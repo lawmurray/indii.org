@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Matrix Multiplication On GPU: Part 2, Tiling</title>
+
+    <meta name="description" content="Breaking down large matrix multiplications into tiles">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Matrix Multiplication On GPU: Part 2, Tiling">
+    <meta name="twitter:description" content="Breaking down large matrix multiplications into tiles">
+    <meta name="twitter:image" content="/blog/gpu-matrix-multiply-tiling/gemm-tile-cover.png">
+
+    <meta property="og:title" content="Matrix Multiplication On GPU: Part 2, Tiling">
+    <meta property="og:description" content="Breaking down large matrix multiplications into tiles">
+    <meta property="og:url" content="https://indii.org/blog/gpu-matrix-multiply-tiling/">
+    <meta property="og:image" content="https://indii.org/blog/gpu-matrix-multiply-tiling/gemm-tile-cover.png">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="canonical" href="https://indii.org/blog/gpu-matrix-multiply-tiling/">
+    <link rel="icon" href="/assets/favicon.svg?v=2">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.min.js" async></script>
+  </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feed
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container text-center align-center w-75 mb-5">
+        <div class="py-2">
+      <img src="/blog/gpu-matrix-multiply-tiling/gemm-tile-cover.png" loading="lazy" style="width:auto;max-height:128px;" class="img-fluid" width="512" height="512" alt="Artistic image depicting the thread tiling strategy." srcset="/blog/gpu-matrix-multiply-tiling/gemm-tile-cover.png 512w, /blog/gpu-matrix-multiply-tiling/gemm-tile-cover-128w.png 128w, /blog/gpu-matrix-multiply-tiling/gemm-tile-cover-256w.png 256w”" sizes="auto">
+      </div>
+      
+      <div class="category">dev</div>
+      <h1 class="mt-0">Matrix Multiplication On GPU: Part 2, Tiling</h1>
+      <p class="h5"><strong>Breaking down large matrix multiplications into tiles</strong></p>
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      </header>
+            <p class="date">
+      <time pubdate datetime="2024-10-04" title="2024-10-04">2024-10-04</time>
+      
+    </p>
+        
+    <div class="body">
+            <p>As a follow up to the <a
+            href="/blog/gpu-matrix-multiply">previous post</a>, this
+            post details the tiling scheme used by the matrix-matrix
+            multiplication kernel. None of this is particularly elegant,
+            it is mainly an exercise in sizing to fit hardware
+            resources, then trial and error at the finer scales to
+            strike a Goldilocks mix of floating point, integer and
+            memory load/store instructions to get the performance just
+            right.</p>
+                        <div class="toc">
+        <ul>
+        <li><a href="#background"
+        id="toc-background">Background</a></li>
+        <li><a href="#thread-block-global-memory"
+        id="toc-thread-block-global-memory">Thread block, global
+        memory</a></li>
+        <li><a href="#thread-block-shared-memory"
+        id="toc-thread-block-shared-memory">Thread block, shared
+        memory</a></li>
+        <li><a href="#warp-shared-memory"
+        id="toc-warp-shared-memory">Warp, shared memory</a></li>
+        <li><a href="#thread-registers"
+        id="toc-thread-registers">Thread, registers</a></li>
+        <li><a href="#finishing-up" id="toc-finishing-up">Finishing
+        up</a></li>
+        <li><a href="#summary" id="toc-summary">Summary</a></li>
+        </ul>
+      </div>
+            <h2 id="background">Background</h2>
+            <p>The purpose of a tiling scheme is twofold:</p>
+            <ol type="1">
+            <li><p>To parallelize by breaking down the original problem
+            into smaller sub-problems that can be solved concurrently
+            (divide and conquer). By way of available parallelism, a GPU
+            executes many <em>threads</em> simultaneously—thousands or
+            tens of thousands—that are organized into teams of 32 called
+            <em>warps</em>, and further into teams of (for this kernel)
+            8 warps (256 threads) called <em>thread blocks</em>. The
+            breakdown into smaller tiles reflects this thread
+            hierarchy.</p></li>
+            <li><p>To make best use of the memory hierarchy of the GPU
+            by fitting those smaller sub-problems into faster memory
+            types. The test device is an Nvidia GeForce RTX 4080 Laptop
+            GPU, with the following memory types, from slowest &amp;
+            largest to fastest &amp; smallest:</p>
+            <table>
+            <colgroup>
+            <col style="width: 41%" />
+            <col style="width: 32%" />
+            <col style="width: 25%" />
+            </colgroup>
+            <thead>
+            <tr>
+            <th>Type</th>
+            <th>Size</th>
+            <th>Speed (latency)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>Global memory</td>
+            <td>12 GB</td>
+            <td>Hundreds of cycles</td>
+            </tr>
+            <tr>
+            <td>L2 cache</td>
+            <td>48 MB</td>
+            <td>Tens of cycles</td>
+            </tr>
+            <tr>
+            <td>Shared memory and/or L1 cache</td>
+            <td>128 KB per thread block</td>
+            <td>A few cycles</td>
+            </tr>
+            <tr>
+            <td>Registers</td>
+            <td>256 32-bit per thread</td>
+            <td>One cycle</td>
+            </tr>
+            </tbody>
+            </table></li>
+            </ol>
+            <p>As an example to visualize, consider a matrix
+            multiplication
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>←</mo><mi>A</mi><mi>B</mi></mrow><annotation encoding="application/x-tex">C \leftarrow AB</annotation></semantics></math>
+            where
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>
+            is a 1024x1024 matrix,
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+            a 1024x512 matrix, and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+            a 512x1024 matrix, i.e. the dimensions of the problem are
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo>=</mo><mn>1024</mn></mrow><annotation encoding="application/x-tex">M = 1024</annotation></semantics></math>,
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>1024</mn></mrow><annotation encoding="application/x-tex">N = 1024</annotation></semantics></math>,
+            and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>=</mo><mn>512</mn></mrow><annotation encoding="application/x-tex">K = 512</annotation></semantics></math>.
+            <a href="#figure1">Figure 1</a> depicts the first two levels
+            of tiling breakdown.</p>
+            <p><a name="figure1"/> <img src="gemm-grid.svg"
+            style="max-width:100%;"
+            alt="Breakdown of the matrix multiplication into smaller sub-problems via tiling." /></p>
+            <p><em>Figure 1: Breakdown of the matrix multiplication
+            problem into smaller sub-problems. <span
+            style="color:rgb(210,210,210);">■Grey</span> represents the
+            original matrices. <span
+            style="color:rgb(86,180,233);">■Blue</span> represents the
+            first breakdown into tiles for thread blocks, with output
+            size 256x128. <span style="color:rgb(213,94,0);">■Red</span>
+            represents the second breakdown into tiles for warps, with
+            output size 64x64. Each of these is nested in the previous.
+            The arrows and fine gridlines represent a further breakdown
+            of the input tiles into 256x8 slices of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+            and 8x128 slices of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>,
+            for which pairwise products are summed to compute the output
+            tile.</em></p>
+            <p>The following sections provide more details on each level
+            of the scheme.</p>
+            <h2 id="thread-block-global-memory">Thread block, global
+            memory</h2>
+            <p>At the first level, the output matrix is divided into
+            output tiles of size 256x128. Each is assigned to a thread
+            block to compute. To do so, it must compute the product of
+            256 rows of matrix
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+            by 128 columns of matrix
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>.
+            This is shown in <span
+            style="color:rgb(86,180,233);">■blue</span> in <a
+            href="#figure1">Figure 1</a>.</p>
+            <p>To improve L2 cache utilization, thread blocks are
+            assigned to output tiles according to a two-dimensional
+            Hilbert curve.</p>
+            <div class="note">
+            <p><strong>Assigning output tiles to thread blocks with the
+            Hilbert curve</strong></p>
+            <p>The test device has 58 streaming multiprocessors. For
+            this kernel, each of those can execute one thread block at a
+            time. For simplicity, we can round that to 64 thread blocks
+            at a time, and think about how to assign an output tile to
+            each.</p>
+            <p>We could go column by column, so a 64x1 grid of 256x128
+            output tiles. Assuming a large enough problem, each of the
+            64 thread blocks would read in a different 256 rows of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>,
+            but all would read the same 128 columns of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>.
+            That would be reading in
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>64</mn><mo>×</mo><mn>256</mn><mo>×</mo><mi>K</mi><mo>+</mo><mn>1</mn><mo>×</mo><mn>128</mn><mo>×</mo><mi>K</mi><mo>=</mo><mn>16512</mn><mi>K</mi></mrow><annotation encoding="application/x-tex">64 \times 256 \times K + 1 \times 128 \times K = 16512K</annotation></semantics></math>
+            elements to compute the 64 output tiles.</p>
+            <p>We could instead use a square, so an 8x8 grid of 256x128
+            output tiles. Between them, the thread blocks would then
+            read in eight 256-row slices of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+            and eight 128-column slices of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>,
+            for
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>8</mn><mo>×</mo><mn>256</mn><mo>×</mo><mi>K</mi><mo>+</mo><mn>8</mn><mo>×</mo><mn>128</mn><mo>×</mo><mi>K</mi><mo>=</mo><mn>3072</mn><mi>K</mi></mrow><annotation encoding="application/x-tex">8 \times 256 \times K + 8 \times 128 \times K = 3072K</annotation></semantics></math>
+            elements. That is, this configuration reads much fewer
+            elements to compute the same amount of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>,
+            i.e. 64 output tiles. In fact, a square configuration is
+            optimal in this regard.</p>
+            <p>That motivates an 8x8 square grid, but not necessarily a
+            Hilbert curve. The Hilbert curve has the advantage that we
+            do not need to determine the optimal grid size for any
+            particular device; the test device has 58 streaming
+            multiprocessors, but other devices have more or fewer than
+            this. The recursive formulation of the Hilbert curve gives a
+            good configuration (c.f. <a
+            href="https://en.m.wikipedia.org/wiki/Cache-oblivious_algorithm">cache
+            oblivious algorithms</a>), although not necessarily an
+            optimal one. It also has the advantage that the next grid of
+            8x8 thread blocks is never far from the current, in fact it
+            will have either the rows or the columns in common, and it
+            is possible that some of the data from those rows and
+            columns still resides in L2 cache so as to advantage that
+            next grid, at least for smaller problem sizes.</p>
+            </div>
+            <h2 id="thread-block-shared-memory">Thread block, shared
+            memory</h2>
+            <p>The 256 rows of matrix
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+            are further broken into tiles of size 256x8, and the 128
+            columns of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+            into tiles of size 8x128. This is still shown in <span
+            style="color:rgb(86,180,233);">■blue</span> in <a
+            href="#figure1">Figure 1</a>, with the finest gridlines.
+            These are copied into shared memory using a four stage
+            pipeline: at any time the product of a pair of such tiles is
+            being computed while the next three pairs are being copied
+            asynchronously from global to shared memory. This allows
+            overlap of copy and compute.</p>
+            <h2 id="warp-shared-memory">Warp, shared memory</h2>
+            <p>Once in shared memory, the multiplication of the pairs of
+            256x8 tiles of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+            by 8x128 tiles of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+            are shared by the 8 warps of each thread block. Each warp
+            computes the product of a 64x8 tile against an 8x64 tile.
+            This is shown in <span
+            style="color:rgb(213,94,0);">■red</span> in <a
+            href="#figure1">Figure 1</a>.</p>
+            <div class="note">
+            <p><strong>Synchronization</strong></p>
+            <p>When using shared memory, threads in a block must
+            synchronize to ensure that writes made into shared memory by
+            those threads become visible to the other threads.</p>
+            <p>The thread block consists of 8 warps of 32 threads each.
+            Similarly, the 256x128 output tile is broken into 8 subtiles
+            of 64x64 elements each. Each warp then requires one of four
+            64-row slices of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>,
+            and one of two 64-column slices of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>,
+            to compute its 64x64 output tile of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>.</p>
+            <p>The copy of these tiles from global to shared memory can
+            be arranged such that two warps copy each 64-row slice of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+            and four warps copy each 64-column slice of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>.
+            Each warp must then synchronize with the one other warp
+            contributing to the copy of the 64-row slice that it
+            requires, and the three other warps contributing to the copy
+            of the 64-column slice that it requires (assuming that it
+            participated in those copies too). That is, it takes a
+            quarter block (2 warp) and half block (4 warp)
+            synchronization, but not a full block (8 warp)
+            synchronization to ensure that all the writes are visible
+            where they need to be. This can improve performance
+            significantly.</p>
+            </div>
+            <h2 id="thread-registers">Thread, registers</h2>
+            <p>Zooming into the warp-level computation, we have the
+            thread-level computation shown in <a href="#figure2">Figure
+            2</a>. Recall that there are 32 threads in each warp. Each
+            thread loads two 4x1 tiles of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+            and one 1x16 tile of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+            from shared memory to registers, computes the 8x16 product
+            of those, and accumulates it back into registers. It does
+            this eight times, being the length of the inner dimension
+            (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>)
+            of the tiles at this level. The rows handled by the thread
+            are not contiguous, as this avoids shared memory bank
+            conflicts.</p>
+            <p><a name="figure2"/> <img src="gemm-warp.svg"
+            style="max-width:100%;"
+            alt="Breakdown of the warp-level computation into the thread-level computation" /></p>
+            <p><em>Figure 2: Breakdown of the warp-level computation
+            into the thread-level computation. As before, the thread
+            block level is shown in <span
+            style="color:rgb(86,180,233);">■blue</span> and the warp
+            level in <span style="color:rgb(213,94,0);">■red</span>, but
+            we are now zoomed in enough to see the thread level in <span
+            style="color:rgb(213,94,0);">■darker red</span>.</em></p>
+            <h2 id="finishing-up">Finishing up</h2>
+            <p>Once complete, each thread has accumulated an 8x16 tile
+            in registers, representing its share of the output matrix
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>.
+            This is written to global memory to complete the
+            computation.</p>
+            <p>Two other tricks:</p>
+            <ol type="1">
+            <li><p>Where possible, 128-bit reads (i.e. four consecutive
+            elements in single-precision floating point) are used when
+            copying from global memory to shared memory, from shared
+            memory to registers, and from registers to global memory.
+            This reduces the number of instructions that must be
+            executed to copy the data, but requires that the memory used
+            to store the matrices is 128-bit aligned.</p></li>
+            <li><p>When copying tiles of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math>
+            from global to shared memory, we take the opportunity to
+            transpose the tile, as this improves performance later when
+            copying from shared memory to registers. The transpose
+            imposes 32-bit copies from global to shared memory rather
+            than the preferred 128-bit copies (see above), but is still
+            a net win.</p></li>
+            </ol>
+            <div class="note">
+            <p>In CUDA C++, 128-bit reads are enabled by using the <a
+            href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#built-in-vector-types"><code>float4</code></a>
+            type. In PTX, the <a
+            href="https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-asynchronous-copy"><code>cp.async</code></a>
+            instruction takes, as one of its arguments, the number of
+            bytes to copy.</p>
+            </div>
+            <h2 id="summary">Summary</h2>
+            <p>This post presented the tiling scheme for the CUDA kernel
+            for matrix-matrix multiplication introduced in the <a
+            href="/blog/gpu-matrix-multiply">previous post</a>. The
+            breakdown is aimed at creating a hierarchy of
+            parallelization that matches the hierarchy of the GPU
+            hardware with respect to processors and memory types.</p>
+    </div>
+  </article>
+</main>
+
+<div class="w-100 mt-5" style="clear:both;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Feeds</h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Everything
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/blog.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Blog only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/software.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Software only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/research.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Research only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/photography.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Photography only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/creative.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Creative only
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Newsletter</h1>
+      <p><small>Subscribe to the newletter for announcements of new posts.</small></p>
+      <form action="https://indii.us11.list-manage.com/subscribe/post?u=6c39d985ee6d7e2a4f83f52c2&amp;id=6022e2b633&amp;f_id=00c4d7e3f0" method="post" target="_self" novalidate="">
+        <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="Email" value="" class="form-control w-100 my-2">
+        <input type="submit" name="subscribe" value="Subscribe" class="btn btn-primary w-100 my-2">
+
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="hidden" name="tags" value="10280626">
+          <input type="text" name="b_6c39d985ee6d7e2a4f83f52c2_6022e2b633" tabindex="-1" value="">
+        </div>
+      </form>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence
+Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

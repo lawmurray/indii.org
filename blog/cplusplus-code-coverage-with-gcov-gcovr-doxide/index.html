@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Improving C++ Code Coverage with Gcov, Gcovr and Doxide</title>
+
+    <meta name="description" content="Doxide can now produce line data on function templates, even when not instantiated, to mix with execution data for more accurate test coverage reports. This is especially useful when testing header-only libraries.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Improving C++ Code Coverage with Gcov, Gcovr and Doxide">
+    <meta name="twitter:description" content="Doxide can now produce line data on function templates, even when not instantiated, to mix with execution data for more accurate test coverage reports. This is especially useful when testing header-only libraries.">
+    <meta name="twitter:image" content="/assets/doxide.svg">
+
+    <meta property="og:title" content="Improving C++ Code Coverage with Gcov, Gcovr and Doxide">
+    <meta property="og:description" content="Doxide can now produce line data on function templates, even when not instantiated, to mix with execution data for more accurate test coverage reports. This is especially useful when testing header-only libraries.">
+    <meta property="og:url" content="https://indii.org/blog/cplusplus-code-coverage-with-gcov-gcovr-doxide/">
+    <meta property="og:image" content="/assets/doxide.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="canonical" href="https://indii.org/blog/cplusplus-code-coverage-with-gcov-gcovr-doxide/">
+    <link rel="icon" href="/assets/favicon.svg?v=2">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.min.js" async></script>
+  </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feed
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container text-center align-center w-75 mb-5">
+        <div class="py-2">
+      <img src="/assets/doxide.svg" style="width:auto;max-height:128px;" class="img-fluid" width="128" height="128" alt="Doxide logo">
+      </div>
+      
+      <div class="category">dev</div>
+      <h1 class="mt-0">Improving C++ Code Coverage with Gcov, Gcovr and Doxide</h1>
+      <p class="h5"><strong>Doxide can now produce line data on function templates, even when not instantiated, to mix with execution data for more accurate test coverage reports. This is especially useful when testing header-only libraries.</strong></p>
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      </header>
+            <p class="date">
+      <time pubdate datetime="2024-11-13" title="2024-11-13">2024-11-13</time>
+      (updated 2024-11-27)
+    </p>
+        
+    <div class="body">
+            <p>Providing accurate code coverage reports for C++ is
+            difficult, perhaps more so than other programming languages,
+            because of function templates. Coverage tools such as GCC’s
+            <a
+            href="https://gcc.gnu.org/onlinedocs/gcc/Gcov.html"><code>gcov</code></a>
+            and LLVM’s <a
+            href="https://clang.llvm.org/docs/SourceBasedCodeCoverage.html">Source-Based
+            Code Coverage</a> instrument a program binary to count which
+            lines, branches and functions are executed when that program
+            is run, but function templates are compile-time entities
+            that do not translate into a program binary at all if they
+            are never instantiated. When computing code coverage, these
+            missing function templates can mean under-counting the
+            number of lines in a C++ program, and so over-reporting code
+            coverage. This problem is particularly acute for test
+            coverage of header-only libraries, where just about
+            everything is a template.</p>
+            <p>I have been working on some tooling to improve this, and
+            have added an experimental <a
+            href="https://doxide.org/coverage"><code>cover</code>
+            command</a> to <a href="https://doxide.org">Doxide</a>. That
+            may seem a little out of place—Doxide is a documentation
+            tool for C++ source code, not a test code coverage tool (<a
+            href="https://github.com/lawmurray/doxide/discussions/54">not
+            yet?</a>)—but to extract that documentation it uses a C++
+            parser provided by <a
+            href="https://tree-sitter.github.io/tree-sitter/">Tree-sitter</a>,
+            and that same parser provides all the information necessary
+            on function templates to make them visible to code coverage
+            tools that otherwise rely only on binaries. The basic idea
+            of this new <code>cover</code> command is to output that
+            information to JSON with baseline zero execution counts, mix
+            it with data from <code>gcov</code> on nonzero execution
+            counts, then produce an HTML report of the two together
+            using <a href="https://gcovr.com">gcovr</a>. In this way
+            line data from source code supplements execution data from
+            the binary program for more accurate code coverage
+            reports.</p>
+            <p>This post provides a step by step guide to the whole
+            process of using <code>gcov</code>, <code>gcovr</code> and
+            <code>doxide</code> to produce such a report.</p>
+            <div class="note">
+            <p><strong>Update 17 November 2024</strong></p>
+            <p>After further developing this idea, Doxide can now
+            produce its own HTML code coverage reports too! <a
+            href="https://doxide.org/demo/coverage">Check it
+            out</a>.</p>
+            </div>
+                        <div class="toc">
+        <ul>
+        <li><a href="#overview-of-workflow"
+        id="toc-overview-of-workflow">Overview of workflow</a></li>
+        <li><a href="#preliminaries"
+        id="toc-preliminaries">Preliminaries</a></li>
+        <li><a href="#working-example" id="toc-working-example">Working
+        example</a></li>
+        <li><a href="#building-and-running-with-coverage-enabled"
+        id="toc-building-and-running-with-coverage-enabled">Building and
+        running with coverage enabled</a></li>
+        <li><a href="#demonstrating-the-problem"
+        id="toc-demonstrating-the-problem">Demonstrating the
+        problem</a></li>
+        <li><a href="#generating-a-json-report-with-gcovr"
+        id="toc-generating-a-json-report-with-gcovr">Generating a JSON
+        report with Gcovr</a></li>
+        <li><a href="#generating-a-json-report-with-doxide"
+        id="toc-generating-a-json-report-with-doxide">Generating a JSON
+        report with Doxide</a></li>
+        <li><a href="#merging-the-json-reports-of-gcovr-and-doxide"
+        id="toc-merging-the-json-reports-of-gcovr-and-doxide">Merging
+        the JSON reports of Gcovr and Doxide</a></li>
+        <li><a href="#summary-and-further-work"
+        id="toc-summary-and-further-work">Summary and further
+        work</a></li>
+        <li><a href="#related-links" id="toc-related-links">Related
+        links</a></li>
+        </ul>
+      </div>
+            <h2 id="overview-of-workflow">Overview of workflow</h2>
+            <p>The basic workflow is as follows:</p>
+            <ol type="1">
+            <li>Build tests with code coverage enabled.</li>
+            <li>Run tests.</li>
+            <li>Use <code>gcovr</code> to create a code coverage report
+            from that execution in a JSON file.</li>
+            <li>Use <code>doxide</code> to create a line data report
+            from the original source files in a JSON file.</li>
+            <li>Use <code>gcovr</code> again to create a final code
+            coverage report in HTML, merging the two JSON files created
+            in steps 3 and 4.</li>
+            </ol>
+            <p>As we shall see, the lines of function templates that
+            have not been instantiated will be reported as uncovered in
+            the final report.</p>
+            <h2 id="preliminaries">Preliminaries</h2>
+            <p>You will need to install <a
+            href="https://gcovr.com">Gcovr</a> and <a
+            href="https://doxide.org">Doxide</a> for this to work. The
+            former is readily available from Linux distributions and as
+            a Python package installable via <code>pip</code>; <a
+            href="https://gcovr.com/en/stable/installation.html">see the
+            installation instructions</a>. The latter you are unlikely
+            to find in your Linux distribution just yet, but there are
+            Linux, Mac and Windows packages available; <a
+            href="https://doxide.org/installation/">see the installation
+            instructions</a>—you will need the absolute latest version
+            at time of writing, which is 0.7.0.</p>
+            <h2 id="working-example">Working example</h2>
+            <p>We will consider the following simple program:</p>
+            <div class="sourceCode" id="cb1"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">/**</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"> * Overload of f() with concrete type.</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> twice<span class="op">(</span><span class="dt">double</span> x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">2</span><span class="op">*</span>x<span class="op">;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">/**</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"> * Function template.</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">&gt;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>T twice<span class="op">(</span>T x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">3</span><span class="op">*</span>x<span class="op">;</span>  <span class="co">// deliberate error</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="dt">double</span> x <span class="op">=</span> <span class="fl">5.0</span><span class="op">;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="dt">double</span> y <span class="op">=</span> twice<span class="op">(</span>x<span class="op">);</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cout <span class="op">&lt;&lt;</span> y <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>This has a function <code>twice()</code> that multiplies
+            its argument by two. There is an overload of this function
+            for arguments of type <code>double</code>, as well as a
+            function template for generic types. The <code>main()</code>
+            program, which we can think of as a test program for
+            <code>twice()</code>, calls that function with argument
+            <code>x</code> and prints out the result. Because
+            <code>x</code> is of type <code>double</code>, the first
+            overload of the function is called and the test looks
+            successful. The function template is not instantiated during
+            the compile, and not executed during the run—for good
+            measure, we’ve snuck a silly error in there that would not
+            be caught if this was our test suite!</p>
+            <p>Unfortunately, as we shall see, code coverage is reported
+            at 100%, and the busy developer may overlook this
+            problem.</p>
+            <h2 id="building-and-running-with-coverage-enabled">Building
+            and running with coverage enabled</h2>
+            <p>To build a program with <code>gcov</code> coverage
+            enabled, using either <code>g++</code> or
+            <code>clang++</code>, simply add the <code>--coverage</code>
+            command-line option. It is a good idea to disable
+            optimization and inlining as well. Using <code>g++</code>,
+            if the above code is in a file called <code>test.cpp</code>,
+            we can build with:</p>
+            <div class="sourceCode" id="cb2"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">g++</span> <span class="at">--coverage</span> <span class="at">-O0</span> <span class="at">-fno-inline</span> <span class="at">-o</span> test test.cpp</span></code></pre></div>
+            <p>As well as the usual compile, this creates a file
+            <code>test.gcno</code> in the same directory, with some
+            basic block and source line mapping information necessary
+            for collecting coverage data.</p>
+            <div class="note">
+            <p>In addition to <code>gcov</code>-compatible coverage
+            data, <code>clang++</code> can provide alternative <a
+            href="https://clang.llvm.org/docs/SourceBasedCodeCoverage.html">Source-Based
+            Code Coverage</a> data, enabled with different command-line
+            options. However, <code>gcovr</code> and <code>doxide</code>
+            require <code>gcov</code>-compatible data.</p>
+            </div>
+            <p>Now run the program as normal:</p>
+            <div class="sourceCode" id="cb3"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./test</span></span></code></pre></div>
+            <p>This runs the program and outputs the result as normal,
+            but also creates a second code coverage file
+            <code>test.gcda</code> in the same directory, with data on
+            how many times each line, branch, and function of the
+            program was executed.</p>
+            <div class="note">
+            <p>For more information on the <code>test.gcno</code> and
+            <code>test.gcda</code> files, see <a
+            href="https://gcc.gnu.org/onlinedocs/gcc/Gcov-Data-Files.html">Brief
+            Description of gcov Data Files</a> in the GCC
+            documentation.</p>
+            </div>
+            <h2 id="demonstrating-the-problem">Demonstrating the
+            problem</h2>
+            <p>To see the problem with function templates, we can
+            produce an HTML report using <code>gcovr</code>:</p>
+            <div class="sourceCode" id="cb4"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcovr</span> <span class="at">--html-details</span> gcovr.html <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--exclude-function-lines</span> <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--exclude-noncode-lines</span></span></code></pre></div>
+            <p>This command already enables a few options to make the
+            line count more accurate, excluding some lines that do not
+            really reflect executable code: function signatures
+            (<code>--exclude-function-lines</code>) and end-of-function
+            closing braces (<code>--exclude-noncode-lines</code>).</p>
+            <p>Now open <code>gcovr.html</code> in your browser (created
+            by the last command). It reports 100% code coverage.
+            Clicking on <code>test.cpp</code> for further details, we
+            see that, as expected, all of the <code>main()</code>
+            function is executed along with the first definition of
+            <code>twice()</code>, but that the generic version of
+            <code>twice()</code> is unmarked. This means that it is
+            simply not included in the coverage report at all; if it was
+            included but uncovered it would be marked in red instead,
+            and total coverage would be less than 100%. We may consider
+            this a problem.</p>
+            <figure>
+            <img src="gcovr_no_doxide_2.png"
+            style="border:1px solid; padding:12px; max-width:100%;"
+            width="400"
+            alt="Screen grab of gcovr detailed output for test.cpp reporting 100% code coverage, but missing the body of the uninstantiated function template, which is marked in neither green as executed, nor red as unexecuted, it is simply missed" />
+            <figcaption aria-hidden="true">Screen grab of gcovr detailed
+            output for test.cpp reporting 100% code coverage, but
+            missing the body of the uninstantiated function template,
+            which is marked in neither green as executed, nor red as
+            unexecuted, it is simply missed</figcaption>
+            </figure>
+            <p>A fix is to mix line data from the source code with the
+            count data from the execution. We can get that from Doxide.
+            But first, we need to produce JSON output from Gcovr to mix
+            it into.</p>
+            <h2 id="generating-a-json-report-with-gcovr">Generating a
+            JSON report with Gcovr</h2>
+            <p>We previously ran <code>gcovr</code> to produce an HTML
+            report. A simple change to the command allows us to produce
+            a JSON report instead:</p>
+            <div class="sourceCode" id="cb5"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcovr</span> <span class="at">--json</span> gcovr.json <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--exclude-function-lines</span> <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--exclude-noncode-lines</span></span></code></pre></div>
+            <div class="note">
+            <p>An alternative to <code>gcovr</code> is <a
+            href="https://github.com/linux-test-project/lcov"><code>lcov</code></a>.
+            We do not use it here as it does not have the JSON support
+            that makes merging reports from <code>gcovr</code> and
+            <code>doxide</code> straightforward. But for completeness,
+            to use <code>lcov</code>, first collate coverage information
+            in an <code>lcov.info</code> file:</p>
+            <div class="sourceCode" id="cb6"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">lcov</span> <span class="at">--directory</span> . <span class="at">--no-external</span> <span class="at">--capture</span> <span class="at">--output</span> lcov.info</span></code></pre></div>
+            <p>then produce an HTML report with the accompanying tool
+            <code>genhtml</code>:</p>
+            <div class="sourceCode" id="cb7"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">genhtml</span> lcov.info <span class="at">-o</span> lcov</span></code></pre></div>
+            <p>and open <code>lcov/index.html</code> in your browser.
+            The report looks similar to <code>gcovr</code>.</p>
+            </div>
+            <h2 id="generating-a-json-report-with-doxide">Generating a
+            JSON report with Doxide</h2>
+            <p>Doxide must be first set up for documentation, although
+            that is easy. Just run, in your souce directory:</p>
+            <div class="sourceCode" id="cb8"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxide</span> init</span></code></pre></div>
+            <p>Inspect the <code>doxide.yaml</code> <a
+            href="https://doxide.org/configuring">configuration file</a>
+            that is created and make sure that the <code>files</code>
+            section includes your source files. By default all
+            <code>*.hpp</code> and <code>*.h</code> header files are
+            included, recursively. If you have function templates in
+            <code>*.cpp</code> source files then add those source files
+            here as well. For the working example we have the
+            <code>test.cpp</code> source file to add at least. A minimal
+            example of a working <code>doxide.yaml</code> file for code
+            coverage is something like:</p>
+            <div class="sourceCode" id="cb9"><pre
+            class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> Untitled</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">path</span><span class="kw">:</span><span class="at"> /blog/cplusplus-code-coverage-with-gcov-gcovr-doxide/</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">category</span><span class="kw">:</span><span class="at"> dev</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">description</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">files</span><span class="kw">:</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">- </span><span class="st">&quot;*.hpp&quot;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">- </span><span class="st">&quot;**/*.hpp&quot;</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">- </span><span class="st">&quot;*.cpp&quot;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">- </span><span class="st">&quot;**/*.cpp&quot;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">- </span><span class="st">&quot;*.h&quot;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">- </span><span class="st">&quot;**/*.h&quot;</span></span></code></pre></div>
+            <p>Once Doxide is configured, produce a line data report by
+            running, from the same directory as the
+            <code>doxide.yaml</code> file:</p>
+            <div class="sourceCode" id="cb10"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">doxide</span> cover <span class="op">&gt;</span> doxide.json</span></code></pre></div>
+            <p>The <code>doxide.json</code> file now contains the
+            report. It lists files and line numbers for all functions
+            and operators found in the source code, with zero execution
+            counts.</p>
+            <div class="note">
+            <p>The remainder of the <code>doxide.yaml</code>
+            configuration file and the other files generated by
+            <code>doxide init</code> are not important, unless you are
+            also interested in using Doxide for documentation—they can
+            be deleted if not of interest. The only exception is if
+            Doxide fails to parse your source files correctly, often due
+            to macro use, in which case further tweaking of the
+            configuration file may be necessary. See the Doxide website
+            on <a href="https://doxide.org/parsing/">Parsing
+            Considerations</a> if that seems to be affecting you.</p>
+            </div>
+            <h2
+            id="merging-the-json-reports-of-gcovr-and-doxide">Merging
+            the JSON reports of Gcovr and Doxide</h2>
+            <p>In the previous two sections we produced a
+            <code>gcovr.json</code> file with coverage data from
+            executing the program, and a <code>doxide.json</code> file
+            with line data from the source code. The next step is to
+            combine them into a single HTML report with
+            <code>gcovr</code>:</p>
+            <div class="sourceCode" id="cb11"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gcovr</span> <span class="at">--html-details</span> gcovr.html <span class="dt">\</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--exclude-function-lines</span> <span class="dt">\</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--exclude-noncode-lines</span> <span class="dt">\</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--json-add-tracefile</span> gcovr.json <span class="dt">\</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--json-add-tracefile</span> doxide.json</span></code></pre></div>
+            <p>The two <code>--json-add-tracefile</code> options at the
+            end of the command add the two JSON files that we have
+            produced.</p>
+            <p>We can now inspect <code>gcovr.html</code> again. We see
+            that coverage is now reported at 83.3%, with the function
+            template marked as uncovered when the program was run. We
+            may consider this a more accurate reflection of the code
+            coverage of a test suite, which will be particularly useful
+            for large header-only libraries, where a lack of data on
+            uninstantiated function templates is easily missed.</p>
+            <figure>
+            <img src="gcovr_plus_doxide_2.png"
+            style="border:1px solid; padding:12px; max-width:100%;"
+            width="400"
+            alt="Screen grab of gcovr detailed output for test.cpp, marking the body of the uninstantiated function template as uncovered, in red, and reporting less than 100% code coverage" />
+            <figcaption aria-hidden="true">Screen grab of gcovr detailed
+            output for test.cpp, marking the body of the uninstantiated
+            function template as uncovered, in red, and reporting less
+            than 100% code coverage</figcaption>
+            </figure>
+            <h2 id="summary-and-further-work">Summary and further
+            work</h2>
+            <p>This post has proposed an approach to including
+            uninstantiated function templates in C++ code coverage
+            reports by mixing line data from source code with execution
+            data from <code>gcov</code>. It uses a new feature in <a
+            href="https://doxide.org">Doxide</a>—the <code>cover</code>
+            command—to provide the supplementary line data from source
+            code.</p>
+            <p>This is still early work. While use of line data from
+            source code can provide better recall of all executable
+            lines, it may lack precision and include lines that are not,
+            in fact, executable code, or that are executed at compile
+            time rather than runtime (e.g. <code>if constexpr</code>
+            lines). Refinements are needed in this regard.</p>
+            <h2 id="related-links">Related links</h2>
+            <ul>
+            <li><a
+            href="https://emilydolson.github.io/force-cover/">Force-cover</a>,
+            which uses Clang tooling to preprocess C++ source code with
+            comments to identify templates, then a Python program to
+            postprocess code coverage output to ensure that those
+            templates are counted as uncovered code.</li>
+            </ul>
+    </div>
+  </article>
+</main>
+
+<div class="w-100 mt-5" style="clear:both;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Feeds</h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Everything
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/blog.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Blog only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/software.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Software only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/research.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Research only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/photography.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Photography only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/creative.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Creative only
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Newsletter</h1>
+      <p><small>Subscribe to the newletter for announcements of new posts.</small></p>
+      <form action="https://indii.us11.list-manage.com/subscribe/post?u=6c39d985ee6d7e2a4f83f52c2&amp;id=6022e2b633&amp;f_id=00c4d7e3f0" method="post" target="_self" novalidate="">
+        <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="Email" value="" class="form-control w-100 my-2">
+        <input type="submit" name="subscribe" value="Subscribe" class="btn btn-primary w-100 my-2">
+
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="hidden" name="tags" value="10280626">
+          <input type="text" name="b_6c39d985ee6d7e2a4f83f52c2_6022e2b633" tabindex="-1" value="">
+        </div>
+      </form>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence
+Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>Lawrence Murray</title>
+    <link>https://indii.org</link>
+    <description>Personal site of Lawrence Murray, collating blog articles, scientific research, software artifacts, and creative outputs</description>
+    
+    <pubDate>Sat, 03 Oct 2026 16:55:19 +0700</pubDate>
+    <lastBuildDate>Sat, 03 Oct 2026 16:55:19 +0700</lastBuildDate>
+        <item>
+      <title>Tattoo the Sea</title>
+      <link>https://indii.org/creative/tattoo-the-sea/</link>
+      <description>Fat rain poked the terrace. Separate splots—caliper-sizeable, measurable, aged and faded by the sun and vanished back to sky</description>
+      <category>writing</category>
+      <pubDate>2023-04-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+        <item>
+      <title>Girl with Headphones</title>
+      <link>https://indii.org/creative/girl-with-headphones/</link>
+      <description>Charcoal, chalk and pastel on paper, 2015</description>
+      <category>drawing</category>
+      <pubDate>2023-04-02</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+        <item>
+      <title>Bifurcation</title>
+      <link>https://indii.org/creative/bifurcation/</link>
+      <description>Revealing the intricate behaviour of the Lorenz ’96 chaotic equations</description>
+      <category>graphics</category>
+      <pubDate>2016-04-17</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+      </channel>
+</rss>

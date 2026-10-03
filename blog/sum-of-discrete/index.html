@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sums of Discrete Random Variables as Banded Matrix Products</title>
+
+    <meta name="description" content="Zero-stride catch and a custom CUDA kernel">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Sums of Discrete Random Variables as Banded Matrix Products">
+    <meta name="twitter:description" content="Zero-stride catch and a custom CUDA kernel">
+    <meta name="twitter:image" content="/blog/sum-of-discrete/sum-of-discrete.svg">
+
+    <meta property="og:title" content="Sums of Discrete Random Variables as Banded Matrix Products">
+    <meta property="og:description" content="Zero-stride catch and a custom CUDA kernel">
+    <meta property="og:url" content="https://indii.org/blog/sum-of-discrete/">
+    <meta property="og:image" content="https://indii.org/blog/sum-of-discrete/sum-of-discrete.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="canonical" href="https://indii.org/blog/sum-of-discrete/">
+    <link rel="icon" href="/assets/favicon.svg?v=2">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.min.js" async></script>
+  </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feed
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container text-center align-center w-75 mb-5">
+        <div class="py-2">
+      <img src="/blog/sum-of-discrete/sum-of-discrete.svg" loading="lazy" style="width:auto;max-height:128px;" class="img-fluid" width="144" height="250" alt="Simple line drawing of a GPU">
+      </div>
+      
+      <div class="category">dev</div>
+      <h1 class="mt-0">Sums of Discrete Random Variables as Banded Matrix Products</h1>
+      <p class="h5"><strong>Zero-stride catch and a custom CUDA kernel</strong></p>
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      </header>
+            <p class="date">
+      <time pubdate datetime="2023-03-16" title="2023-03-16">2023-03-16</time>
+      
+    </p>
+        
+    <div class="body">
+            <p>Further to the previous attempt at <a
+            href="/blog/fast-discrete-enumeration/">Fast Enumeration of
+            Sums of Discrete Random Variables</a>, in this new attempt
+            we see the computation as a banded matrix-vector product
+            with an unorthodox (and unsupported) stride of zero, and
+            implement a custom CUDA kernel through several steps of
+            optimization. Timings at the end. <a
+            href="https://github.com/lawmurray/sum-of-discrete">Code is
+            available</a> to reproduce the results.</p>
+                        <div class="toc">
+        <ul>
+        <li><a href="#recap-of-the-problem"
+        id="toc-recap-of-the-problem">Recap of the problem</a></li>
+        <li><a
+        href="#discrete-enumeration-as-banded-matrix-multiplication"
+        id="toc-discrete-enumeration-as-banded-matrix-multiplication">Discrete
+        enumeration as banded matrix multiplication</a></li>
+        <li><a href="#programmatic-representations-of-banded-matrices"
+        id="toc-programmatic-representations-of-banded-matrices">Programmatic
+        representations of banded matrices</a></li>
+        <li><a href="#custom-cuda-kernels"
+        id="toc-custom-cuda-kernels">Custom CUDA kernels</a>
+        <ul>
+        <li><a href="#version-0-starting-out"
+        id="toc-version-0-starting-out">Version 0: Starting out</a></li>
+        <li><a href="#version-1-equalizing-workload-per-thread"
+        id="toc-version-1-equalizing-workload-per-thread">Version 1:
+        Equalizing workload per thread</a></li>
+        <li><a href="#version-2-using-shared-memory"
+        id="toc-version-2-using-shared-memory">Version 2: Using shared
+        memory</a></li>
+        <li><a href="#version-3-using-more-shared-memory"
+        id="toc-version-3-using-more-shared-memory">Version 3: Using
+        more shared memory</a></li>
+        <li><a href="#version-4-increasing-parallelism"
+        id="toc-version-4-increasing-parallelism">Version 4: Increasing
+        parallelism</a></li>
+        <li><a href="#launching-the-kernels"
+        id="toc-launching-the-kernels">Launching the kernels</a></li>
+        <li><a href="#gradient-kernels"
+        id="toc-gradient-kernels">Gradient kernels</a></li>
+        </ul></li>
+        <li><a href="#results" id="toc-results">Results</a></li>
+        <li><a href="#further-work" id="toc-further-work">Further
+        work</a></li>
+        </ul>
+      </div>
+            <h2 id="recap-of-the-problem">Recap of the problem</h2>
+            <p>The basic problem is as follows:</p>
+            <ol type="1">
+            <li>given a random variable
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+            on the integers
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{0,\ldots,m-1\}</annotation></semantics></math>
+            with a vector of probabilities
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒑</mi><annotation encoding="application/x-tex">\mathbf{p}</annotation></semantics></math>
+            with
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>=</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p_i = P(x = i)</annotation></semantics></math>,
+            and</li>
+            <li>another random variable
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+            on the integers
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{0,\ldots,n-1\}</annotation></semantics></math>
+            with a vector of probabilities
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒒</mi><annotation encoding="application/x-tex">\mathbf{q}</annotation></semantics></math>
+            with
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><mi>i</mi></msub><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>=</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">q_i = P(y = i)</annotation></semantics></math>,</li>
+            <li>consider the sum
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x + y</annotation></semantics></math>
+            on the integers
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo>−</mo><mn>2</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{0, m + n - 2\}</annotation></semantics></math>
+            and compute its vector of probabilities
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒓</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>
+            with
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_i = P(x + y = i)</annotation></semantics></math>.</li>
+            </ol>
+            <p>The basic computation is the convolution:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mrow><mi mathvariant="normal">max</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi>i</mi><mo>−</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mrow><mi mathvariant="normal">min</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow></munderover><msub><mi>p</mi><mi>j</mi></msub><msub><mi>q</mi><mrow><mi>i</mi><mo>−</mo><mi>j</mi></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+            r_i = \sum_{j = \max(0,i-n+1)}^{\min (m-1,i)} p_j q_{i-j}.
+            </annotation></semantics></math></p>
+            <h2
+            id="discrete-enumeration-as-banded-matrix-multiplication">Discrete
+            enumeration as banded matrix multiplication</h2>
+            <p>We can write this as the product of a <a
+            href="https://en.wikipedia.org/wiki/Band_matrix">banded
+            matrix</a> and a vector. Let
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo>,</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{band}(\mathbf{x}, n)</annotation></semantics></math>
+            be a function that constructs a banded matrix from a vector
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒙</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>
+            of length
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+            and number of columns
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+            like so:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo>,</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>x</mi><mn>0</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>x</mi><mn>0</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>x</mi><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow></msub></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>x</mi><mn>0</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>x</mi><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow></msub></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mo>⋱</mo></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>x</mi><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow></msub></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>x</mi><mn>0</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mo>⋱</mo></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>x</mi><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+            \mathrm{band}(\mathbf{x}, n) = \left(\begin{array}{cccccc}
+            x_0     &amp; 0       &amp; \ldots  &amp; \ldots &amp; \ldots \\
+            \vdots  &amp; x_0     &amp; 0       &amp; \ldots &amp; \ldots \\
+            x_{m-1} &amp; \vdots  &amp; x_0     &amp; 0      &amp; \ldots \\
+            0       &amp; x_{m-1} &amp; \vdots  &amp; \ddots &amp; 0      \\
+            \vdots  &amp; 0       &amp; x_{m-1} &amp; \vdots &amp; x_0    \\
+            \vdots  &amp; \vdots  &amp; 0       &amp; \ddots &amp; \vdots \\
+            \vdots  &amp; \vdots  &amp; \vdots  &amp; 0      &amp; x_{m-1} \\
+            \end{array}\right).
+            </annotation></semantics></math></p>
+            <p>This is a little like we might use
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">g</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{diag}(x, n)</annotation></semantics></math>
+            to construct a diagonal matrix of size
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>×</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">n \times n</annotation></semantics></math>
+            with all diagonal elements set to
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.
+            With this
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{band}(\cdot)</annotation></semantics></math>
+            function we can write the required computation in matrix
+            form as:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝒓</mi><mo>=</mo><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒑</mi><mo>,</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="bold-italic">𝒒</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+            \mathbf{r} = \mathrm{band}(\mathbf{p}, n) \mathbf{q}.
+            </annotation></semantics></math></p>
+            <p>We may be interested in gradients of this operation with
+            respect to a scalar function
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>,
+            specifically
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∂</mi><mi>f</mi><mi>/</mi><mi>∂</mi><mi mathvariant="bold-italic">𝒑</mi></mrow><annotation encoding="application/x-tex">\partial f/\partial \mathbf{p}</annotation></semantics></math>
+            and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∂</mi><mi>f</mi><mi>/</mi><mi>∂</mi><mi mathvariant="bold-italic">𝒒</mi></mrow><annotation encoding="application/x-tex">\partial f/\partial \mathbf{q}</annotation></semantics></math>.
+            Given the upstream gradient
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∂</mi><mi>f</mi><mi>/</mi><mi>∂</mi><mi mathvariant="bold-italic">𝒓</mi></mrow><annotation encoding="application/x-tex">\partial f/\partial \mathbf{r}</annotation></semantics></math>,
+            first apply the rule for matrix multiplication (see <a
+            href="/blog/matrix-gradients-of-scalar-functions">Matrix
+            Gradients of Scalar Functions</a>):</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒑</mi><mo>,</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒓</mi></mrow></mfrac><msup><mi mathvariant="bold-italic">𝒒</mi><mi>⊤</mi></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒒</mi></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒑</mi><mo>,</mo><mi>n</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>⊤</mi></msup><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒓</mi></mrow></mfrac><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \frac{\partial f}{\partial \mathrm{band}(\mathbf{p}, n)} &amp;= \frac{\partial f}{\partial \mathbf{r}} \mathbf{q}^\top \\
+            \frac{\partial f}{\partial \mathbf{q}} &amp;= \mathrm{band}(\mathbf{p}, n)^\top \frac{\partial f}{\partial \mathbf{r}}.
+            \end{aligned}</annotation></semantics></math></p>
+            <p>Now, having
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∂</mi><mi>f</mi><mi>/</mi><mi>∂</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒑</mi><mo>,</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\partial f/ \partial \mathrm{band}(\mathbf{p}, n)</annotation></semantics></math>,
+            we can obtain
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∂</mi><mi>f</mi><mi>/</mi><mi>∂</mi><mi mathvariant="bold-italic">𝒑</mi></mrow><annotation encoding="application/x-tex">\partial f/\partial \mathbf{p}</annotation></semantics></math>
+            from the mechanical construction of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒑</mi><mo>,</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{band}(\mathbf{p}, n)</annotation></semantics></math>
+            from
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒑</mi><annotation encoding="application/x-tex">\mathbf{p}</annotation></semantics></math>:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi>p</mi><mi>i</mi></msub></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow></munderover><munderover><mo>∑</mo><mrow><mi>l</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></munderover><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒑</mi><mo>,</mo><mi>n</mi><msub><mo stretchy="false" form="postfix">)</mo><mrow><mi>k</mi><mi>l</mi></mrow></msub></mrow></mfrac><mo>⋅</mo><mfrac><mrow><mi>∂</mi><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒑</mi><mo>,</mo><mi>n</mi><msub><mo stretchy="false" form="postfix">)</mo><mrow><mi>k</mi><mi>l</mi></mrow></msub></mrow><mrow><mi>∂</mi><msub><mi>p</mi><mi>i</mi></msub></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow></munderover><munderover><mo>∑</mo><mrow><mi>l</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></munderover><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi>r</mi><mi>k</mi></msub></mrow></mfrac><msub><mi>q</mi><mi>l</mi></msub><mo>⋅</mo><msub><mi>δ</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>−</mo><mi>l</mi><mo stretchy="false" form="postfix">)</mo><mi>i</mi></mrow></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><munderover><mo>∑</mo><mrow><mi>l</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></munderover><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi>r</mi><mrow><mi>i</mi><mo>+</mo><mi>l</mi></mrow></msub></mrow></mfrac><msub><mi>q</mi><mi>l</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \frac{\partial f}{\partial p_i} &amp;= \sum_{k=0}^{m-1} \sum_{l=0}^{n-1} \frac{\partial f}{\partial \mathrm{band}(\mathbf{p}, n)_{kl}} \cdot \frac{\partial \mathrm{band}(\mathbf{p}, n)_{kl}}{\partial p_i} \\
+            &amp;= \sum_{k=0}^{m-1} \sum_{l=0}^{n-1} \frac{\partial f}{\partial r_k}q_l \cdot \delta_{(k-l)i} \\
+            &amp;= \sum_{l=0}^{n-1} \frac{\partial f}{\partial r_{i + l}}q_l
+            \end{aligned}</annotation></semantics></math></p>
+            <p>where
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>δ</mi><annotation encoding="application/x-tex">\delta</annotation></semantics></math>
+            is the Kronecker delta
+            (i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>δ</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\delta_{ij} = 1</annotation></semantics></math>
+            where
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i = j</annotation></semantics></math>
+            and zero elsewhere). We can recognize this as corresponding
+            to the matrix form:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒑</mi></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒒</mi><mo>,</mo><mi>m</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>⊤</mi></msup><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒓</mi></mrow></mfrac><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \frac{\partial f}{\partial \mathbf{p}} &amp;= \mathrm{band}(\mathbf{q}, m)^\top \frac{\partial f}{\partial \mathbf{r}}.
+            \end{aligned}</annotation></semantics></math></p>
+            <p>Notice that both gradients are banded matrix-vector
+            products too, albeit with a transpose in the mix. To
+            summarize, we have three functions to implement:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi mathvariant="bold-italic">𝒓</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒑</mi><mo>,</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mi mathvariant="bold-italic">𝒒</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒑</mi></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒒</mi><mo>,</mo><mi>m</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>⊤</mi></msup><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒓</mi></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒒</mi></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒑</mi><mo>,</mo><mi>n</mi><msup><mo stretchy="false" form="postfix">)</mo><mi>⊤</mi></msup><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒓</mi></mrow></mfrac><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \mathbf{r} &amp;= \mathrm{band}(\mathbf{p}, n)\mathbf{q} \\
+            \frac{\partial f}{\partial \mathbf{p}} &amp;= \mathrm{band}(\mathbf{q}, m)^\top \frac{\partial f}{\partial \mathbf{r}} \\
+            \frac{\partial f}{\partial \mathbf{q}} &amp;= \mathrm{band}(\mathbf{p}, n)^\top \frac{\partial f}{\partial \mathbf{r}}.
+            \end{aligned}</annotation></semantics></math></p>
+            <h2
+            id="programmatic-representations-of-banded-matrices">Programmatic
+            representations of banded matrices</h2>
+            <p>Linear algebra libraries often provide support for banded
+            matrices. BLAS provides the <code>gbmv</code> function
+            family, as in <a
+            href="https://docs.nvidia.com/cuda/cublas/index.html#cublas-t-gbmv">cuBLAS</a>.
+            Unfortunately there is a catch and they cannot be used
+            here!</p>
+            <p>A matrix in column-major order is represented in BLAS by
+            giving a base pointer to the first element in memory
+            (e.g. <code>A</code>), and a <em>stride</em> or
+            <em>lead</em> between rows (e.g. <code>ldA</code>). The
+            element in the <code>i</code>th row and <code>j</code>th
+            column is then <code>A[i + j*ldA]</code>. A banded matrix in
+            column-major order is represented by storing only the
+            non-zero elements, and additionally providing the number of
+            nonzero lower (e.g. <code>kl</code>) and upper
+            (e.g. <code>ku</code>) subdiagonals. The notation
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">b</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo>,</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{band}(\mathbf{x}, n)</annotation></semantics></math>,
+            with
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒙</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>
+            of length
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>,
+            corresponds to <code>A = x</code>, <code>ldA = 0</code>,
+            <code>kl = m - 1</code>, and <code>ku = 0</code>.</p>
+            <p>The catch? The BLAS interface requires that
+            <code>ldA &gt;= max(1, m)</code>, and so we cannot use
+            <code>ldA = 0</code>. It will produce an error.</p>
+            <p>We will need a custom kernel!</p>
+            <div class="note">
+            <p><strong>BLAS with arbitrary strides?</strong></p>
+            <p>If BLAS could support arbitrary strides, we could simply
+            use the <code>gbmv</code> family of functions here. It would
+            also enable other tricks that involve repeating elements,
+            such as a base pointer to an allocation with a single
+            element, with the stride set to zero, to represent a vector
+            with a repeating element of any length. The challenge would
+            be for BLAS kernels to recognize and optimize for these
+            cases of repeated elements. Even more of a challenge would
+            be gradients of such functions, as repeated elements in a
+            forward pass involve reductions during a backward pass.</p>
+            </div>
+            <div class="note">
+            <p><strong>Eigen supports arbitrary strides</strong></p>
+            <p><a href="https://eigen.tuxfamily.org">Eigen</a> supports
+            arbitrary strides, including zero and negative, but not
+            banded matrices. A workaround is to break the banded matrix
+            into lower triangular (top) and upper triangular (bottom)
+            sections and perform the multiplication block-wise.</p>
+            </div>
+            <h2 id="custom-cuda-kernels">Custom CUDA kernels</h2>
+            <h3 id="version-0-starting-out">Version 0: Starting out</h3>
+            <p>For illustration, draw out the product for
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">m = 6</annotation></semantics></math>
+            and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">n = 4</annotation></semantics></math>.
+            The length of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒓</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>
+            will be
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>+</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo>=</mo><mn>9</mn></mrow><annotation encoding="application/x-tex">m + n - 1 = 9</annotation></semantics></math>.</p>
+            <p><img src="1.svg" class="invert" /></p>
+            <p>The numbers are not representing the values of the
+            elements here, but rather the associated
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+            and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>.
+            We can see that the dot product of each row of the matrix
+            with the vector
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒒</mi><annotation encoding="application/x-tex">\mathbf{q}</annotation></semantics></math>
+            is a summation of the probabilities of all pairs of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+            and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+            that add to the same outcome. The operation is commutative,
+            so we will assume without loss of generality that
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>≥</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">m \geq n</annotation></semantics></math>
+            (we can swap the order of arguments if this is not the
+            case). This minimizes the inner dimension of the matrix
+            multiplication.</p>
+            <p>As a first attempt, we can assign one thread to compute
+            each element of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒓</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>,
+            so
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>+</mo><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m + n - 1</annotation></semantics></math>
+            threads in total:</p>
+            <div class="sourceCode" id="cb1"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel_convolve_v0<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* element of r for which thread is responsible */</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> threadIdx<span class="op">.</span>x <span class="op">+</span> blockIdx<span class="op">.</span>x<span class="op">*</span>blockDim<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> m <span class="op">+</span> n <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> result <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span><span class="dv">0</span> <span class="op">&lt;=</span> i <span class="op">-</span> j <span class="op">&amp;&amp;</span> i <span class="op">-</span> j <span class="op">&lt;</span> m<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        result <span class="op">+=</span> p<span class="op">[(</span>i <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q<span class="op">[</span>j<span class="op">*</span>incq<span class="op">];</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    r<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> result<span class="op">;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>This is a perfectly fine first attempt. However, it
+            leaves threads with different amounts of work, according to
+            how many times the <code>if</code> statement within the
+            <code>for</code> loop rings true. For thread 0 it is true
+            only once, while for thread 3 it is true four times. These
+            numbers correspond to the number of nonzero multiplications
+            that must be performed to compute each element of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒓</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>
+            via the banded matrix-vector multiplication.</p>
+            <p>This is a form of <a
+            href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#simt-architecture">warp
+            divergence</a> to be avoided if possible.</p>
+            <h3 id="version-1-equalizing-workload-per-thread">Version 1:
+            Equalizing workload per thread</h3>
+            <p>Consider the following transformation of the problem:</p>
+            <p><img src="2.svg" class="invert" /></p>
+            <p>We now reduce from
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>+</mo><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m + n - 1</annotation></semantics></math>
+            to just
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+            threads, but now threads
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">0,\ldots,n-2</annotation></semantics></math>
+            compute two elements of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒓</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>
+            instead of just one. This leaves all threads with the same
+            number of multiplications to do.</p>
+            <div class="sourceCode" id="cb2"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel_convolve_v1<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* element of r for which thread is responsible */</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> threadIdx<span class="op">.</span>x <span class="op">+</span> blockIdx<span class="op">.</span>x<span class="op">*</span>blockDim<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> m<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> result1 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">,</span> result2 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span><span class="dv">0</span> <span class="op">&lt;=</span> i <span class="op">-</span> j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        result1 <span class="op">+=</span> p<span class="op">[(</span>i <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q<span class="op">[</span>j<span class="op">*</span>incq<span class="op">];</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        result2 <span class="op">+=</span> p<span class="op">[(</span>m <span class="op">+</span> i <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q<span class="op">[</span>j<span class="op">*</span>incq<span class="op">];</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    r<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> result1<span class="op">;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> n <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      r<span class="op">[</span>i <span class="op">+</span> m<span class="op">]</span> <span class="op">=</span> result2<span class="op">;</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <div class="secondary">
+            <p><strong>Relationship to the previous attempt</strong></p>
+            <p>This kernel is very similar to the <a
+            href="/blog/fast-discrete-enumeration">previous attempt</a>;
+            the banded matrix merely offers a different perspective on
+            the same computation. An assignment of threads, either one-
+            or two-dimensional, gives:</p>
+            <p><img src="3.svg" class="invert" /></p>
+            <p>The indexing is the same as before. In the
+            one-dimensional case, thread
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+            maps to element
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math>
+            with:</p>
+            <p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>x</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="prefix">⌊</mo><mi>k</mi><mi>/</mi><mn>4</mn><mo stretchy="false" form="postfix">⌋</mo><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>y</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>k</mi><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            x &amp;= (\lfloor k/4 \rfloor - (k \bmod 4)) \bmod 4 \\
+            y &amp;= k \bmod 4.
+            \end{aligned}</annotation></semantics></math>$</p>
+            <p>Alternatively, with two-dimensional thread indices,
+            thread
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics></math>,
+            with
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mo stretchy="false" form="prefix">⌊</mo><mi>k</mi><mi>/</mi><mn>4</mn><mo stretchy="false" form="postfix">⌋</mo></mrow><annotation encoding="application/x-tex">i = \lfloor k/4 \rfloor</annotation></semantics></math>
+            and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi><mo>=</mo><mi>k</mi><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow></mrow><annotation encoding="application/x-tex">j = k \bmod 4</annotation></semantics></math>,
+            maps to element
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math>,
+            with:</p>
+            <p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>x</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>−</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>y</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>j</mi><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            x &amp;= (j - i) \bmod 4 \\
+            y &amp;= j.
+            \end{aligned}</annotation></semantics></math>$</p>
+            <p>However, in the previous approach, multiple threads
+            contributed to each output element, necessitating
+            coordination of threads to aggregate results using atomic
+            operations. Here we have only one thread computing each
+            output element, meaning fewer threads and reduced
+            parallelism, but no need for coordination.</p>
+            </div>
+            <h3 id="version-2-using-shared-memory">Version 2: Using
+            shared memory</h3>
+            <p>Each thread reads all of <code>q</code> from device
+            memory. We can use shared memory to read in <code>q</code>
+            only once per thread block, so that all threads in the block
+            can share the read. Doing so requires some careful use of
+            <code>__syncthreads()</code> to ensure that reads and writes
+            to shared memory are appropriately sequenced between
+            threads. All threads must encounter the
+            <code>__syncthreads()</code> calls, so the large
+            <code>if (i &lt; m) { ... }</code> is broken into finer
+            grain controls.</p>
+            <div class="sourceCode" id="cb3"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel_convolve_v2<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">extern</span> __shared__ <span class="dt">float</span> q_shared<span class="op">[];</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* element of r for which thread is responsible */</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> threadIdx<span class="op">.</span>x <span class="op">+</span> blockIdx<span class="op">.</span>x<span class="op">*</span>blockDim<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span> result1 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">,</span> result2 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> base_j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> base_j <span class="op">&lt;</span> n<span class="op">;</span> base_j <span class="op">+=</span> blockDim<span class="op">.</span>x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> j <span class="op">=</span> threadIdx<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    __syncthreads<span class="op">();</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    q_shared<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> <span class="op">(</span>base_j <span class="op">+</span> j <span class="op">&lt;</span> n<span class="op">)</span> <span class="op">?</span> q<span class="op">[(</span>base_j <span class="op">+</span> j<span class="op">)*</span>incq<span class="op">]</span> <span class="op">:</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    __syncthreads<span class="op">();</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span>j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> blockDim<span class="op">.</span>x<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span><span class="dv">0</span> <span class="op">&lt;=</span> i <span class="op">-</span> base_j <span class="op">-</span> j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        result1 <span class="op">+=</span> p<span class="op">[(</span>i <span class="op">-</span> base_j <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q_shared<span class="op">[</span>j<span class="op">];</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        result2 <span class="op">+=</span> p<span class="op">[(</span>m <span class="op">+</span> i <span class="op">-</span> base_j <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q_shared<span class="op">[</span>j<span class="op">];</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> m<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    r<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> result1<span class="op">;</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> n <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      r<span class="op">[</span>i <span class="op">+</span> m<span class="op">]</span> <span class="op">=</span> result2<span class="op">;</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <h3 id="version-3-using-more-shared-memory">Version 3: Using
+            more shared memory</h3>
+            <p>We can go further and use shared memory for the read of
+            <code>p</code> too. The read pattern here is more
+            complicated. We use the modulo operator (<code>%</code>) so
+            as to never read outside the range of <code>p</code>, but
+            rely on multiplying by <code>0.0f</code> when outside the
+            range of <code>q</code> to ensure correctness.</p>
+            <div class="sourceCode" id="cb4"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel_convolve_v3<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">extern</span> __shared__ <span class="dt">float</span> shared<span class="op">[];</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span><span class="op">*</span> q_shared <span class="op">=</span> shared<span class="op">;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span><span class="op">*</span> p_shared <span class="op">=</span> q_shared <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>blockDim<span class="op">.</span>x<span class="op">;</span>  <span class="co">// permits -ve indices</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> threadIdx<span class="op">.</span>x<span class="op">;</span>  </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> j <span class="op">=</span> threadIdx<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span> result1 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">,</span> result2 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> base_i <span class="op">=</span> blockIdx<span class="op">.</span>x<span class="op">*</span>blockDim<span class="op">.</span>x<span class="op">,</span> base_j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> base_j <span class="op">&lt;</span> n<span class="op">;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      base_i <span class="op">-=</span> blockDim<span class="op">.</span>x<span class="op">,</span> base_j <span class="op">+=</span> blockDim<span class="op">.</span>x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    __syncthreads<span class="op">();</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    q_shared<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> <span class="op">(</span>base_j <span class="op">+</span> j <span class="op">&lt;</span> n<span class="op">)</span> <span class="op">?</span> q<span class="op">[(</span>base_j <span class="op">+</span> j<span class="op">)*</span>incq<span class="op">]</span> <span class="op">:</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    p_shared<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> p<span class="op">[((</span>base_i <span class="op">+</span> i <span class="op">+</span> m<span class="op">)</span> <span class="op">%</span> m<span class="op">)*</span>incp<span class="op">];</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    p_shared<span class="op">[</span>i <span class="op">-</span> blockDim<span class="op">.</span>x<span class="op">]</span> <span class="op">=</span> p<span class="op">[((</span>base_i <span class="op">+</span> i <span class="op">-</span> blockDim<span class="op">.</span>x <span class="op">+</span> m<span class="op">)</span> <span class="op">%</span> m<span class="op">)*</span>incp<span class="op">];</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    __syncthreads<span class="op">();</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> blockDim<span class="op">.</span>x<span class="op">;</span> <span class="op">++</span>k<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span><span class="dv">0</span> <span class="op">&lt;=</span> base_i <span class="op">+</span> i <span class="op">-</span> k<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        result1 <span class="op">+=</span> p_shared<span class="op">[</span>i <span class="op">-</span> k<span class="op">]*</span>q_shared<span class="op">[</span>k<span class="op">];</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        result2 <span class="op">+=</span> p_shared<span class="op">[</span>i <span class="op">-</span> k<span class="op">]*</span>q_shared<span class="op">[</span>k<span class="op">];</span>        </span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* element of r for which thread is responsible */</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  i <span class="op">=</span> threadIdx<span class="op">.</span>x <span class="op">+</span> blockIdx<span class="op">.</span>x<span class="op">*</span>blockDim<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> m<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    r<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> result1<span class="op">;</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> n <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>      r<span class="op">[</span>i <span class="op">+</span> m<span class="op">]</span> <span class="op">=</span> result2<span class="op">;</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <h3 id="version-4-increasing-parallelism">Version 4:
+            Increasing parallelism</h3>
+            <p>As it stands, the kernel offers
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>-way
+            parallelism by assigning one or two elements to each thread.
+            In many cases
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+            will be insufficient to occupy the device. We can scale this
+            up by assigning those one or two elements to a whole warp of
+            32 threads instead, giving
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>32</mn><mi>m</mi></mrow><annotation encoding="application/x-tex">32m</annotation></semantics></math>-way
+            parallelism. In doing so, however, we must also handle 32
+            times fewer output elements per thread block, and so reduce
+            the benefits of the previous shared memory optimizations (by
+            reducing the number of output elements that share each
+            read).</p>
+            <p>It is likely that this version of the kernel will only
+            offer improvements at small problem sizes for which the
+            other versions do not occupy the whole GPU.</p>
+            <p>The kernel makes use of <a
+            href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#warp-shuffle-functions">warp
+            shuffle functions</a> to aggregate the partial sum computed
+            by each thread in a warp to a total sum across the warp.</p>
+            <div class="sourceCode" id="cb5"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel_convolve_v4<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">(</span>blockDim<span class="op">.</span>x <span class="op">==</span> warpSize <span class="op">&amp;&amp;</span> gridDim<span class="op">.</span>x <span class="op">==</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">extern</span> __shared__ <span class="dt">float</span> shared<span class="op">[];</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span><span class="op">*</span> q_shared <span class="op">=</span> shared<span class="op">;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span><span class="op">*</span> p_shared <span class="op">=</span> q_shared <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>warpSize<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">;</span>  <span class="co">// permits -ve indices</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> threadIdx<span class="op">.</span>y<span class="op">*</span>warpSize <span class="op">+</span> threadIdx<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> j <span class="op">=</span> threadIdx<span class="op">.</span>y<span class="op">*</span>warpSize <span class="op">+</span> threadIdx<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> l <span class="op">=</span> threadIdx<span class="op">.</span>y<span class="op">;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span> result1 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">,</span> result2 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> base_i <span class="op">=</span> blockIdx<span class="op">.</span>y<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">,</span> base_j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> base_j <span class="op">&lt;</span> n<span class="op">;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      base_i <span class="op">-=</span> warpSize<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">,</span> base_j <span class="op">+=</span> warpSize<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    __syncthreads<span class="op">();</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    q_shared<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> <span class="op">(</span>base_j <span class="op">+</span> j <span class="op">&lt;</span> n<span class="op">)</span> <span class="op">?</span> q<span class="op">[(</span>base_j <span class="op">+</span> j<span class="op">)*</span>incq<span class="op">]</span> <span class="op">:</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    p_shared<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> p<span class="op">[((</span>base_i <span class="op">+</span> i <span class="op">+</span> m<span class="op">)</span> <span class="op">%</span> m<span class="op">)*</span>incp<span class="op">];</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    p_shared<span class="op">[</span>i <span class="op">-</span> warpSize<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">]</span> <span class="op">=</span> p<span class="op">[((</span>base_i <span class="op">+</span> i <span class="op">-</span> warpSize<span class="op">*</span>blockDim<span class="op">.</span>y <span class="op">+</span> m<span class="op">)</span> <span class="op">%</span> m<span class="op">)*</span>incp<span class="op">];</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    __syncthreads<span class="op">();</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> threadIdx<span class="op">.</span>x<span class="op">;</span> k <span class="op">&lt;</span> warpSize<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">;</span> k <span class="op">+=</span> warpSize<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span><span class="dv">0</span> <span class="op">&lt;=</span> base_i <span class="op">+</span> l <span class="op">-</span> k<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        result1 <span class="op">+=</span> p_shared<span class="op">[</span>l <span class="op">-</span> k<span class="op">]*</span>q_shared<span class="op">[</span>k<span class="op">];</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        result2 <span class="op">+=</span> p_shared<span class="op">[</span>l <span class="op">-</span> k<span class="op">]*</span>q_shared<span class="op">[</span>k<span class="op">];</span>        </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* sum across threads of warp, using butterfly sum */</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">16</span><span class="op">;</span> k <span class="op">&gt;=</span> <span class="dv">1</span><span class="op">;</span> k <span class="op">/=</span> <span class="dv">2</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    result1 <span class="op">+=</span> __shfl_xor_sync<span class="op">(</span><span class="bn">0xffffffff</span><span class="op">,</span> result1<span class="op">,</span> k<span class="op">,</span> warpSize<span class="op">);</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    result2 <span class="op">+=</span> __shfl_xor_sync<span class="op">(</span><span class="bn">0xffffffff</span><span class="op">,</span> result2<span class="op">,</span> k<span class="op">,</span> warpSize<span class="op">);</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* element of r for which warp is responsible */</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  i <span class="op">=</span> threadIdx<span class="op">.</span>y <span class="op">+</span> blockIdx<span class="op">.</span>y<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">;</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* first thread in each warp sets the final result */</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> m <span class="op">&amp;&amp;</span> threadIdx<span class="op">.</span>x <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    r<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> result1<span class="op">;</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> n <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>      r<span class="op">[</span>i <span class="op">+</span> m<span class="op">]</span> <span class="op">=</span> result2<span class="op">;</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <h3 id="launching-the-kernels">Launching the kernels</h3>
+            <p>When launching to kernels we enforce that
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>≥</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">m \geq n</annotation></semantics></math>
+            by swapping the order of the arguments if necessary. For
+            example, a function to call version 3 might look like:</p>
+            <div class="sourceCode" id="cb6"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> convolve_v3<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">const</span> <span class="dt">float</span> <span class="op">*</span>p1 <span class="op">=</span> p<span class="op">,</span> <span class="op">*</span>q1 <span class="op">=</span> q<span class="op">;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> incp1 <span class="op">=</span> incp<span class="op">,</span> incq1 <span class="op">=</span> incq<span class="op">;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> m1 <span class="op">=</span> m<span class="op">,</span> n1 <span class="op">=</span> n<span class="op">;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>n <span class="op">&gt;</span> m<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* swap to put largest vector on the left */</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    p1 <span class="op">=</span> q<span class="op">;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    q1 <span class="op">=</span> p<span class="op">;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    incp1 <span class="op">=</span> incq<span class="op">;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    incq1 <span class="op">=</span> incp<span class="op">;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    m1 <span class="op">=</span> n<span class="op">;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    n1 <span class="op">=</span> m<span class="op">;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  dim3 block<span class="op">(</span>BLOCK_SIZE<span class="op">);</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  dim3 grid<span class="op">((</span>m1 <span class="op">+</span> block<span class="op">.</span>x <span class="op">-</span> <span class="dv">1</span><span class="op">)/</span>block<span class="op">.</span>x<span class="op">);</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">size_t</span> shared <span class="op">=</span> <span class="dv">3</span><span class="op">*</span>block<span class="op">.</span>x<span class="op">*</span><span class="kw">sizeof</span><span class="op">(</span><span class="dt">float</span><span class="op">);</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  kernel_convolve_v3<span class="op">&lt;&lt;&lt;</span>grid<span class="op">,</span>block<span class="op">,</span>shared<span class="op">&gt;&gt;&gt;(</span>m1<span class="op">,</span> n1<span class="op">,</span> p1<span class="op">,</span> incp1<span class="op">,</span> q1<span class="op">,</span> incq1<span class="op">,</span> r<span class="op">,</span> incr<span class="op">);</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <h3 id="gradient-kernels">Gradient kernels</h3>
+            <p>Recall that the gradients require a banded matrix-vector
+            product where the matrix is transposed. The implementation
+            is similar to the above kernels and left as an exercise.</p>
+            <h2 id="results">Results</h2>
+            <p>We run the kernels on an Nvidia RTX4000 on <a
+            href="https://console.paperspace.com/signup?R=0KV1IKZ">Paperspace</a>.
+            Timings for each kernel version are provided in microseconds
+            (μs), averaged over 100 repetitions, at problem sizes of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mi>n</mi><mo>=</mo><mn>65536</mn></mrow><annotation encoding="application/x-tex">m = n = 65536</annotation></semantics></math>
+            and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mi>n</mi><mo>=</mo><mn>2048</mn></mrow><annotation encoding="application/x-tex">m = n = 2048</annotation></semantics></math>.
+            Lower is better (faster).</p>
+            <table>
+            <thead>
+            <tr>
+            <th>Kernel</th>
+            <th>Description</th>
+            <th style="text-align: right;">μs@65536</th>
+            <th style="text-align: right;">μs@2048</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>Version 0</td>
+            <td>Starting out</td>
+            <td style="text-align: right;">21041</td>
+            <td style="text-align: right;">122</td>
+            </tr>
+            <tr>
+            <td>Version 1</td>
+            <td>Equalizing workload per thread</td>
+            <td style="text-align: right;">16317</td>
+            <td style="text-align: right;">133</td>
+            </tr>
+            <tr>
+            <td>Version 2</td>
+            <td>Using shared memory</td>
+            <td style="text-align: right;">12987</td>
+            <td style="text-align: right;">130</td>
+            </tr>
+            <tr>
+            <td>Version 3</td>
+            <td>Using more shared memory</td>
+            <td style="text-align: right;"><strong>7274</strong></td>
+            <td style="text-align: right;">50</td>
+            </tr>
+            <tr>
+            <td>Version 4</td>
+            <td>Increasing parallelism</td>
+            <td style="text-align: right;">11842</td>
+            <td style="text-align: right;"><strong>27</strong></td>
+            </tr>
+            </tbody>
+            </table>
+            <p>We see that for the larger problem size (65536), version
+            3 provides the best performance, while for the smaller
+            problem size (2048), version 4 provides the best
+            performance. This is as expected. Version 3 maximizes use of
+            shared memory and so outperforms prior versions. Version 4
+            further increases parallelism, but must reduce the sharing
+            of reads to do so. This tradeoff in version 4 is worthwhile
+            at small problem sizes where version 3 does not occupy the
+            GPU, but is not worthwhile at larger problem sizes where it
+            does occupy the GPU.</p>
+            <h2 id="further-work">Further work</h2>
+            <p>Can <a
+            href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#pipeline-primitives-interface">pipeline
+            primitives</a> improve the shared memory kernels
+            further?</p>
+    </div>
+  </article>
+</main>
+
+<div class="w-100 mt-5" style="clear:both;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Feeds</h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Everything
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/blog.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Blog only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/software.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Software only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/research.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Research only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/photography.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Photography only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/creative.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Creative only
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Newsletter</h1>
+      <p><small>Subscribe to the newletter for announcements of new posts.</small></p>
+      <form action="https://indii.us11.list-manage.com/subscribe/post?u=6c39d985ee6d7e2a4f83f52c2&amp;id=6022e2b633&amp;f_id=00c4d7e3f0" method="post" target="_self" novalidate="">
+        <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="Email" value="" class="form-control w-100 my-2">
+        <input type="submit" name="subscribe" value="Subscribe" class="btn btn-primary w-100 my-2">
+
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="hidden" name="tags" value="10280626">
+          <input type="text" name="b_6c39d985ee6d7e2a4f83f52c2_6022e2b633" tabindex="-1" value="">
+        </div>
+      </form>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence
+Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

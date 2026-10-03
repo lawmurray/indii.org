@@ -1,0 +1,14 @@
+site:
+  name: Lawrence Murray
+  author: Lawrence Murray
+  url: https://indii.org
+  path: /
+  description: Personal site of Lawrence Murray, collating blog articles, scientific research, software artifacts, and creative outputs
+categories:
+  - dev
+  - software
+  - research
+  - photography
+  - graphics
+  - drawing
+  - writing

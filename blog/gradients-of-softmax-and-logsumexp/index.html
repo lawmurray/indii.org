@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Gradients of Softmax and Logsumexp</title>
+
+    <meta name="description" content="Essential functions for categorical distributions and attention mechanisms in machine learning">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Gradients of Softmax and Logsumexp">
+    <meta name="twitter:description" content="Essential functions for categorical distributions and attention mechanisms in machine learning">
+    
+
+    <meta property="og:title" content="Gradients of Softmax and Logsumexp">
+    <meta property="og:description" content="Essential functions for categorical distributions and attention mechanisms in machine learning">
+    <meta property="og:url" content="https://indii.org/blog/gradients-of-softmax-and-logsumexp/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="canonical" href="https://indii.org/blog/gradients-of-softmax-and-logsumexp/">
+    <link rel="icon" href="/assets/favicon.svg?v=2">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.min.js" async></script>
+  </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feed
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container text-center align-center w-75 mb-5">
+      
+      <div class="category">dev</div>
+      <h1 class="mt-0">Gradients of Softmax and Logsumexp</h1>
+      <p class="h5"><strong>Essential functions for categorical distributions and attention mechanisms in machine learning</strong></p>
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      </header>
+            <p class="date">
+      <time pubdate datetime="2024-05-04" title="2024-05-04">2024-05-04</time>
+      
+    </p>
+        
+    <div class="body">
+            <p>Two mathematical functions that commonly arise in machine
+            learning models are <em>softmax</em> and <em>logsumexp</em>.
+            They occur when dealing with categorical and multinomial
+            probability distributions, as well as in attention
+            mechanisms used in neural network architectures (such as the
+            transformer). The two functions are closely related in that
+            they both involve sums of exponentials, with similar
+            numerical considerations. In fact they are so closely
+            related that deriving the gradient of softmax involves (or
+            at least can involve) logsumexp, while the gradient of
+            logsumexp <em>is</em> softmax. This note serves as a quick
+            explanation of the functions as well as a derivation of
+            their gradients for the purposes of implementation.</p>
+                        <div class="toc">
+        <ul>
+        <li><a href="#logsumexp-and-softmax"
+        id="toc-logsumexp-and-softmax">Logsumexp and Softmax</a></li>
+        <li><a href="#gradient-of-logsumexp"
+        id="toc-gradient-of-logsumexp">Gradient of Logsumexp</a></li>
+        <li><a href="#gradient-of-softmax"
+        id="toc-gradient-of-softmax">Gradient of Softmax</a></li>
+        </ul>
+      </div>
+            <h2 id="logsumexp-and-softmax">Logsumexp and Softmax</h2>
+            <p>The two functions of interest are logsumexp and softmax,
+            defined as:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">x</mi><mi mathvariant="normal">p</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>:=</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><munder><mo>∑</mo><mi>i</mi></munder><mi mathvariant="normal">exp</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>:=</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><munder><mo>∑</mo><mi>i</mi></munder><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \mathrm{logsumexp}(\mathbf{x}) &amp; :=\log\left(\sum_{i}\exp(x_{i})\right)\\
+            \mathrm{softmax}(\mathbf{x}) &amp; :=\frac{\exp(\mathbf{x})}{\sum_{i}\exp(x_{i})}.
+            \end{aligned}</annotation></semantics></math></p>
+            <p>The first resolves to a scalar, whereas the second
+            resolves to a vector of the same length as
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒙</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>
+            (by
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\exp(\mathbf{x})</annotation></semantics></math>
+            we mean the exponential function applied to each element of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒙</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>).
+            The latter can be written in terms of the former as:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><munder><mo>∑</mo><mi>i</mi></munder><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mi>.</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi mathvariant="normal">log</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><munder><mo>∑</mo><mi>i</mi></munder><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo>−</mo><mi mathvariant="normal">log</mi><mrow><mo stretchy="true" form="prefix">(</mo><munder><mo>∑</mo><mi>i</mi></munder><mi mathvariant="normal">exp</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo>−</mo><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">x</mi><mi mathvariant="normal">p</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \mathrm{softmax}(\mathbf{x}) &amp; =\frac{\exp(\mathbf{x})}{\sum_{i}\exp(x_{i})}.\\
+             &amp; =\exp\left(\log\left(\frac{\exp(\mathbf{x})}{\sum_{i}\exp(x_{i})}\right)\right)\\
+             &amp; =\exp\left(\mathbf{x}-\log\left(\sum_{i}\exp(x_{i})\right)\right)\\
+             &amp; =\exp\left(\mathbf{x}-\mathrm{logsumexp}\left(\mathbf{x}\right)\right).
+            \end{aligned}</annotation></semantics></math></p>
+            <p>The two functions arise in several contexts, including
+            categorical and multinomial distributions (where
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒙</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>
+            is a vector of logarithms of unnormalized probabilities) and
+            attention mechanisms in neural network architectures (where
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒙</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>
+            is a vector of unnormalized attention weights).</p>
+            <p>When computing the softmax and logsumexp functions,
+            implementations are usually adapted from the above
+            definitions, rather than taking them exactly as written, for
+            reasons of numerical stability. The exponential function is
+            very sensitive to the scale of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒙</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>,
+            and in floating point arithmetic has a propensity to
+            underflow to zero for large negative arguments, and overflow
+            to infinity for large positive arguments. The effect is much
+            worse in single precision than double precision, and much
+            worse again in half precision—critical as these lower
+            precisions are commonly used in machine learning to reduce
+            compute time and memory use, especially on GPUs. To mitigate
+            the issue, observe that
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo>−</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{softmax}(\mathbf{x} - c)=\mathrm{softmax}(\mathbf{x})</annotation></semantics></math>
+            for any scalar
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+            (allowing the addition to broadcast the scalar). This can be
+            used to translate
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒙</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>
+            into a better range for numerical stability of the
+            exponential function. A common choice is to set
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+            to the maximum element of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒙</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>.
+            In practice the functions may then be computed as:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">x</mi><mi mathvariant="normal">p</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><munder><mo>∑</mo><mi>i</mi></munder><mi mathvariant="normal">exp</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>c</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>:=</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo>−</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><munder><mo>∑</mo><mi>i</mi></munder><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>c</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \mathrm{logsumexp}(\mathbf{x}) &amp; =\log\left(\sum_{i}\exp(x_{i}-c)\right)+c\\
+            \mathrm{softmax}(\mathbf{x}) &amp; :=\frac{\exp(\mathbf{x}-c)}{\sum_{i}\exp(x_{i}-c)}.
+            \end{aligned}</annotation></semantics></math></p>
+            <p>For the purposes of gradients, however, we can go back to
+            the original definitions. To simplify notation in what
+            follows, let
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝒔</mi><mo>=</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathbf{s}=\mathrm{softmax}(\mathbf{x})</annotation></semantics></math>
+            and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mo>=</mo><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">x</mi><mi mathvariant="normal">p</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">l=\mathrm{logsumexp}(\mathbf{x})</annotation></semantics></math>.</p>
+            <h2 id="gradient-of-logsumexp">Gradient of Logsumexp</h2>
+            <p>Element-wise, using the usual rule for derivatives of the
+            logarithmic function, we have:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>l</mi></mrow><mrow><mi>∂</mi><msub><mi>x</mi><mi>i</mi></msub></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mi>∂</mi><mrow><mi>∂</mi><msub><mi>x</mi><mi>i</mi></msub></mrow></mfrac><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><munder><mo>∑</mo><mi>j</mi></munder><mi mathvariant="normal">exp</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><munder><mo>∑</mo><mi>j</mi></munder><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>s</mi><mi>i</mi></msub><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \frac{\partial l}{\partial x_{i}} &amp; =\frac{\partial}{\partial x_{i}}\log\left(\sum_{j}\exp(x_{j})\right)\\
+             &amp; =\frac{\exp(x_{i})}{\sum_{j}\exp(x_{j})}\\
+             &amp; =s_{i}.
+            \end{aligned}</annotation></semantics></math></p>
+            <p>Written in vector form, this is:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>∂</mi><mi>l</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒙</mi></mrow></mfrac><mo>=</mo><mi mathvariant="bold-italic">𝒔</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">\frac{\partial l}{\partial\mathbf{x}}=\mathbf{s}.</annotation></semantics></math></p>
+            <p>This is, the gradient of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">x</mi><mi mathvariant="normal">p</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{logsumexp}(\mathbf{x})</annotation></semantics></math>
+            is just
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathrm{softmax}(\mathbf{x})</annotation></semantics></math>.</p>
+            <h2 id="gradient-of-softmax">Gradient of Softmax</h2>
+            <p>Element-wise, using the property introduced above that
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo>−</mo><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">x</mi><mi mathvariant="normal">p</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathrm{softmax}(\mathbf{x})=\exp\left(\mathbf{x}-\mathrm{logsumexp}\left(\mathbf{x}\right)\right)</annotation></semantics></math>
+            (and so
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝒔</mi><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo>−</mo><mi>l</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathbf{s}=\exp(\mathbf{x}-l)</annotation></semantics></math>,
+            and so
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mi>i</mi></msub><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>l</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">s_{i}=\exp(x_{i}-l)</annotation></semantics></math>),
+            and the previously-derived
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∂</mi><mi>l</mi><mi>/</mi><mi>∂</mi><msub><mi>x</mi><mi>i</mi></msub><mo>=</mo><msub><mi>s</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\partial l/\partial x_{i}=s_{i}</annotation></semantics></math>,
+            we have:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><msub><mi>s</mi><mi>i</mi></msub></mrow><mrow><mi>∂</mi><msub><mi>x</mi><mi>j</mi></msub></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mi>∂</mi><mrow><mi>∂</mi><msub><mi>x</mi><mi>j</mi></msub></mrow></mfrac><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>l</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>l</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mi>i</mi><mo>=</mo><mi>j</mi></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mi>−</mi><msub><mi>s</mi><mi>j</mi></msub><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><mi>l</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mi>i</mi><mo>≠</mo><mi>j</mi></mtd></mtr></mtable></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><msub><mi>s</mi><mi>i</mi></msub></mtd><mtd columnalign="left" style="text-align: left"><mi>i</mi><mo>=</mo><mi>j</mi></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mi>−</mi><msub><mi>s</mi><mi>j</mi></msub><msub><mi>s</mi><mi>i</mi></msub></mtd><mtd columnalign="left" style="text-align: left"><mi>i</mi><mo>≠</mo><mi>j</mi><mi>.</mi></mtd></mtr></mtable></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \frac{\partial s_{i}}{\partial x_{j}} &amp; =\frac{\partial}{\partial x_{j}}\exp\left(x_{i}-l\right)\\
+             &amp; =\begin{cases}
+            \left(1-s_{j}\right)\exp\left(x_{i}-l\right) &amp; i=j\\
+            -s_{j}\exp\left(x_{i}-l\right) &amp; i\neq j
+            \end{cases}\\
+             &amp; =\begin{cases}
+            (1-s_{j})s_{i} &amp; i=j\\
+            -s_{j}s_{i} &amp; i\neq j.
+            \end{cases}
+            \end{aligned}</annotation></semantics></math></p>
+            <p>We can write this as a matrix of all-pairs partial
+            derivatives (the Jacobian) as:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑱</mi><mo>:=</mo><mi mathvariant="bold-italic">𝑰</mi><mo>−</mo><mi mathvariant="bold-italic">𝒔</mi><msup><mi mathvariant="bold-italic">𝒔</mi><mi>⊤</mi></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">\mathbf{J}:=\mathbf{I}-\mathbf{s}\mathbf{s}^{\top}.</annotation></semantics></math></p>
+            <p>According to the application, we may never need to
+            compute this matrix explicitly. A typical use case is
+            computing gradients of a scalar function with respect to
+            some parameters of that function. In machine learning,
+            during the training of a model, that scalar function is a
+            loss function, and reverse-mode automatic differentiation is
+            used to backpropagate losses onto parameters for the next
+            gradient update. Let
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>
+            denote such a scalar function and let
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∂</mi><mi>f</mi><mi>/</mi><mi>∂</mi><mi mathvariant="bold-italic">𝒔</mi></mrow><annotation encoding="application/x-tex">\partial f/\partial\mathbf{s}</annotation></semantics></math>
+            be given (i.e. working backward from a loss given by
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics></math>,
+            reverse mode automatic differentiation has arrived at the
+            output of the softmax, for which the gradient is
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∂</mi><mi>f</mi><mi>/</mi><mi>∂</mi><mi mathvariant="bold-italic">𝒔</mi></mrow><annotation encoding="application/x-tex">\partial f/\partial\mathbf{s}</annotation></semantics></math>);
+            we can write:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi>x</mi><mi>i</mi></msub></mrow></mfrac><mo>=</mo><munder><mo>∑</mo><mi>j</mi></munder><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi>s</mi><mi>j</mi></msub></mrow></mfrac><mo>⋅</mo><mfrac><mrow><mi>∂</mi><msub><mi>s</mi><mi>j</mi></msub></mrow><mrow><mi>∂</mi><msub><mi>x</mi><mi>i</mi></msub></mrow></mfrac><mo>,</mo></mrow><annotation encoding="application/x-tex">\frac{\partial f}{\partial x_{i}}=\sum_{j}\frac{\partial f}{\partial s_{j}}\cdot\frac{\partial s_{j}}{\partial x_{i}},</annotation></semantics></math></p>
+            <p>which in matrix form is:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒙</mi></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi mathvariant="bold-italic">𝑱</mi><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒔</mi></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝑰</mi><mo>−</mo><mi mathvariant="bold-italic">𝒔</mi><msup><mi mathvariant="bold-italic">𝒔</mi><mi>⊤</mi></msup><mo stretchy="false" form="postfix">)</mo><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒔</mi></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒔</mi></mrow></mfrac><mo>−</mo><mi mathvariant="bold-italic">𝒔</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi mathvariant="bold-italic">𝒔</mi><mi>⊤</mi></msup><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒔</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \frac{\partial f}{\partial\mathbf{x}} &amp; =\mathbf{J}\frac{\partial f}{\partial\mathbf{s}}\\
+             &amp; =(\mathbf{I}-\mathbf{s}\mathbf{s}^{\top})\frac{\partial f}{\partial\mathbf{s}}\\
+             &amp; =\frac{\partial f}{\partial\mathbf{s}}-\mathbf{s}\left(\mathbf{s}^{\top}\frac{\partial f}{\partial\mathbf{s}}\right).
+            \end{aligned}</annotation></semantics></math></p>
+            <p>The last line is a more efficient way of computing the
+            gradient than the first line, in both time and memory, as it
+            avoids computing the whole Jacobian matrix.</p>
+    </div>
+  </article>
+</main>
+
+<div class="w-100 mt-5" style="clear:both;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Feeds</h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Everything
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/blog.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Blog only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/software.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Software only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/research.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Research only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/photography.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Photography only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/creative.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Creative only
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Newsletter</h1>
+      <p><small>Subscribe to the newletter for announcements of new posts.</small></p>
+      <form action="https://indii.us11.list-manage.com/subscribe/post?u=6c39d985ee6d7e2a4f83f52c2&amp;id=6022e2b633&amp;f_id=00c4d7e3f0" method="post" target="_self" novalidate="">
+        <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="Email" value="" class="form-control w-100 my-2">
+        <input type="submit" name="subscribe" value="Subscribe" class="btn btn-primary w-100 my-2">
+
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="hidden" name="tags" value="10280626">
+          <input type="text" name="b_6c39d985ee6d7e2a4f83f52c2_6022e2b633" tabindex="-1" value="">
+        </div>
+      </form>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence
+Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

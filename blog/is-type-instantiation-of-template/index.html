@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>C++: Check if a type is an instantiation of a given class template</title>
+
+    <meta name="description" content="How to implement an <code>is_instance_of</code> type trait">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="C++: Check if a type is an instantiation of a given class template">
+    <meta name="twitter:description" content="How to implement an <code>is_instance_of</code> type trait">
+    <meta name="twitter:image" content="/assets/cpp.png">
+
+    <meta property="og:title" content="C++: Check if a type is an instantiation of a given class template">
+    <meta property="og:description" content="How to implement an <code>is_instance_of</code> type trait">
+    <meta property="og:url" content="https://indii.org/blog/is-type-instantiation-of-template/">
+    <meta property="og:image" content="/assets/cpp.png">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="canonical" href="https://indii.org/blog/is-type-instantiation-of-template/">
+    <link rel="icon" href="/assets/favicon.svg?v=2">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.min.js" async></script>
+  </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feed
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container text-center align-center w-75 mb-5">
+        <div class="py-2">
+      <img src="/assets/cpp.png" style="width:auto;max-height:128px;" class="img-fluid" width="128" height="128" alt="C++ programming language logo, white text ‘C++’ in shaded blue hexagon">
+      </div>
+      
+      <div class="category">dev</div>
+      <h1 class="mt-0">C++: Check if a type is an instantiation of a given class template</h1>
+      <p class="h5"><strong>How to implement an <code>is_instance_of</code> type trait</strong></p>
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      </header>
+            <p class="date">
+      <time pubdate datetime="2024-02-05" title="2024-02-05">2024-02-05</time>
+      
+    </p>
+        
+    <div class="body">
+            <p>A <a href="/blog/forwarding-references/">previous
+            post</a> mulled over some awkwardness in forwarding
+            references when it comes to function overload resolution. It
+            proposed a design pattern of merging all function overloads
+            into one, then using <code>if constexpr</code> within the
+            one function body to check for different argument types and
+            provide an implementation for each. The workhorse for
+            checking argument types was <code>std::is_same_v</code> to
+            check for exact matches between types, combined with
+            <code>std::decay_t</code> to relax const and ref
+            qualifications.</p>
+            <p>Here we go a little further. We can use any type traits
+            in the implementation of such a function. We needn’t be
+            restricted to <code>std::is_same_v</code> and exact
+            comparisons between types, and can use various <a
+            href="https://en.cppreference.com/w/cpp/header/type_traits">type
+            traits</a> of the C++ Standard Library. But there are other
+            checks we may wish to make that are not supported in the
+            standard library (as of C++23). One is whether a given type
+            is an instantiation of a given type template, e.g. whether
+            some type is an instantiation of <code>std::vector</code>,
+            or <code>std::list</code>, or whatever. We show how to do
+            that here, by implementing our own
+            <code>is_instance_of_v</code> type trait.</p>
+                        <div class="toc">
+        <ul>
+        <li><a href="#implementation"
+        id="toc-implementation">Implementation</a></li>
+        <li><a href="#demonstration"
+        id="toc-demonstration">Demonstration</a></li>
+        <li><a href="#summary" id="toc-summary">Summary</a></li>
+        </ul>
+      </div>
+            <h2 id="implementation">Implementation</h2>
+            <p>We would like to implement a type trait
+            <code>is_instance_of_v&lt;T,U&gt;</code> that, for a given
+            type <code>T</code> and type template <code>U</code>, gives
+            true if <code>T</code> is an instantiation of
+            <code>U</code>, and false otherwise. The following
+            illustrates the desired behavior:</p>
+            <div class="sourceCode" id="cb1"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// true</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span><span class="bu">std::</span>list<span class="op">&gt;;</span>  <span class="co">// false</span></span></code></pre></div>
+            <p>For templates with one template parameter, we could
+            implement <code>is_instance_of_v</code> as follows:</p>
+            <div class="sourceCode" id="cb2"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">,</span> <span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span><span class="op">&gt;</span> <span class="kw">class</span> U<span class="op">&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_instance_of_v <span class="op">=</span> <span class="bu">std::</span>false_type<span class="op">{};</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span><span class="op">&gt;</span> <span class="kw">class</span> U<span class="op">,</span> <span class="kw">class</span> V<span class="op">&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_instance_of_v<span class="op">&lt;</span>U<span class="op">&lt;</span>V<span class="op">&gt;,</span>U<span class="op">&gt;</span> <span class="op">=</span> <span class="bu">std::</span>true_type<span class="op">{};</span></span></code></pre></div>
+            <p>This features the curious (rare?) use of a <em>template
+            template parameter</em> (yes!): a <em>template
+            parameter</em> that accepts a <em>template</em>. This is the
+            <code>template&lt;class&gt; class U</code> part. The
+            <em>declaration</em> of <code>is_instance_of_v</code> (the
+            first statement) establishes that the trait is false in the
+            general case, then the <em>specialization</em> of
+            <code>is_instance_of_v</code> (the second statement)
+            establishes that it is true in the special case that the
+            type is indeed an instantiation of the type template.</p>
+            <p>That is for one template parameter. It is readily
+            extended to more than one by using a <a
+            href="https://en.cppreference.com/w/cpp/language/parameter_pack">parameter
+            pack</a>:</p>
+            <div class="sourceCode" id="cb3"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">,</span> <span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span><span class="op">...&gt;</span> <span class="kw">class</span> U<span class="op">&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_instance_of_v <span class="op">=</span> <span class="bu">std::</span>false_type<span class="op">{};</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span><span class="op">...&gt;</span> <span class="kw">class</span> U<span class="op">,</span> <span class="kw">class</span><span class="op">...</span> Vs<span class="op">&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_instance_of_v<span class="op">&lt;</span>U<span class="op">&lt;</span>Vs<span class="op">...&gt;,</span>U<span class="op">&gt;</span> <span class="op">=</span> <span class="bu">std::</span>true_type<span class="op">{};</span></span></code></pre></div>
+            <p>The <code>...</code> is the parameter pack. This latter
+            version is the preferred implementation, replacing the
+            former version.</p>
+            <h2 id="demonstration">Demonstration</h2>
+            <p>Motivated by the <a
+            href="/blog/forwarding-references/">previous post</a> on
+            overloading functions with forwarding references, we can use
+            this in place of <code>std::is_same_v</code> where we wish
+            to check that the type is an instantiation of a given
+            template, not just an exact match against some other type.
+            The caveats around const and ref qualifiers still apply,
+            however, and the implementation of
+            <code>is_instance_of_v</code> above does not consider const
+            or ref-qualified types to be instantiations of a template.
+            Hence the following:</p>
+            <div class="sourceCode" id="cb4"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// true</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;,</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// false</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;&amp;,</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// false</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// false</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;,</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// false</span></span></code></pre></div>
+            <p>We can use <code>std::decay_t</code> around the type (as
+            suggested in the previous post) to remove const and ref
+            qualifiers:</p>
+            <div class="sourceCode" id="cb5"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// true</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// true</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;&amp;&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// true</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// true</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// true</span></span></code></pre></div>
+            <p>Or <a
+            href="https://en.cppreference.com/w/cpp/language/decltype"><code>decltype(...)</code></a>
+            works too:</p>
+            <div class="sourceCode" id="cb6"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> x<span class="op">;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>is_instance_of_v<span class="op">&lt;</span><span class="kw">decltype</span><span class="op">(</span>x<span class="op">),</span><span class="bu">std::</span>vector<span class="op">&gt;;</span>  <span class="co">// true</span></span></code></pre></div>
+            <p>That’s because while <code>x</code> has lvalue reference
+            type <code>std::vector&lt;int&gt;&amp;</code>, its
+            <code>decltype</code> is still just
+            <code>std::vector&lt;int&gt;</code>.</p>
+            <h2 id="summary">Summary</h2>
+            <p>This post introduced a type trait
+            <code>is_instance_of_v&lt;T,U&gt;</code> to check if some
+            type <code>T</code> is an instantiation of some type
+            template <code>U</code>. It can be used for various
+            purposes, but might be particularly useful in the context of
+            implementing function overloads with forwarding reference
+            parameters as suggested by the <a
+            href="/blog/forwarding-references/">previous post</a>.</p>
+            <p>Here’s a complete source file for further play:</p>
+            <div class="sourceCode" id="cb7"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;type_traits&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;list&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">,</span> <span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span><span class="op">...&gt;</span> <span class="kw">class</span> U<span class="op">&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_instance_of_v <span class="op">=</span> <span class="bu">std::</span>false_type<span class="op">{};</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span><span class="op">...&gt;</span> <span class="kw">class</span> U<span class="op">,</span> <span class="kw">class</span><span class="op">...</span> Vs<span class="op">&gt;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_instance_of_v<span class="op">&lt;</span>U<span class="op">&lt;</span>Vs<span class="op">...&gt;,</span>U<span class="op">&gt;</span> <span class="op">=</span> <span class="bu">std::</span>true_type<span class="op">{};</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span><span class="bu">std::</span>list<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>  <span class="co">// false</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;,</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span>  <span class="co">// false</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;&amp;,</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span>  <span class="co">// false</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span>  <span class="co">// false</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;,</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>  <span class="co">// false</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;&amp;&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span><span class="at">const</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;&amp;&gt;,</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;</span> x<span class="op">;</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_instance_of_v<span class="op">&lt;</span><span class="kw">decltype</span><span class="op">(</span>x<span class="op">),</span><span class="bu">std::</span>vector<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+    </div>
+  </article>
+</main>
+
+<div class="w-100 mt-5" style="clear:both;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Feeds</h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Everything
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/blog.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Blog only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/software.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Software only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/research.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Research only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/photography.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Photography only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/creative.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Creative only
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Newsletter</h1>
+      <p><small>Subscribe to the newletter for announcements of new posts.</small></p>
+      <form action="https://indii.us11.list-manage.com/subscribe/post?u=6c39d985ee6d7e2a4f83f52c2&amp;id=6022e2b633&amp;f_id=00c4d7e3f0" method="post" target="_self" novalidate="">
+        <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="Email" value="" class="form-control w-100 my-2">
+        <input type="submit" name="subscribe" value="Subscribe" class="btn btn-primary w-100 my-2">
+
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="hidden" name="tags" value="10280626">
+          <input type="text" name="b_6c39d985ee6d7e2a4f83f52c2_6022e2b633" tabindex="-1" value="">
+        </div>
+      </form>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence
+Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

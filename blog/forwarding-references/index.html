@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>C++: Forwarding references, overload resolution, and taking back control</title>
+
+    <meta name="description" content="Consider merging overloads into one function with forwarding reference parameters">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="C++: Forwarding references, overload resolution, and taking back control">
+    <meta name="twitter:description" content="Consider merging overloads into one function with forwarding reference parameters">
+    <meta name="twitter:image" content="/assets/cpp.png">
+
+    <meta property="og:title" content="C++: Forwarding references, overload resolution, and taking back control">
+    <meta property="og:description" content="Consider merging overloads into one function with forwarding reference parameters">
+    <meta property="og:url" content="https://indii.org/blog/forwarding-references/">
+    <meta property="og:image" content="/assets/cpp.png">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="canonical" href="https://indii.org/blog/forwarding-references/">
+    <link rel="icon" href="/assets/favicon.svg?v=2">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.min.js" async></script>
+  </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feed
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container text-center align-center w-75 mb-5">
+        <div class="py-2">
+      <img src="/assets/cpp.png" style="width:auto;max-height:128px;" class="img-fluid" width="128" height="128" alt="C++ programming language logo, white text ‘C++’ in shaded blue hexagon">
+      </div>
+      
+      <div class="category">dev</div>
+      <h1 class="mt-0">C++: Forwarding references, overload resolution, and taking back control</h1>
+      <p class="h5"><strong>Consider merging overloads into one function with forwarding reference parameters</strong></p>
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      </header>
+            <p class="date">
+      <time pubdate datetime="2024-01-27" title="2024-01-27">2024-01-27</time>
+      
+    </p>
+        
+    <div class="body">
+            <p>This is the first of three posts on the nuisance of
+            overload resolution when functions with forwarding reference
+            parameters are involved (forwarding reference parameters are
+            those of type <code>T&amp;&amp;</code>, where <code>T</code>
+            is a template parameter). It suggests a design pattern of
+            merging all overloads into one function definition that has
+            forwarding reference parameters, then internally, in the
+            function body, using <code>if constexpr</code> in
+            combination with <code>std::is_same_v</code> to implement
+            the behavior required for each combination of argument
+            types.</p>
+            <div class="note">
+            <p>Subsequent posts go further, introducing an <a
+            href="/blog/is-type-instantiation-of-template"><code>is_instance_of_v</code>
+            trait</a> for checking if a given type is an instantiation
+            of a given template, and an <a
+            href="/blog/pattern-matching-template-types"><code>is_like_v</code>
+            trait</a> for pattern matching template types. Beyond exact
+            matches with <code>std::is_same_v</code> as in this post,
+            these other traits allow matching patterns such as
+            <code>A&lt;_,_&gt;</code> for an instantiation of a class
+            template <code>A</code> with two template arguments, or
+            <code>A&lt;int,_&gt;</code> where the first template
+            argument must be <code>int</code>, or even nested patterns
+            such as <code>B&lt;_,A&lt;int,_&gt;&gt;</code>. Using type
+            traits such as these, we can reduce repetitive code and
+            compactly implement our own logic with respect to overload
+            resolution and type-specific behavior.</p>
+            </div>
+                        <div class="toc">
+        <ul>
+        <li><a href="#motivation"
+        id="toc-motivation">Motivation</a></li>
+        <li><a href="#design-pattern-forwarding-reference-function-only"
+        id="toc-design-pattern-forwarding-reference-function-only">Design
+        pattern: forwarding reference function only</a></li>
+        <li><a href="#understanding-stdis_same_v-and-stddecay_t"
+        id="toc-understanding-stdis_same_v-and-stddecay_t">Understanding
+        <code>std::is_same_v</code> and
+        <code>std::decay_t</code></a></li>
+        <li><a href="#return-to-the-design-pattern"
+        id="toc-return-to-the-design-pattern">Return to the design
+        pattern</a></li>
+        <li><a href="#advantages-and-disadvantages"
+        id="toc-advantages-and-disadvantages">Advantages and
+        disadvantages</a></li>
+        <li><a href="#summary" id="toc-summary">Summary</a></li>
+        </ul>
+      </div>
+            <h2 id="motivation">Motivation</h2>
+            <p>Consider a function that uses a <em>forwarding
+            reference</em> (sometimes called a <a
+            href="https://isocpp.org/blog/2012/11/universal-references-in-c11-scott-meyers">universal
+            reference</a>) parameter, introduced in C++11:</p>
+            <div class="sourceCode" id="cb1"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span>T<span class="op">&amp;&amp;</span> x<span class="op">)</span> <span class="op">{</span>  </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(T&amp;&amp; x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>The forwarding reference is the argument <code>x</code>,
+            which is of type <code>T&amp;&amp;</code>, where
+            <code>T</code> is a template parameter. We now wish to
+            overload this function for a particular type
+            <code>A</code>:</p>
+            <div class="sourceCode" id="cb2"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span><span class="at">const</span> A<span class="op">&amp;</span> x<span class="op">)</span> <span class="op">{</span>  </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(const A&amp; x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>and call the function:</p>
+            <div class="sourceCode" id="cb3"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  A a<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  f<span class="op">(</span>a<span class="op">);</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>When running the program, the output is:</p>
+            <pre><code>f(T&amp;&amp; x)</code></pre>
+            <p>This may come as a surprise! While we (perhaps thought
+            we) overloaded the function for <code>A</code>, the
+            forwarding reference overload is called instead.</p>
+            <p>This by design. The variable <code>a</code> in the
+            <code>main</code> program is an lvalue, and the forwarding
+            reference overload is preferred over the const lvalue
+            reference overload in this case. We could add a new overload
+            for lvalue references:</p>
+            <div class="sourceCode" id="cb5"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span>A<span class="op">&amp;</span> x<span class="op">)</span> <span class="op">{</span>  </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(A&amp; x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>This will be preferred to both the const lvalue and
+            forwarding reference overloads in overload resolution. The
+            output is now:</p>
+            <pre><code>f(A&amp; x)</code></pre>
+            <p>If we move <code>a</code> into the call:</p>
+            <div class="sourceCode" id="cb7"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  A a<span class="op">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  f<span class="op">(</span><span class="bu">std::</span>move<span class="op">(</span>a<span class="op">));</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>we’re back to the forwarding reference overload
+            again:</p>
+            <pre><code>f(T&amp;&amp; x)</code></pre>
+            <p>until we add an rvalue reference overload:</p>
+            <div class="sourceCode" id="cb9"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span>A<span class="op">&amp;&amp;</span> x<span class="op">)</span> <span class="op">{</span>  </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(A&amp;&amp; x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>giving:</p>
+            <pre><code>f(A&amp;&amp; x)</code></pre>
+            <p>Again, this is by design—presumably for good reason, too,
+            but it does create a nuisance in situations where we desire
+            a forwarding reference overload, but also specific type
+            overloads. In this case we end up with multiple overloads
+            for each specific type: const lvalue reference
+            <code>f(const A&amp;)</code>, lvalue reference
+            <code>f(A&amp;)</code>, and rvalue reference
+            <code>f(A&amp;&amp;)</code>. In many situations the
+            implementation of these overloads looks exactly the same, or
+            at least could be made generic, with respect to the const
+            and ref qualifiers.</p>
+            <h2
+            id="design-pattern-forwarding-reference-function-only">Design
+            pattern: forwarding reference function only</h2>
+            <p>Following on from the above example, the aim is to write
+            the function <code>f</code> just once, but structure the
+            body to specialize the implementation for different argument
+            types:</p>
+            <div class="sourceCode" id="cb11"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span>T<span class="op">&amp;&amp;</span> x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="kw">constexpr</span> <span class="op">(</span><span class="co">/* T is A, or some const or ref variant of it */</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// implementation for A</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(A x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// implementation for everything else</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(T&amp;&amp; x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>The first language feature to understand here is <a
+            href="https://en.cppreference.com/w/cpp/language/if"><code>if constexpr</code></a>.
+            This is an <code>if</code> statement evaluated at compile
+            time. It requires that the condition is a
+            <code>constexpr</code>, which it will be in this case: some
+            check on the type at compile time. Importantly, if the
+            condition is true, the <code>else</code> branch is not
+            evaluated, and if the condition is false, the
+            <code>if</code> branch is not evaluated. This allows the
+            code in the branches to be type-specific and not trigger
+            compile errors for incompatible types.</p>
+            <h2
+            id="understanding-stdis_same_v-and-stddecay_t">Understanding
+            <code>std::is_same_v</code> and
+            <code>std::decay_t</code></h2>
+            <p>To fill in the <code>if constexpr</code> condition, we
+            can use type traits. The type trait <a
+            href="https://en.cppreference.com/w/cpp/types/is_same"><code>std::is_same_v</code></a>
+            is provided by the C++ standard library for comparing
+            types:</p>
+            <div class="sourceCode" id="cb12"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;type_traits&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> A<span class="op">;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="bu">std::</span>is_same_v<span class="op">&lt;</span>A<span class="op">,</span>A<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="bu">std::</span>is_same_v<span class="op">&lt;</span>A<span class="op">,</span>A<span class="op">&amp;&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="bu">std::</span>is_same_v<span class="op">&lt;</span>A<span class="op">,</span>A<span class="op">&amp;&amp;&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="bu">std::</span>is_same_v<span class="op">&lt;</span>A<span class="op">,</span><span class="at">const</span> A<span class="op">&amp;&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>When run, this outputs:</p>
+            <pre><code>1 0 0 0</code></pre>
+            <p>Only the exact match of <code>A</code> to <code>A</code>
+            gives true, whereas <code>const</code> and ref
+            (i.e. <code>&amp;</code> and <code>&amp;&amp;</code>)
+            qualified versions compare false. But this is a good
+            starting point.</p>
+            <p>The standard library also provides a number of type
+            transformations:</p>
+            <ul>
+            <li><a
+            href="https://en.cppreference.com/w/cpp/types/remove_const"><code>std::remove_const</code></a>
+            to remove the <code>const</code> qualifier from a type,</li>
+            <li><a
+            href="https://en.cppreference.com/w/cpp/types/remove_reference"><code>std::remove_reference</code></a>
+            to remove the ref qualifier from a type,</li>
+            <li><a
+            href="https://en.cppreference.com/w/cpp/types/decay"><code>std::decay_t</code></a>
+            to combine the two with a little extra.</li>
+            </ul>
+            <p>We will use <code>std::decay_t</code> here for its
+            brevity. Combining it with <code>std::is_same_v</code> above
+            we get:</p>
+            <div class="sourceCode" id="cb14"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;type_traits&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> A<span class="op">;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="bu">std::</span>is_same_v<span class="op">&lt;</span>A<span class="op">,</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span>A<span class="op">&gt;&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="bu">std::</span>is_same_v<span class="op">&lt;</span>A<span class="op">,</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span>A<span class="op">&amp;&gt;&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="bu">std::</span>is_same_v<span class="op">&lt;</span>A<span class="op">,</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span>A<span class="op">&amp;&amp;&gt;&gt;</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span><span class="op">;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="bu">std::</span>is_same_v<span class="op">&lt;</span>A<span class="op">,</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span><span class="at">const</span> A<span class="op">&amp;&gt;&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>which outputs:</p>
+            <pre><code>1 1 1 1</code></pre>
+            <p>This is what we want. The comparisons are now true
+            regardless of the const and ref qualifiers.</p>
+            <h2 id="return-to-the-design-pattern">Return to the design
+            pattern</h2>
+            <p>We can now return to the suggested design pattern,
+            plugging in <code>std::is_same_v</code> and
+            <code>std::decay_t</code> to the condition of the
+            <code>if constexpr</code>:</p>
+            <div class="sourceCode" id="cb16"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span>T<span class="op">&amp;&amp;</span> x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="kw">constexpr</span> <span class="op">(</span><span class="bu">std::</span>is_same_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span>T<span class="op">&gt;,</span>A<span class="op">&gt;)</span> <span class="op">{</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// implementation for A</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(A x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// implementation for everything else</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(T&amp;&amp; x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>That is, we apply <code>std::decay_t</code> to the
+            template argument <code>T</code> to remove any
+            <code>const</code> and ref qualifiers, then compare the
+            result to <code>A</code>.</p>
+            <p>The above is a simple example with a special
+            implementation for just one type <code>A</code>. The
+            approach is readily extended to additional types. It is also
+            possible to selectively use <code>std::remove_const</code>
+            and <code>std::remove_reference</code> if, indeed, behavior
+            should be different according to const and ref
+            qualifiers.</p>
+            <h2 id="advantages-and-disadvantages">Advantages and
+            disadvantages</h2>
+            <p>There are three main advantages to this design
+            pattern:</p>
+            <ol type="1">
+            <li>Reducing code size by eliminating repetitive
+            implementations.</li>
+            <li>Reducing code documentation, such as when using <a
+            href="https://doxygen.org">Doxygen</a> or <a
+            href="https://doxide.org">Doxide</a>, as there is only one
+            function to document.</li>
+            <li>Giving the programmer control over overload resolution,
+            in that the single function definition can encode any logic
+            into <code>if constexpr</code> statements to prioritize
+            certain overloads over others, and even resolve
+            what-would-be ambiguous overloads.</li>
+            </ol>
+            <p>The disadvantage is that it’s a little ugly, sure.</p>
+            <h2 id="summary">Summary</h2>
+            <p>This post suggested a design pattern of merging function
+            overloads into the one function in the presence of
+            forwarding references, which may get in the way of desired
+            overload resolution. The next post will look at more
+            advanced conditions within <code>if constexpr</code>, using
+            pattern matching on template types.</p>
+            <p>Here is a complete code snippet for further play:</p>
+            <div class="sourceCode" id="cb17"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;type_traits&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> A <span class="op">{};</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">&gt;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span>T<span class="op">&amp;&amp;</span> x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="kw">constexpr</span> <span class="op">(</span><span class="bu">std::</span>is_same_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span>T<span class="op">&gt;,</span>A<span class="op">&gt;)</span> <span class="op">{</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">// overload for A</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(A x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// overload for anything else</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(T&amp;&amp; x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  A a<span class="op">;</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  f<span class="op">(</span><span class="bu">std::</span>move<span class="op">(</span>a<span class="op">));</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  f<span class="op">(</span>i<span class="op">);</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+    </div>
+  </article>
+</main>
+
+<div class="w-100 mt-5" style="clear:both;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Feeds</h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Everything
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/blog.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Blog only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/software.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Software only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/research.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Research only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/photography.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Photography only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/creative.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Creative only
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Newsletter</h1>
+      <p><small>Subscribe to the newletter for announcements of new posts.</small></p>
+      <form action="https://indii.us11.list-manage.com/subscribe/post?u=6c39d985ee6d7e2a4f83f52c2&amp;id=6022e2b633&amp;f_id=00c4d7e3f0" method="post" target="_self" novalidate="">
+        <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="Email" value="" class="form-control w-100 my-2">
+        <input type="submit" name="subscribe" value="Subscribe" class="btn btn-primary w-100 my-2">
+
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="hidden" name="tags" value="10280626">
+          <input type="text" name="b_6c39d985ee6d7e2a4f83f52c2_6022e2b633" tabindex="-1" value="">
+        </div>
+      </form>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence
+Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

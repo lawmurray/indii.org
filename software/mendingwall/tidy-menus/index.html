@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Tidy Menus</title>
+
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Tidy Menus">
+    
+    <meta name="twitter:image" content="/software/mendingwall/logo.svg">
+
+    <meta property="og:title" content="Tidy Menus">
+    
+    <meta property="og:url" content="https://indii.org/software/mendingwall/tidy-menus/">
+    <meta property="og:image" content="https://indii.org/software/mendingwall/logo.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/mendingwall.min.css">
+    <link rel="canonical" href="https://indii.org/software/mendingwall/tidy-menus/">
+    <link rel="icon" href="/assets/favicon.svg?v=2">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.min.js" async></script>
+  </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/software/mendingwall">
+                <img src="/software/mendingwall/logo.svg" alt="Logo" width="24" height="24" class="d-inline-block align-text-top">
+                  Mending Wall
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+          <a href="/software/mendingwall" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            Main
+          </a>
+        </li>
+                <li class="nav-item">
+          <a href="/software/mendingwall/getting-started/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            Get Started
+          </a>
+        </li>
+                <li class="nav-item">
+          <a href="/software/mendingwall/mend-themes/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            Mend Themes
+          </a>
+        </li>
+                <li class="nav-item">
+          <a href="/software/mendingwall/tidy-menus/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            Tidy Menus
+          </a>
+        </li>
+                <li class="nav-item">
+          <a href="/software/mendingwall/contributing/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            How To Help
+          </a>
+        </li>
+                <li class="nav-item">
+          <a href="/software/mendingwall/faq/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            Q &amp; A
+          </a>
+        </li>
+                      </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container text-center align-center w-75 mb-5">
+        <div class="py-2">
+      <img src="/software/mendingwall/logo.svg" loading="lazy" style="width:auto;max-height:128px;" class="img-fluid" width="256" height="256">
+      </div>
+      
+      <div class="category">Mending Wall</div>
+      <h1 class="mt-0">Tidy Menus</h1>
+      
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      </header>
+            
+    <div class="body">
+                        <p>Most desktop environments provide core
+                        applications such as a terminal, file manager
+                        and text editor. These provide much the same
+                        functionality as counterpart applications in
+                        other desktop environments, but can clutter up
+                        menus with seemingly redundant applications.</p>
+                        <div class="row">
+                        <div class="col-sm-12 col-lg-6">
+                        <figure>
+                        <picture>
+                        <source srcset="/software/mendingwall/kde_many_file_manager_apps_light.png" media="(prefers-color-scheme: light)" />
+                        <source srcset="/software/mendingwall/kde_many_file_manager_apps_dark.png" media="(prefers-color-scheme: dark)" />
+                        <img src="/software/mendingwall/kde_many_file_manager_apps_light.png" width="400" height="421" class="img-fluid " alt="The KDE menu showing six file manager applications." />
+                        </picture>
+                        <figcaption>
+                        With GNOME, KDE and Xfce installed, the KDE menu
+                        shows six file manager applications.
+                        </figcaption>
+                        </figure>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                        <figure>
+                        <img src="/software/mendingwall/gnome_many_terminal_apps.png" width="400" height="421" class="img-fluid " alt="The GNOME menu showing six terminal applications." />
+                        </picture>
+                        <figcaption>
+                        Simlarly, the GNOME dash shows six terminal
+                        applications.
+                        </figcaption>
+                        </figure>
+                        </div>
+                        </div>
+                        <p>To have Mending Wall tidy up menus
+                        automatically, enable its <em>Tidy Menus</em>
+                        feature. It will then show core applications in
+                        the menu for their respective desktop
+                        environment only.</p>
+                        <h2 id="what-it-does">What it does</h2>
+                        <p><em>Tidy Menus</em> applies a set of rules to
+                        show certain applications in their native
+                        desktop environment only. It does not apply to
+                        all applications. The rules are generally
+                        consistent with the notion that you, the user,
+                        will always prefer a native app over a
+                        non-native app. So you will use Console,
+                        Nautilus and Text Editor on GNOME, but Konsole,
+                        Dolphin and Kate on KDE Plasma.</p>
+                        <p>The rules apply mostly to core applications
+                        with counterparts in other desktop environments,
+                        as well as many games. They do not apply to
+                        larger applications that are too featureful to
+                        be considered counterparts, despite having
+                        similar aims, such as GIMP and Krita. The rules
+                        only affect visibility in menus; all
+                        applications are still available in all desktop
+                        environments and can be launched by other means
+                        (such as from the command line).</p>
+                        <div class="note">
+                        <p>You can also use an app like <a
+                        href="https://flathub.org/apps/page.codeberg.libre_menu_editor.LibreMenuEditor">Libre
+                        Menu Editor</a> to change menus, or edit
+                        <code>.desktop</code> files directly. Mending
+                        Wall will not override changes made with other
+                        apps. The recommended approach is to enable
+                        <em>Tidy Menus</em> in Mending Wall to automate
+                        the process as much as possible, then use
+                        another app for refinement if necessary.</p>
+                        </div>
+                        <h2 id="how-it-works">How it works</h2>
+                        <div class="note">
+                        <p>This section is for users who want to know
+                        exactly what Mending Wall is doing to their
+                        system.</p>
+                        </div>
+                        <p>When <em>Tidy Menus</em> is enabled, Mending
+                        Wall starts a background process named
+                        <code>mendingwalld</code> that will also
+                        auto-start every time you log in. This process
+                        applies the menu rules, and reapplies them when
+                        new applications are installed. When <em>Tidy
+                        Menus</em> is disabled, it will undo any
+                        changes.</p>
+                        <p>The process acts as follows:</p>
+                        <ol type="1">
+                        <li><p>It considers all <code>.desktop</code>
+                        files installed in the <code>applications</code>
+                        subdirectory of any directories listed in the
+                        <code>XDG_DATA_DIRS</code> environment variable
+                        (e.g. <code>/usr/share/applications</code>,
+                        <code>/usr/local/share/applications</code>).</p></li>
+                        <li><p>For each <code>.desktop</code> file it
+                        determines, according to its rules, whether the
+                        <code>OnlyShowIn</code> or
+                        <code>NotShowIn</code> keys should be
+                        updated.</p></li>
+                        <li><p>If so, it copies the
+                        <code>.desktop</code> file into
+                        <code>$XDG_DATA_HOME/applications/</code> and
+                        updates those keys. It also adds an entry
+                        <code>X-MendingWall-Tidied=true</code> for
+                        record keeping, in case <em>Tidy Menus</em> is
+                        disabled in future and changes must be undone.
+                        If a <code>.desktop</code> file for the
+                        application already exists in
+                        <code>$XDG_DATA_HOME/applications/</code>, it is
+                        not changed (in this way, customizations made
+                        with other apps are not overwritten). If the
+                        environment variable <code>XDG_DATA_HOME</code>
+                        does not exist then the default value
+                        <code>$HOME/.local/share</code> is
+                        used.</p></li>
+                        <li><p>It continues to monitor for changes to
+                        any of the directories listed in
+                        <code>XDG_DATA_DIRS</code>. When changes occur
+                        it reapplies the rules. For example, if a new
+                        application is installed, one or more new
+                        <code>.desktop</code> files will appear in these
+                        directories and be subject to the
+                        rules.</p></li>
+                        </ol>
+                        <h2 id="configuration">Configuration</h2>
+                        <div class="note">
+                        <p>This section is for contributors to help
+                        improve Mending Wall. The installed rules are
+                        meant to be suitable for everyone, with
+                        adjustments made with other apps.</p>
+                        </div>
+                        <p>The rules applied by <em>Tidy Menus</em> are
+                        set in the config file <code>menus.conf</code>.
+                        If the environment variable
+                        <code>XDG_DATA_HOME</code> is set and
+                        <code>$XDG_DATA_HOME/mendingwall/menus.conf</code>
+                        exists then that file is used, otherwise
+                        <code>$HOME/.local/share/mendingwall/menus.conf</code>,
+                        otherwise the directories listed in
+                        <code>XDG_DATA_DIRS</code> are checked in order
+                        for <code>mendingwall/menus.conf</code> until
+                        the file is found.</p>
+                        <p>If <code>menus.conf</code> is in a system
+                        directory and you wish to make changes to it,
+                        first copy it to
+                        <code>$XDG_DATA_HOME/mendingwall/menus.conf</code>
+                        or
+                        <code>$HOME/.local/share/mendingwall/menus.conf</code>.</p>
+                        <p>The config file is a <a
+                        href="https://docs.gtk.org/glib/struct.KeyFile.html">KeyFile</a>.
+                        It contains any number of group headers to
+                        identify applications, each followed by
+                        key-value pairs that specify the desktop
+                        environments in which to show that application.
+                        For example:</p>
+                        <div class="sourceCode" id="cb1"><pre
+                        class="sourceCode ini"><code class="sourceCode ini"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[org.kde.Konsole]</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">OnlyShowIn</span><span class="ot">=</span><span class="st">KDE</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">[org.gnome.Console]</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">OnlyShowIn</span><span class="ot">=</span><span class="st">GNOME;X-Cinnamon</span></span></code></pre></div>
+                        <p>The group headers are surrounded by square
+                        brackets (<code>[...]</code>) and identify the
+                        applications. Each should be the name of the
+                        <code>.desktop</code> file of the application,
+                        but without the <code>.desktop</code> extension.
+                        The names are usually, but not always, reverse
+                        domain-name identifiers (e.g. they start with
+                        <code>org.gnome.</code> or
+                        <code>org.kde.</code>).</p>
+                        <p>Each key is followed by an equals sign
+                        (<code>=</code>), and where multiple values are
+                        required they are separated by semicolons
+                        (<code>;</code>). Recognized keys are:</p>
+                        <table>
+                        <colgroup>
+                        <col style="width: 37%" />
+                        <col style="width: 62%" />
+                        </colgroup>
+                        <thead>
+                        <tr>
+                        <th>Key</th>
+                        <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                        <td><code>OnlyShowIn</code></td>
+                        <td>The application will only be shown in these
+                        desktop environments.</td>
+                        </tr>
+                        <tr>
+                        <td><code>NotShowIn</code></td>
+                        <td>The application will be shown in all but
+                        these desktop environments.</td>
+                        </tr>
+                        </tbody>
+                        </table>
+                        <p>It only makes sense to use one of these. They
+                        are copied into the <code>.desktop</code> file
+                        of the application. Valid values are the same as
+                        those that appear in the
+                        <code>XDG_CURRENT_DESKTOP</code> environment
+                        variable set by desktop environments,
+                        e.g. <code>GNOME</code> and <code>KDE</code>.
+                        These are case sensitive.</p>
+                        <div class="note">
+                        <p>After modifying <code>menus.conf</code>,
+                        disable the Tidy Menus feature, then enable it
+                        again, to apply changes.</p>
+                        </div>
+                        <h2 id="relevant-specifications">Relevant
+                        specifications</h2>
+                        <ul>
+                        <li>The <a
+                        href="https://specifications.freedesktop.org/basedir-spec/latest/">XDG
+                        Base Directory Specification</a> for the
+                        <code>XDG_DATA_HOME</code> and
+                        <code>XDG_DATA_DIRS</code> environment
+                        variables.</li>
+                        <li>The <a
+                        href="https://specifications.freedesktop.org/desktop-entry-spec/latest/">XDG
+                        Desktop Entry Specification</a> for
+                        <code>.desktop</code> files, especially the <a
+                        href="https://specifications.freedesktop.org/desktop-entry-spec/latest/recognized-keys.html">Recognized
+                        desktop entry keys</a> section for
+                        interpretation of the <code>OnlyShowIn</code>
+                        and <code>NotShowIn</code> keys and related
+                        <code>XDG_CURRENT_DESKTOP</code> environment
+                        variable.</li>
+                        <li>The <a
+                        href="https://specifications.freedesktop.org/menu-spec/latest/">XDG
+                        Desktop Menu Specification</a> and especially <a
+                        href="https://specifications.freedesktop.org/menu-spec/latest/onlyshowin-registry.html">Registered
+                        OnlyShowIn environments</a>.</li>
+                        </ul>
+    </div>
+  </article>
+</main>
+
+<div class="w-100 mt-5" style="clear:both;">
+<div class="container">
+  <nav class="row g-4">
+        <div class="nav-bottom">
+      <h1><a href="/software/mendingwall">Mending Wall</a></h1>
+      <ul class="nav flex-column">
+                <li class="nav-item">
+          <a href="/software/mendingwall" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            Main
+          </a>
+        </li>
+                <li class="nav-item">
+          <a href="/software/mendingwall/getting-started/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            Get Started
+          </a>
+        </li>
+                <li class="nav-item">
+          <a href="/software/mendingwall/mend-themes/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            Mend Themes
+          </a>
+        </li>
+                <li class="nav-item">
+          <a href="/software/mendingwall/tidy-menus/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            Tidy Menus
+          </a>
+        </li>
+                <li class="nav-item">
+          <a href="/software/mendingwall/contributing/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            How To Help
+          </a>
+        </li>
+                <li class="nav-item">
+          <a href="/software/mendingwall/faq/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+            Q &amp; A
+          </a>
+        </li>
+              </ul>
+    </div>
+    
+    <div class="nav-bottom">
+            <h1><a href="/">Lawrence Murray</a></h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Feeds</h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Everything
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/blog.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Blog only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/software.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Software only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/research.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Research only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/photography.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Photography only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/creative.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Creative only
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Newsletter</h1>
+      <p><small>Subscribe to the newletter for announcements of new posts.</small></p>
+      <form action="https://indii.us11.list-manage.com/subscribe/post?u=6c39d985ee6d7e2a4f83f52c2&amp;id=6022e2b633&amp;f_id=00c4d7e3f0" method="post" target="_self" novalidate="">
+        <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="Email" value="" class="form-control w-100 my-2">
+        <input type="submit" name="subscribe" value="Subscribe" class="btn btn-primary w-100 my-2">
+
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="hidden" name="tags" value="10280626">
+          <input type="text" name="b_6c39d985ee6d7e2a4f83f52c2_6022e2b633" tabindex="-1" value="">
+        </div>
+      </form>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence
+Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

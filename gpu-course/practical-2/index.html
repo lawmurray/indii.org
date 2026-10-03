@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Foundations of GPU Computing: Practical Exercises #2</title>
+
+    <meta name="description" content="Profiling code in Nsight Systems and refactoring to improve performance">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Foundations of GPU Computing: Practical Exercises #2">
+    <meta name="twitter:description" content="Profiling code in Nsight Systems and refactoring to improve performance">
+    <meta name="twitter:image" content="/assets/gpu.svg">
+
+    <meta property="og:title" content="Foundations of GPU Computing: Practical Exercises #2">
+    <meta property="og:description" content="Profiling code in Nsight Systems and refactoring to improve performance">
+    <meta property="og:url" content="https://indii.org/gpu-course/practical-2/">
+    <meta property="og:image" content="/assets/gpu.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="canonical" href="https://indii.org/gpu-course/practical-2/">
+    <link rel="icon" href="/assets/favicon.svg?v=2">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.min.js" async></script>
+  </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feed
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container text-center align-center w-75 mb-5">
+        <div class="py-2">
+      <img src="/assets/gpu.svg" style="width:auto;max-height:128px;" class="img-fluid" width="128" height="128" alt="Simple line drawing of a GPU">
+      </div>
+      
+      <div class="category">course</div>
+      <h1 class="mt-0">Foundations of GPU Computing: Practical Exercises #2</h1>
+      <p class="h5"><strong>Profiling code in Nsight Systems and refactoring to improve performance</strong></p>
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      </header>
+            
+    <div class="body">
+            <p>In this practical we continue with the example of a deep
+            neural network implemented in C. We learn to profile with
+            Nsight Systems, measure headroom on concurrency, and
+            refactor the code to improve performance.</p>
+            <p>This practical is part of the course <a
+            href="/gpu-course/">Foundations of GPU Computing</a>.</p>
+            <div class="note">
+            <p><strong>Not familiar with C?</strong></p>
+            <p>The practical does not require you to write any C code
+            from scratch, only make specific modifications. Tips are
+            provided along the way.</p>
+            </div>
+                        <div class="toc">
+        <ul>
+        <li><a href="#prerequisites"
+        id="toc-prerequisites">Prerequisites</a></li>
+        <li><a href="#profiling-20-minutes"
+        id="toc-profiling-20-minutes">Profiling (20 minutes)</a></li>
+        <li><a href="#aim-5-minutes" id="toc-aim-5-minutes">Aim (5
+        minutes)</a></li>
+        <li><a href="#headroom-5-minutes"
+        id="toc-headroom-5-minutes">Headroom (5 minutes)</a></li>
+        <li><a href="#first-attempt-sharing-memory-10-minutes"
+        id="toc-first-attempt-sharing-memory-10-minutes">First attempt:
+        sharing memory (10 minutes)</a></li>
+        <li><a
+        href="#second-attempt-replicating-the-training-data-10-minutes"
+        id="toc-second-attempt-replicating-the-training-data-10-minutes">Second
+        attempt: replicating the training data (10 minutes)</a></li>
+        <li><a href="#third-attempt-prefetching-10-minutes"
+        id="toc-third-attempt-prefetching-10-minutes">Third attempt:
+        prefetching (10 minutes)</a></li>
+        <li><a href="#summary" id="toc-summary">Summary</a></li>
+        <li><a href="#possible-extensions"
+        id="toc-possible-extensions">Possible extensions</a></li>
+        </ul>
+      </div>
+            <h2 id="prerequisites">Prerequisites</h2>
+            <p>Make sure that your system satisfies the prerequisites
+            given on the <a href="/gpu-course">main course page</a>. We
+            will use both Visual Studio Code and Nsight Systems in this
+            practical.</p>
+            <div class="info">
+            <p>Start Visual Studio code and, if you are using a remote
+            system, <a
+            href="/blog/develop-in-the-cloud-with-visual-studio-code">connect
+            to it</a>. Start Nsight Systems and <em>File &gt; New
+            Project</em>. Click <em>Select target for profiling…</em>
+            and, if you are using a remote system, <em>Configure
+            targets…</em> to <a
+            href="/blog/profile-in-the-cloud-with-nsight-systems">connect
+            to it</a>, otherwise select your local system. If you are
+            using a remote system, Nsight Systems will take a minute or
+            two to configure it.</p>
+            </div>
+            <h2 id="profiling-20-minutes">Profiling (20 minutes)</h2>
+            <p>In the previous practical we only looked at overall
+            execution time. To obtain more detailed performance
+            information we can profile the code using Nsight
+            Systems.</p>
+            <div class="info">
+            <p>Start Nsight Systems, create a new project, and enter the
+            following settings: - Command line with arguments:
+            <code>./main</code> - Working directory:
+            <code>/home/👤user/gpu-course</code> where
+            👤<code>user</code> is your username.</p>
+            <p>Check the boxes: - <em>Collect CPU IP/backtrace
+            samples</em> - <em>Collect CUDA trace</em>, and under it: -
+            <em>Collect UM CPU page faults</em> - <em>Collect UM GPU
+            page faults</em> - <em>Collect cuBLAS trace</em></p>
+            <p>You can uncheck all the other boxes—they won’t hurt, but
+            will make for busy reports with a lot of extraneous
+            information for the purposes of this exercise.</p>
+            <p>Click <em>Start</em> to run the program and collect
+            profiling information.</p>
+            </div>
+            <p>After a few moments the timeline view should appear.</p>
+            <div class="info">
+            <p>On the left, expand <em>CUDA GW &gt; Context 1 &gt;
+            Kernels</em> and <em>Threads &gt; main &gt; CUDA API</em> to
+            inspect the activity of the GPU and CPU, respectively.</p>
+            </div>
+            <p>You can navigate the timeline view using the following
+            basic controls:</p>
+            <ul>
+            <li>To zoom in, click and drag to select an interval, then
+            right-click and choose <em>Zoom into Selection</em>
+            (shortcut: <code>Shift+Z</code>).</li>
+            <li>To return to the previous zoom level, right-click and
+            choose <em>Undo Zoom</em> (shortcut:
+            <code>Backspace</code>).</li>
+            <li>To reset the view, right-click and choose <em>Reset
+            Zoom</em>.</li>
+            <li>To run again, return to the <em>Project</em> tab and
+            click the <em>Start</em> button. This will create a new
+            report in a new tab (it will not overwrite previous
+            reports).</li>
+            </ul>
+            <div class="info">
+            <p>Zoom in until you can make out a repeating pattern like
+            the below.</p>
+            </div>
+            <p><img src="1.svg" /></p>
+            <p>We can understand this as the training and testing loop,
+            implemented in <code>src/main.c</code>:</p>
+            <ol type="1">
+            <li>The CPU loops over minibatches of the training and test
+            data, enqueuing kernels to a stream to perform the forward
+            pass, backward pass, and gradient updates.</li>
+            <li>Meanwhile, the GPU executes kernels from the stream
+            asynchronously.</li>
+            <li>Once all kernels are enqueued, the CPU waits for the GPU
+            to finish with a call to <a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__DEVICE.html#group__CUDART__DEVICE_1g10e20b05a95f638a4071a655503df25d"><code>cudaDeviceSynchronize()</code></a>.</li>
+            <li>The CPU shuffles the training data for the next epoch.
+            Because this does not involve any CUDA calls, the work may
+            not be visible in the profile, but we understand that it
+            occurs in this apparent gap.</li>
+            <li>The next epoch begins, repeating steps 1-4.</li>
+            </ol>
+            <h2 id="aim-5-minutes">Aim (5 minutes)</h2>
+            <p>There is an opportunity to improve performance if we can
+            swap steps 3 and 4, so that the CPU shuffles data for the
+            next epoch while the GPU is still on the training and
+            testing loop for the current epoch (step 2). This should
+            allow us to compress the timeline to the following:</p>
+            <p><img src="2.svg" /></p>
+            <p>For smaller models, the time taken for 3 may be longer
+            than the time taken for 4. This is because the time taken
+            for the shuffle is a function of the data size, while the
+            time taken to perform training and testing is a function of
+            both the data size and model size. For such cases, the
+            timeline that we can achieve is more like this:</p>
+            <p><img src="3.svg" /></p>
+            <h2 id="headroom-5-minutes">Headroom (5 minutes)</h2>
+            <p>We can assess the headroom for such an improvement by
+            disabling the shuffle entirely.</p>
+            <div class="info">
+            <p>In Visual Studio Code, comment out the line
+            <code>data_shuffle(&amp;d)</code> in
+            <code>src/main.c</code>, then rebuild and rerun. How much
+            does performance improve? Once you have established the
+            headroom, uncomment the line again.</p>
+            </div>
+            <div class="note">
+            <p><strong>Not familiar with C?</strong></p>
+            <p>Comment out a line of code by adding <code>//</code> in
+            front of it, or by wrapping the whole line in
+            <code>/*</code> and <code>*/</code>.</p>
+            </div>
+            <h2 id="first-attempt-sharing-memory-10-minutes">First
+            attempt: sharing memory (10 minutes)</h2>
+            <p>In the current implementation, we cannot allow the
+            execution of steps 2 and 4 to overlap, as the GPU would be
+            reading the training data while the CPU is modifying it, and
+            the results would be incorrect. Nonetheless, let’s start
+            that way, as it leads to some interesting observations.</p>
+            <div class="info">
+            <p>In <code>src/main.c</code>, move the following two
+            lines:</p>
+            <div class="sourceCode" id="cb1"><pre
+            class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* shuffle data for next time */</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data_shuffle<span class="op">(&amp;</span>d<span class="op">);</span></span></code></pre></div>
+            <p>to above the two lines:</p>
+            <div class="sourceCode" id="cb2"><pre
+            class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* finalize loss and report progress */</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>cudaDeviceSynchronize<span class="op">();</span></span></code></pre></div>
+            <p>Rebuild with rerun.</p>
+            </div>
+            <p>In addition to being incorrect, as expected, this also
+            runs considerably slower, which may be surprising. Let’s
+            investigate with Nsight Systems again.</p>
+            <div class="info">
+            <p>In Nsight Systems, return to the project tab, and click
+            the <em>Start</em> button to collect a new profile. Switch
+            between the tab for the first report and the second report.
+            Can you diagnose what has happened here?</p>
+            <p><strong>Hint:</strong> Expand the <em>UVM page fault</em>
+            group on the left. UVM is Unified Virtual Memory.</p>
+            </div>
+            <p>We are seeing many more <em>page faults</em> than before.
+            Recall that we are using managed memory, which means that
+            pages of virtual memory swap between main and device memory
+            on demand. A page fault occurs when either the CPU or GPU
+            attempts to access a page not in its memory, triggering the
+            swap. Too much swapping harms performance. On this occasion
+            the swaps occur because the CPU and GPU are accessing the
+            training data (<code>d.X_train</code>) concurrently.</p>
+            <h2
+            id="second-attempt-replicating-the-training-data-10-minutes">Second
+            attempt: replicating the training data (10 minutes)</h2>
+            <p>To fix both the correctness and performance issue we can
+            proceed as follows:</p>
+            <ol type="1">
+            <li>Maintain two copies of the training data, call them
+            <code>A</code> and <code>B</code>.</li>
+            <li>On every odd numbered epoch, the GPU reads from
+            <code>A</code> while the CPU shuffles <code>B</code>.</li>
+            <li>On every even numbered epoch, the CPU reads from
+            <code>B</code> while the GPU shuffles <code>A</code>.</li>
+            </ol>
+            <p>In this way, the CPU and GPU are always operating on
+            different memory to minimize swaps.</p>
+            <div class="info">
+            <p>Create a copy of the training data. Just before
+            <code>/* start timer */</code>, insert the following
+            code:</p>
+            <div class="sourceCode" id="cb3"><pre
+            class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span><span class="op">*</span> X_train <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">size_t</span> bytes <span class="op">=</span> d<span class="op">.</span>M<span class="op">*</span>d<span class="op">.</span>N_train<span class="op">*</span><span class="kw">sizeof</span><span class="op">(</span><span class="dt">float</span><span class="op">);</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>cudaMallocManaged<span class="op">((</span><span class="dt">void</span><span class="op">**)&amp;</span>X_train<span class="op">,</span> bytes<span class="op">,</span> cudaMemAttachGlobal<span class="op">);</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>cudaMemcpyAsync<span class="op">(</span>X_train<span class="op">,</span> d<span class="op">.</span>X_train<span class="op">,</span> bytes<span class="op">,</span> cudaMemcpyDefault<span class="op">,</span> cudaStreamDefault<span class="op">);</span></span></code></pre></div>
+            <p>Just after <code>/* clean up */</code>, insert the
+            following code:</p>
+            <div class="sourceCode" id="cb4"><pre
+            class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cudaFree<span class="op">(</span>X_train<span class="op">);</span></span></code></pre></div>
+            <p>Rebuild.</p>
+            </div>
+            <p>The original data is in <code>d.X_train</code> and the
+            copy in <code>X_train</code>. This code allocates memory for
+            <code>X_train</code> and copies <code>d.X_train</code> into
+            it. The second code deallocates the memory.</p>
+            <div class="info">
+            <p>Just before the data shuffle, swap the
+            <code>X_train</code> and <code>d.X_train</code>
+            pointers:</p>
+            <div class="sourceCode" id="cb5"><pre
+            class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* shuffle data for next time */</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span><span class="op">*</span> tmp <span class="op">=</span> d<span class="op">.</span>X_train<span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>d<span class="op">.</span>X_train <span class="op">=</span> X_train<span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> tmp<span class="op">;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>data_shuffle<span class="op">(&amp;</span>d<span class="op">);</span></span></code></pre></div>
+            <p>Rebuild and rerun.</p>
+            </div>
+            <p>The results should now be correct, but may still run
+            slower than before. Let’s investigate with Nsight Systems
+            again.</p>
+            <div class="info">
+            <p>In Nsight Systems, go to the tab for your project,
+            reconnect if necessary, and click the <em>Start</em> button
+            to collect a new profile. Can you diagnose what has happened
+            here?</p>
+            </div>
+            <p>We are still seeing many page faults! The issue here is
+            more subtle than before. The CPU and GPU are no longer
+            accessing the same memory simultaneously, but they do share
+            it alternately. On every odd numbered epoch the GPU swaps
+            <code>A</code> back from main to device memory on demand,
+            while the CPU swaps <code>B</code> back from device to main
+            memory on demand (conversely for even numbered epochs). The
+            inefficiency here is that these swaps occur page-by-page, on
+            demand, each time forcing the CPU or GPU to pause.</p>
+            <h2 id="third-attempt-prefetching-10-minutes">Third attempt:
+            prefetching (10 minutes)</h2>
+            <p>One way to improve this situation is to advise the CUDA
+            runtime to <em>pre-fetch</em> memory onto CPU or GPU ahead
+            of its use with <a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1ge8dc9199943d421bc8bc7f473df12e42">cudaMemPrefetchAsync()</a>.
+            This allows bulk swaps instead of on-demand.</p>
+            <div class="info">
+            <p>After <code>data_shuffle(&amp;d)</code>, enter the
+            following code:</p>
+            <div class="sourceCode" id="cb6"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cudaMemPrefetchAsync<span class="op">(</span>X_train<span class="op">,</span> bytes<span class="op">,</span> cudaCpuDeviceId<span class="op">,</span> cudaStreamDefault<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cudaMemPrefetchAsync<span class="op">(</span>d<span class="op">.</span>X_train<span class="op">,</span> bytes<span class="op">,</span> device<span class="op">,</span> cudaStreamDefault<span class="op">);</span></span></code></pre></div>
+            <p>Rebuild and rerun.</p>
+            </div>
+            <p>The program should run considerably faster than the
+            previous version, and a little faster than the original
+            version, depending on hardware and problem size.</p>
+            <div class="info">
+            <p>Run in Nsight Systems one last time.</p>
+            </div>
+            <p>You should see fewer page faults than before.</p>
+            <div class="info">
+            <p>How close did we get to the headroom?</p>
+            </div>
+            <h2 id="summary">Summary</h2>
+            <p>In this practical we have learnt how to use Nsight
+            Systems to profile a CUDA program, used the timeline view to
+            find a performance opportunity, and updated the code to
+            address it. We should now have a better understanding of CPU
+            and GPU interaction via streaming computation and virtual
+            memory.</p>
+            <h2 id="possible-extensions">Possible extensions</h2>
+            <dl>
+            <dt>Further features of Nsight Systems</dt>
+            <dd>
+            In addition to the timeline view, which provides insight on
+            concurrency and occupancy, Nsight Systems provides
+            information on individual kernel performance. Expanding
+            <em>CUDA HW &gt; Context 1 &gt; Kernels</em> reveals the
+            most expensive kernels on which to focus optimization
+            efforts. Right-clicking a kernel and selecting <em>Show in
+            Events View</em> provides further detail, including
+            execution configuration, timing and memory use information.
+            </dd>
+            <dt>Three buffers</dt>
+            <dd>
+            There is an even faster way of doing this, where both
+            <code>d.X_train</code> and <code>X_train</code> are
+            allocated as pinned main memory (see
+            <code>cudaMallocHost()</code>, <code>cudaFreeHost()</code>),
+            and a third, call it <code>X_train_device</code>, is
+            allocated as device memory only (see
+            <code>cudaMalloc()</code>, <code>cudaFree()</code>).
+            Prefetch is removed, <code>d.X_train</code> and
+            <code>X_train</code> swap as before, but at the start of
+            each training epoch the active of them copies to
+            <code>X_train_device</code>. The GPU works on
+            <code>X_train_device</code> only. This is faster because it
+            uses a one-way copy from main to device memory, rather than
+            two-way swaps between.
+            </dd>
+            <dt>Shuffle on GPU</dt>
+            <dd>
+            Ideally, the shuffle would be performed on the GPU as well,
+            which would avoid copying entirely. A parallel permutation
+            function for GPU is nontrivial to implement. As a starting
+            point, pseudorandom numbers can be generated on the GPU with
+            <a
+            href="https://docs.nvidia.com/cuda/curand/index.html">cuRAND</a>.
+            </dd>
+            </dl>
+    </div>
+  </article>
+</main>
+
+<div class="w-100 mt-5" style="clear:both;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Feeds</h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Everything
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/blog.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Blog only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/software.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Software only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/research.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Research only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/photography.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Photography only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/creative.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Creative only
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Newsletter</h1>
+      <p><small>Subscribe to the newletter for announcements of new posts.</small></p>
+      <form action="https://indii.us11.list-manage.com/subscribe/post?u=6c39d985ee6d7e2a4f83f52c2&amp;id=6022e2b633&amp;f_id=00c4d7e3f0" method="post" target="_self" novalidate="">
+        <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="Email" value="" class="form-control w-100 my-2">
+        <input type="submit" name="subscribe" value="Subscribe" class="btn btn-primary w-100 my-2">
+
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="hidden" name="tags" value="10280626">
+          <input type="text" name="b_6c39d985ee6d7e2a4f83f52c2_6022e2b633" tabindex="-1" value="">
+        </div>
+      </form>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence
+Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

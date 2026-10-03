@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Fast Enumeration of Sums of Discrete Random Variables</title>
+
+    <meta name="description" content="A CUDA kernel">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Fast Enumeration of Sums of Discrete Random Variables">
+    <meta name="twitter:description" content="A CUDA kernel">
+    <meta name="twitter:image" content="/blog/fast-discrete-enumeration/fast-discrete-enumeration.svg">
+
+    <meta property="og:title" content="Fast Enumeration of Sums of Discrete Random Variables">
+    <meta property="og:description" content="A CUDA kernel">
+    <meta property="og:url" content="https://indii.org/blog/fast-discrete-enumeration/">
+    <meta property="og:image" content="https://indii.org/blog/fast-discrete-enumeration/fast-discrete-enumeration.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="canonical" href="https://indii.org/blog/fast-discrete-enumeration/">
+    <link rel="icon" href="/assets/favicon.svg?v=2">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.min.js" async></script>
+  </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feed
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container text-center align-center w-75 mb-5">
+        <div class="py-2">
+      <img src="/blog/fast-discrete-enumeration/fast-discrete-enumeration.svg" loading="lazy" style="width:auto;max-height:128px;" class="img-fluid" width="144" height="298" alt="Simple line drawing of a GPU">
+      </div>
+      
+      <div class="category">dev</div>
+      <h1 class="mt-0">Fast Enumeration of Sums of Discrete Random Variables</h1>
+      <p class="h5"><strong>A CUDA kernel</strong></p>
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      </header>
+            <p class="date">
+      <time pubdate datetime="2023-02-22" title="2023-02-22">2023-02-22</time>
+      
+    </p>
+        
+    <div class="body">
+                        <p>I’ve been working on an upgrade to the <a
+                        href="/research/delayed-sampling-and-automatic-rao-blackwellization-of-probabilistic-programs/">delayed
+                        sampling</a> implementation in <a
+                        href="https://birch.indii.org">Birch</a> to
+                        remove reference cycles and reduce garbage
+                        collector overhead. One culprit for these is the
+                        handling of enumeration of sums of discrete
+                        random variables. I’ve taken the opportunity to
+                        also revisit performance, which we explore
+                        here.</p>
+                        <p>The basic question: 1. given a random
+                        variable
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+                        on the integers
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{0,\ldots,m-1\}</annotation></semantics></math>
+                        with a vector of probabilities
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒑</mi><annotation encoding="application/x-tex">\mathbf{p}</annotation></semantics></math>
+                        with
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>=</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p_i = P(x = i)</annotation></semantics></math>,
+                        and 2. another random variable
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+                        on the integers
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{0,\ldots,n-1\}</annotation></semantics></math>
+                        with a vector of probabilities
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒒</mi><annotation encoding="application/x-tex">\mathbf{q}</annotation></semantics></math>
+                        with
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><mi>i</mi></msub><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>=</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">q_i = P(y = i)</annotation></semantics></math>,
+                        3. consider the sum
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x + y</annotation></semantics></math>
+                        on the integers
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo>−</mo><mn>2</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{0, m + n - 2\}</annotation></semantics></math>
+                        and compute its vector of probabilities
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒓</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>
+                        with
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_i = P(x + y = i)</annotation></semantics></math>.</p>
+                        <p>The basic computation is the convolution:</p>
+                        <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mrow><mi mathvariant="normal">max</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi>i</mi><mo>−</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mrow><mi mathvariant="normal">min</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow></munderover><msub><mi>p</mi><mi>j</mi></msub><msub><mi>q</mi><mrow><mi>i</mi><mo>−</mo><mi>j</mi></mrow></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
+                        r_i = \sum_{j = \max(0,i-n+1)}^{\min (m-1,i)} p_j q_{i-j},
+                        </annotation></semantics></math></p>
+                        <p>but the aim is to develop a kernel to compute
+                        this efficiently on GPU.</p>
+                        <p>Consider the outer product
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝑹</mi><mo>=</mo><mi mathvariant="bold-italic">𝒑</mi><msup><mi mathvariant="bold-italic">𝒒</mi><mi>⊤</mi></msup></mrow><annotation encoding="application/x-tex">\mathbf{R} = \mathbf{p}\mathbf{q}^\top</annotation></semantics></math>.
+                        To obtain
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>i</mi></msub><annotation encoding="application/x-tex">r_i</annotation></semantics></math>
+                        we must sum over the
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>th
+                        <a
+                        href="https://mathworld.wolfram.com/SkewDiagonal.html">skew
+                        diagonal</a> of
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝑹</mi><annotation encoding="application/x-tex">\mathbf{R}</annotation></semantics></math>.
+                        To see this, assume
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+                        and
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+                        are on
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{0, 1, 2, 3\}</annotation></semantics></math>,
+                        and consider a diagram of
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝑹</mi><annotation encoding="application/x-tex">\mathbf{R}</annotation></semantics></math>
+                        (skewed a little):</p>
+                        <p><img src="1.svg" class="invert" /></p>
+                        <p>On the left are the possible outcomes for
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+                        and
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>.
+                        Each cell corresponds to a pair of such
+                        outcomes, marked with the sum
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x + y</annotation></semantics></math>
+                        in the diagram, but having the probability of
+                        that pair of outcomes,
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mo>=</mo><msub><mi>p</mi><mi>x</mi></msub><msub><mi>q</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">R_{xy} = p_x q_y</annotation></semantics></math>,
+                        in actual fact. Pairs that yield the same sum
+                        collect along the same skew diagonal—horizontal
+                        in this orientation. Summing along those skew
+                        diagonals give the probabilities
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow></msub><annotation encoding="application/x-tex">r_{x+y}</annotation></semantics></math>
+                        on the right.</p>
+                        <p>To perform those sums on GPU, we ideally make
+                        use of fast <a
+                        href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#warp-shuffle-functions">warp
+                        shuffle functions</a>. This requires threads to
+                        be arranged by skew diagonal, not by rows and
+                        columns as is more typical. Assume a warp size
+                        of four threads (for the sake of demonstration
+                        only—it’s actually 32 threads). With the
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mo>×</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">4 \times 4</annotation></semantics></math>
+                        matrix here we use 16 threads arranged into four
+                        such warps. In hexadecimal notation
+                        (i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
+                        through
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
+                        denote the decimal numbers 10 through 15), the
+                        four warps contain the threads
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0,1,2,3)</annotation></semantics></math>,
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>4</mn><mo>,</mo><mn>5</mn><mo>,</mo><mn>6</mn><mo>,</mo><mn>7</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(4,5,6,7)</annotation></semantics></math>,
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>8</mn><mo>,</mo><mn>9</mn><mo>,</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(8,9,A,B)</annotation></semantics></math>
+                        and
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>C</mi><mo>,</mo><mi>D</mi><mo>,</mo><mi>E</mi><mo>,</mo><mi>F</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(C,D,E,F)</annotation></semantics></math>.
+                        They are assigned to elements of the matrix as
+                        follows:</p>
+                        <p><img src="2.svg" class="invert" /></p>
+                        <p>With this arrangement, each warp spans two
+                        skew diagonals, with the exception of the last,
+                        which has only the main skew diagonal. For
+                        example, the first warp has thread 0 on the
+                        first skew diagonal, with the single pair where
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x + y = 0</annotation></semantics></math>,
+                        and threads 1, 2, 3 on the fifth skew diagonal,
+                        having the three pairs where
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">x + y = 4</annotation></semantics></math>.
+                        This ordering has a regular pattern; thread
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+                        maps to element
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math>
+                        with:</p>
+                        <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>x</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mo stretchy="false" form="prefix">⌊</mo><mi>k</mi><mi>/</mi><mn>4</mn><mo stretchy="false" form="postfix">⌋</mo><mo>−</mo><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>y</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>k</mi><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+                        x &amp;= (\lfloor k/4 \rfloor - (k \bmod 4)) \bmod 4 \\
+                        y &amp;= k \bmod 4.
+                        \end{aligned}</annotation></semantics></math></p>
+                        <p>Alternatively, with two-dimensional thread
+                        indices, thread
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics></math>,
+                        with
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mo stretchy="false" form="prefix">⌊</mo><mi>k</mi><mi>/</mi><mn>4</mn><mo stretchy="false" form="postfix">⌋</mo></mrow><annotation encoding="application/x-tex">i = \lfloor k/4 \rfloor</annotation></semantics></math>
+                        and
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi><mo>=</mo><mi>k</mi><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow></mrow><annotation encoding="application/x-tex">j = k \bmod 4</annotation></semantics></math>,
+                        maps to element
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math>,
+                        with:</p>
+                        <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>x</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>−</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>y</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>j</mi><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+                        x &amp;= (j - i) \bmod 4 \\
+                        y &amp;= j.
+                        \end{aligned}</annotation></semantics></math></p>
+                        <p>We also designate a single representative
+                        thread for each skew diagonal for operations
+                        that are performed only once per unique value of
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x + y</annotation></semantics></math>.
+                        These are the threads for which
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x \bmod 4 = 0</annotation></semantics></math>
+                        or
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">x \bmod 4 = 3</annotation></semantics></math>,
+                        excluding thread
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>.</p>
+                        <p>The above all holds for a standard warp size
+                        of 32. Just replace 4 with 32 and 3 with 31.</p>
+                        <p>For
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mi>n</mi><mo>=</mo><mn>32</mn></mrow><annotation encoding="application/x-tex">m = n = 32</annotation></semantics></math>,
+                        the computation proceeds as follows:</p>
+                        <ol type="1">
+                        <li>Initialize
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒓</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>
+                        to all zero.</li>
+                        <li>Launch a kernel with a two-dimensional
+                        execution configuration, of size 32 by 32.</li>
+                        <li>Each thread
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics></math>
+                        computes
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><msub><mi>p</mi><mi>i</mi></msub><msub><mi>q</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">R_{ij} = p_i q_j</annotation></semantics></math>
+                        and stores the result in shared memory.</li>
+                        <li>All threads synchronize.</li>
+                        <li>Each thread
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics></math>
+                        adds
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>R</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><annotation encoding="application/x-tex">R_{xy}</annotation></semantics></math>
+                        to
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow></msub><annotation encoding="application/x-tex">r_{x+y}</annotation></semantics></math>.</li>
+                        </ol>
+                        <p>The matrix
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝑹</mi><annotation encoding="application/x-tex">\mathbf{R}</annotation></semantics></math>
+                        is temporarily constructed in fast shared
+                        memory; no device memory is required. We can
+                        readily extend the kernel to cases where
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>
+                        and
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+                        are not 32. Larger matrices can be decomposed
+                        into tiles of size 32 by 32. Matrices where the
+                        number of rows or columns is not a multiple of
+                        32 can be padded with zeros.</p>
+                        <p>The last step can make use of <a
+                        href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#warp-shuffle-functions">warp
+                        shuffle functions</a>, indeed this is the
+                        intention of the design. Specifically, we can
+                        use <code>__shfl_xor_sync</code> as in the <a
+                        href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#reduction-across-a-warp">butterfly
+                        sum example</a> of the CUDA Programming Guide.
+                        While there is a <code>__reduce_add_sync</code>
+                        <a
+                        href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#warp-reduce-functions">warp
+                        reduce function</a> that would seem useful
+                        instead, it does not support floating point
+                        types.</p>
+                        <p>A sketch of the code (untested) is as
+                        follows:</p>
+                        <div class="sourceCode" id="cb1"><pre
+                        class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/**</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"> * Compute the probability distribution for a sum of two discrete random</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"> * variables.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"> *</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@param</span><span class="co"> </span><span class="cv">m</span><span class="co"> Number of values for the first random variable.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@param</span><span class="co"> </span><span class="cv">n</span><span class="co"> Number of values for the second random variable.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@param</span><span class="co"> </span><span class="cv">p</span><span class="co"> Array of length </span><span class="an">@p</span><span class="co"> </span><span class="cv">m</span><span class="co"> of probabilities for each value of the first</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"> * random variable.</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@param</span><span class="co"> </span><span class="cv">incp</span><span class="co"> Stride between elements of </span><span class="an">@p</span><span class="co"> </span><span class="cv">p</span><span class="co">.</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@param</span><span class="co"> </span><span class="cv">q</span><span class="co"> Array of length </span><span class="an">@p</span><span class="co"> </span><span class="cv">n</span><span class="co"> of probabilities for each value of the</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"> * second random variable.</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@param</span><span class="co"> </span><span class="cv">incq</span><span class="co"> Stride between elements of </span><span class="an">@p</span><span class="co"> </span><span class="cv">q</span><span class="co">.</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@param[out]</span><span class="co"> </span><span class="cv">r</span><span class="co"> Array of length `m + n - 1` of probabilities for each sum.</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@param</span><span class="co"> </span><span class="cv">incr</span><span class="co"> Stride between elements of </span><span class="an">@p</span><span class="co"> </span><span class="cv">r</span><span class="co">.</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel_add_enumerate<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">(</span>blockDim<span class="op">.</span>x <span class="op">==</span> warpSize<span class="op">);</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">(</span>blockDim<span class="op">.</span>y <span class="op">==</span> warpSize<span class="op">);</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* populate outer product */</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> x <span class="op">=</span> threadIdx<span class="op">.</span>x <span class="op">+</span> blockIdx<span class="op">.</span>x<span class="op">*</span>warpSize<span class="op">;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> y <span class="op">=</span> threadIdx<span class="op">.</span>y <span class="op">+</span> blockIdx<span class="op">.</span>y<span class="op">*</span>warpSize<span class="op">;</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  __shared__ R<span class="op">[</span>warpSize<span class="op">*</span>warpSize<span class="op">];</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  R<span class="op">[</span>threadIdx<span class="op">.</span>x <span class="op">+</span> threadIdx<span class="op">.</span>y<span class="op">*</span>warpSize<span class="op">]</span> <span class="op">=</span> <span class="op">(</span>x <span class="op">&lt;</span> m <span class="op">&amp;&amp;</span> y <span class="op">&lt;</span> n<span class="op">)</span> <span class="op">?</span> p<span class="op">[</span>x<span class="op">]*</span>q<span class="op">[</span>y<span class="op">]</span> <span class="op">:</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  __syncthreads<span class="op">();</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* local sum */</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> <span class="op">(</span>threadIdx<span class="op">.</span>x <span class="op">-</span> threadIdx<span class="op">.</span>y<span class="op">)</span> <span class="op">%</span> warpSize<span class="op">;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> threadIdx<span class="op">.</span>y<span class="op">;</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="dt">unsigned</span> mask <span class="op">=</span> <span class="bn">0xffffffff</span><span class="op">;</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>x <span class="op">+</span> y <span class="op">&lt;</span> warpSize<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    mask <span class="op">&lt;&lt;=</span> warpSize <span class="op">-</span> x <span class="op">-</span> y <span class="op">-</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    mask <span class="op">&gt;&gt;=</span> x <span class="op">+</span> y <span class="op">+</span> <span class="dv">1</span> <span class="op">-</span> warpSize<span class="op">;</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span> value <span class="op">=</span> R<span class="op">[</span>x <span class="op">+</span> y<span class="op">*</span>warpSize<span class="op">];</span>  </span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">16</span><span class="op">;</span> i <span class="op">&gt;=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">/=</span> <span class="dv">2</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    value <span class="op">+=</span> __shfl_xor_sync<span class="op">(</span>mask<span class="op">,</span> value<span class="op">,</span> i<span class="op">,</span> warpSize<span class="op">);</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* one thread only, for each row, updates the global sum */</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span> mod <span class="op">=</span> x <span class="op">%</span> warpSize<span class="op">;</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">((</span>mod <span class="op">==</span> <span class="dv">0</span> <span class="op">||</span> mod <span class="op">==</span> warpSize <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">&amp;&amp;</span> r <span class="op">!=</span> warpSize<span class="op">*</span>warpSize <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span>    </span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    x <span class="op">+=</span> blockIdx<span class="op">.</span>x<span class="op">*</span>warpSize<span class="op">;</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    y <span class="op">+=</span> blockIdx<span class="op">.</span>y<span class="op">*</span>warpSize<span class="op">;</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    atomicAdd<span class="op">(</span>r <span class="op">+</span> <span class="op">(</span>x <span class="op">+</span> y<span class="op">)*</span>incr<span class="op">,</span> value<span class="op">);</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+                        <p>It can be launched with, for example:</p>
+                        <div class="sourceCode" id="cb2"><pre
+                        class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> add_enumerate<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  cudaMemset<span class="op">(</span>r<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="op">(</span>m <span class="op">+</span> n <span class="op">-</span> <span class="dv">1</span><span class="op">)*</span><span class="kw">sizeof</span><span class="op">(</span><span class="dt">float</span><span class="op">));</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  dim3 block<span class="op">(</span>warpSize<span class="op">,</span> warpSize<span class="op">);</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  dim3 grid<span class="op">((</span>m <span class="op">+</span> warpSize <span class="op">-</span> <span class="dv">1</span><span class="op">)/</span>warpSize<span class="op">,</span> <span class="op">(</span>n <span class="op">+</span> warpSize <span class="op">-</span> <span class="dv">1</span><span class="op">)/</span>warpSize<span class="op">);</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  kernel_add_enumerate<span class="op">&lt;&lt;&lt;</span>grid<span class="op">,</span>block<span class="op">&gt;&gt;&gt;(</span>m<span class="op">,</span> n<span class="op">,</span> p<span class="op">,</span> incp<span class="op">,</span> q<span class="op">,</span> incq<span class="op">,</span> r<span class="op">,</span> incr<span class="op">);</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+                        <p>Further work may include:</p>
+                        <ul>
+                        <li>It may be beneficial to work with
+                        log-probabilities rather than
+                        probabilities.</li>
+                        <li>At the end of the kernel,
+                        <code>atomicAdd</code> is used to reduce across
+                        blocks. Other reduction approaches might be
+                        used.</li>
+                        <li>The approach generalizes to discrete random
+                        variables with support on any contiguous range
+                        of integers by tracking the lower bound
+                        separately. If
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>l</mi><mi>x</mi></msub><annotation encoding="application/x-tex">l_x</annotation></semantics></math>
+                        and
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>l</mi><mi>y</mi></msub><annotation encoding="application/x-tex">l_y</annotation></semantics></math>
+                        are the lower bounds of
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+                        and
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>,
+                        then
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>l</mi><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow></msub><mo>=</mo><msub><mi>l</mi><mi>x</mi></msub><mo>+</mo><msub><mi>l</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">l_{x+y} = l_x + l_y</annotation></semantics></math>
+                        is the lower bound of
+                        <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x + y</annotation></semantics></math>.</li>
+                        </ul>
+    </div>
+  </article>
+</main>
+
+<div class="w-100 mt-5" style="clear:both;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Feeds</h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Everything
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/blog.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Blog only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/software.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Software only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/research.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Research only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/photography.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Photography only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/creative.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Creative only
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Newsletter</h1>
+      <p><small>Subscribe to the newletter for announcements of new posts.</small></p>
+      <form action="https://indii.us11.list-manage.com/subscribe/post?u=6c39d985ee6d7e2a4f83f52c2&amp;id=6022e2b633&amp;f_id=00c4d7e3f0" method="post" target="_self" novalidate="">
+        <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="Email" value="" class="form-control w-100 my-2">
+        <input type="submit" name="subscribe" value="Subscribe" class="btn btn-primary w-100 my-2">
+
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="hidden" name="tags" value="10280626">
+          <input type="text" name="b_6c39d985ee6d7e2a4f83f52c2_6022e2b633" tabindex="-1" value="">
+        </div>
+      </form>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence
+Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

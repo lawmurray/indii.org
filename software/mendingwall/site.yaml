@@ -1,0 +1,18 @@
+style: mendingwall
+section:
+  logo: /software/mendingwall/logo.svg
+  name: Mending Wall
+  path: /software/mendingwall
+  menu:
+    - path: /software/mendingwall
+      name: Main
+    - path: /software/mendingwall/getting-started/
+      name: Get Started
+    - path: /software/mendingwall/mend-themes/
+      name: Mend Themes
+    - path: /software/mendingwall/tidy-menus/
+      name: Tidy Menus
+    - path: /software/mendingwall/contributing/
+      name: How To Help
+    - path: /software/mendingwall/faq/
+      name: Q & A

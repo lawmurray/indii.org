@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>C++: Pattern Matching Template Types</title>
+
+    <meta name="description" content="How to check if a template type matches a pattern? Something like <code>is_like_v&lt;T, vector&lt;int,_&gt;&gt;</code>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="C++: Pattern Matching Template Types">
+    <meta name="twitter:description" content="How to check if a template type matches a pattern? Something like <code>is_like_v&lt;T, vector&lt;int,_&gt;&gt;</code>">
+    <meta name="twitter:image" content="/assets/cpp.png">
+
+    <meta property="og:title" content="C++: Pattern Matching Template Types">
+    <meta property="og:description" content="How to check if a template type matches a pattern? Something like <code>is_like_v&lt;T, vector&lt;int,_&gt;&gt;</code>">
+    <meta property="og:url" content="https://indii.org/blog/pattern-matching-template-types/">
+    <meta property="og:image" content="/assets/cpp.png">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="canonical" href="https://indii.org/blog/pattern-matching-template-types/">
+    <link rel="icon" href="/assets/favicon.svg?v=2">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.min.js" async></script>
+  </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feed
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container text-center align-center w-75 mb-5">
+        <div class="py-2">
+      <img src="/assets/cpp.png" style="width:auto;max-height:128px;" class="img-fluid" width="128" height="128" alt="C++ programming language logo, white text ‘C++’ in shaded blue hexagon">
+      </div>
+      
+      <div class="category">dev</div>
+      <h1 class="mt-0">C++: Pattern Matching Template Types</h1>
+      <p class="h5"><strong>How to check if a template type matches a pattern? Something like <code>is_like_v&lt;T, vector&lt;int,_&gt;&gt;</code></strong></p>
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      </header>
+            <p class="date">
+      <time pubdate datetime="2024-03-02" title="2024-03-02">2024-03-02</time>
+      
+    </p>
+        
+    <div class="body">
+            <p>A <a href="/blog/forwarding-references">previous post</a>
+            considered function overload resolution in the presence of
+            forwarding references, and proposed a design pattern of
+            merging all the overloads of a function into one, using
+            <code>if constexpr</code> to implement the desired overload
+            resolution logic for various argument types. This was
+            restricted to using <code>std::is_same_v</code> and
+            <code>std::decay_t</code> for exact type matches, up to
+            const and ref qualifiers.</p>
+            <p>A <a
+            href="/blog/is-type-instantiation-of-template">follow up
+            post</a> extended this to checks of whether a given type is
+            an instantiation of a given template, introducing a new type
+            trait <code>is_instance_of_v</code>, used as
+            e.g. <code>is_instance_of_v&lt;T, std::vector&gt;</code>.</p>
+            <p>In this post we go further again to implement pattern
+            matching on template types. Patterns are written as
+            e.g. <code>A&lt;_,_&gt;</code> for an instantiation of a
+            class template <code>A</code> with two template arguments,
+            or <code>A&lt;int,_&gt;</code> where the first template
+            argument must be <code>int</code> but the second may be
+            anything, or even nested patterns such as
+            <code>B&lt;_, A&lt;int,_&gt;&gt;</code>. We then introduce a
+            new type trait <code>is_like_v</code> to allow matching of
+            types against such patterns, used as
+            e.g. <code>is_like_v&lt;T, A&lt;int,_&gt;&gt;</code> or
+            <code>is_like_v&lt;T, std::vector&lt;_, std::allocator&lt;_&gt;&gt;</code>.</p>
+                        <div class="toc">
+        <ul>
+        <li><a href="#motivation"
+        id="toc-motivation">Motivation</a></li>
+        <li><a href="#implementation"
+        id="toc-implementation">Implementation</a></li>
+        <li><a href="#demonstration"
+        id="toc-demonstration">Demonstration</a></li>
+        <li><a href="#bonus-one-of-a-set"
+        id="toc-bonus-one-of-a-set">Bonus: one-of-a-set</a></li>
+        <li><a href="#limitations"
+        id="toc-limitations">Limitations</a></li>
+        <li><a href="#conclusion"
+        id="toc-conclusion">Conclusion</a></li>
+        </ul>
+      </div>
+            <h2 id="motivation">Motivation</h2>
+            <p>Consider a template type such as <a
+            href="https://en.cppreference.com/w/cpp/container/vector"><code>std::vector</code></a>:</p>
+            <div class="sourceCode" id="cb1"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> T<span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> Allocator <span class="op">=</span> <span class="bu">std::</span>allocator<span class="op">&lt;</span>T<span class="op">&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">&gt;</span> <span class="kw">class</span> vector<span class="op">;</span></span></code></pre></div>
+            <p>It has two template parameters, <code>T</code> and
+            <code>Allocator</code>, the first giving the element type,
+            the second the allocator type. We may want to query whether
+            some type is an instantiation of <code>std::vector</code>
+            but with a specific element type, say <code>int</code>,
+            while allowing for any allocator type. Effectively we’re
+            looking for a partial match, a bit like a partial
+            specialization of a template. We cannot do this with
+            <code>std::is_same_v</code> or the
+            <code>is_instance_of_v</code> type traits used in previous
+            posts, however.</p>
+            <p>In this post we develop a new type trait
+            <code>is_like_v</code> that works a bit like
+            <code>std::is_same_v</code>, but with support for partial
+            matches using a wildcard denoted by the underscore
+            <code>_</code> (using the underscore for fun,
+            mostly—alternatives are possible). It will be used something
+            like this:</p>
+            <div class="sourceCode" id="cb2"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">constexpr</span> <span class="op">(</span>is_like_v<span class="op">&lt;</span>T<span class="op">,</span>vector<span class="op">&lt;</span><span class="dt">double</span><span class="op">,</span>_<span class="op">&gt;&gt;)</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ...do something</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <h2 id="implementation">Implementation</h2>
+            <p>We start with a basic declaration of
+            <code>is_like_v&lt;T,P&gt;</code>, where <code>T</code>
+            denotes a type, and <code>P</code> a pattern against which
+            to match it. The pattern is itself a type, but it may
+            include the wildcard <code>_</code>.</p>
+            <p>The initial definition equates
+            <code>is_like_v&lt;T,P&gt;</code> with
+            <code>std::is_same_v&lt;T,P&gt;</code>, i.e. two types are
+            alike if they are the same:</p>
+            <div class="sourceCode" id="cb3"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">,</span> <span class="kw">class</span> P<span class="op">&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_like_v <span class="op">=</span> <span class="bu">std::</span>is_same_v<span class="op">&lt;</span>T<span class="op">,</span>P<span class="op">&gt;;</span></span></code></pre></div>
+            <p>Next, we introduce a type to denote wildcards in template
+            patterns. For fun and nice-looking patterns, we’re going to
+            make this the underscore <code>_</code>, although in
+            practice we should be wary of name collisions and reserved
+            words:</p>
+            <div class="sourceCode" id="cb4"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> _ <span class="op">{};</span></span></code></pre></div>
+            <p>All types match the wildcard:</p>
+            <div class="sourceCode" id="cb5"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_like_v<span class="op">&lt;</span>T<span class="op">,</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span></code></pre></div>
+            <p>The final piece is more complicated: two template types
+            are alike if they are instantiations of the same class
+            template, and their template arguments are alike:</p>
+            <div class="sourceCode" id="cb6"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span><span class="op">...&gt;</span> <span class="kw">class</span> T<span class="op">,</span> <span class="kw">class</span><span class="op">...</span> Ts<span class="op">,</span> <span class="kw">class</span><span class="op">...</span> Us<span class="op">&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">requires</span> <span class="op">(</span><span class="kw">sizeof</span><span class="op">...(</span>Ts<span class="op">)</span> <span class="op">==</span> <span class="kw">sizeof</span><span class="op">...(</span>Us<span class="op">))</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_like_v<span class="op">&lt;</span>T<span class="op">&lt;</span>Ts<span class="op">...&gt;,</span>T<span class="op">&lt;</span>Us<span class="op">...&gt;&gt;</span> <span class="op">=</span> <span class="op">(</span>is_like_v<span class="op">&lt;</span>Ts<span class="op">,</span>Us<span class="op">&gt;</span> <span class="op">&amp;&amp;</span> <span class="op">...);</span></span></code></pre></div>
+            <p>Here we use a plentiful mix of modern C++ features:
+            template <a
+            href="https://en.cppreference.com/w/cpp/language/parameter_pack">parameter
+            packs</a> and the <a
+            href="https://en.cppreference.com/w/cpp/language/sizeof..."><code>sizeof...</code>
+            operator</a>, template template arguments (as we did for <a
+            href="/blog/is-type-instantiation-of-template"><code>is_instance_of_v</code></a>),
+            <a
+            href="https://en.cppreference.com/w/cpp/language/constraints">constraints
+            and concepts</a> (the <code>requires</code>) to check for
+            the same number of template arguments, and <a
+            href="https://en.cppreference.com/w/cpp/language/fold">fold
+            expressions</a> (the
+            <code>(is_like&lt;Ts,Us&gt; &amp;&amp; ...)</code>).</p>
+            <p>But those few lines are all we need.</p>
+            <div class="note">
+            <p>This does pattern matching up to const and ref
+            qualifiers. To ignore const and ref qualifiers, massage in
+            <code>std::decay_t</code> as in the <a
+            href="/blog/forwarding-references">first post</a>.</p>
+            </div>
+            <h2 id="demonstration">Demonstration</h2>
+            <p>We can now use <code>is_like_v</code> along the following
+            lines:</p>
+            <div class="sourceCode" id="cb7"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>is_like_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span>_<span class="op">&gt;&gt;;</span>  <span class="co">// true</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>is_like_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>_<span class="op">,</span>_<span class="op">&gt;&gt;;</span>  <span class="co">// true</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>is_like_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span> <span class="bu">std::</span>list<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span>_<span class="op">&gt;&gt;;</span>  <span class="co">// false</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>is_like_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span> <span class="bu">std::</span>list<span class="op">&lt;</span>_<span class="op">,</span>_<span class="op">&gt;&gt;;</span>  <span class="co">// false</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>is_like_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>_<span class="op">,</span> <span class="bu">std::</span>allocator<span class="op">&lt;</span>_<span class="op">&gt;&gt;&gt;;</span>  <span class="co">// true</span></span></code></pre></div>
+            <p>We can use such checks in <code>if constexpr</code>
+            statements to implement the body of a function with
+            forwarding reference arguments, as suggested in the <a
+            href="/blog/forwarding-references">first post</a>, but also
+            other circumstances.</p>
+            <h2 id="bonus-one-of-a-set">Bonus: one-of-a-set</h2>
+            <p>Let’s get beyond single wildcards, and consider sets of
+            patterns as well. Given two or more patterns, we would like
+            <code>is_like_v</code> to give true if the given type
+            matches at least one of those patterns.</p>
+            <p>By way of motivation, consider a numerical library where
+            expression templates are used to represent mathematical
+            formulae that are lazily evaluated. A linear expression of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+            such as
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>x</mi><mo>+</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">ax + c</annotation></semantics></math>
+            may be represented by the type
+            <code>Add&lt;Mul&lt;double,T&gt;,double&gt;</code>, where
+            <code>T</code> is the generic type of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+            (either a simple arithmetic type such as <code>double</code>
+            or a nested expression template type). But because
+            multiplication and addition are commutative,
+            i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mi>y</mi><mo>=</mo><mi>y</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">xy = yx</annotation></semantics></math>
+            and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><mi>y</mi><mo>+</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">x + y = y + x</annotation></semantics></math>,
+            a linear expression of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+            may emerge with any one of the types
+            <code>Add&lt;Mul&lt;double,T&gt;,double&gt;</code>,
+            <code>Add&lt;Mul&lt;T,double&gt;,double&gt;</code>,
+            <code>Add&lt;double,Mul&lt;double,T&gt;&gt;</code> or
+            <code>Add&lt;double,Mul&lt;T,double&gt;&gt;</code>.</p>
+            <p>How to match all of these?</p>
+            <p>Similar to the wildcard type <code>_</code>, we can
+            introduce a set type <code>in</code> that collects together
+            multiple patterns:</p>
+            <div class="sourceCode" id="cb8"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span><span class="op">...</span> Ps<span class="op">&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> in <span class="op">{};</span></span></code></pre></div>
+            <p>Now extend <code>is_like_v</code> with a new
+            specialization to handle the <code>in</code> type:</p>
+            <div class="sourceCode" id="cb9"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">,</span> <span class="kw">class</span><span class="op">...</span> Ps<span class="op">&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_like_v<span class="op">&lt;</span>T<span class="op">,</span>in<span class="op">&lt;</span>Ps<span class="op">...&gt;&gt;</span> <span class="op">=</span> <span class="op">(</span>is_like_v<span class="op">&lt;</span>T<span class="op">,</span>Ps<span class="op">&gt;</span> <span class="op">||</span> <span class="op">...);</span></span></code></pre></div>
+            <p>This uses a fold expression to give true if the type
+            <code>T</code> matches any of the patterns
+            <code>Ps...</code>. We can now use something like the
+            following:</p>
+            <div class="sourceCode" id="cb10"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>is_like_v<span class="op">&lt;</span>T<span class="op">,</span> in<span class="op">&lt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>      Add<span class="op">&lt;</span>Mul<span class="op">&lt;</span><span class="dt">double</span><span class="op">,</span>_<span class="op">&gt;,</span><span class="dt">double</span><span class="op">&gt;,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>      Add<span class="op">&lt;</span>Mul<span class="op">&lt;</span>_<span class="op">,</span><span class="dt">double</span><span class="op">&gt;,</span><span class="dt">double</span><span class="op">&gt;,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>      Add<span class="op">&lt;</span><span class="dt">double</span><span class="op">,</span>Mul<span class="op">&lt;</span><span class="dt">double</span><span class="op">,</span>_<span class="op">&gt;&gt;,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      Add<span class="op">&lt;</span><span class="dt">double</span><span class="op">,</span>Mul<span class="op">&lt;</span>_<span class="op">,</span><span class="dt">double</span><span class="op">&gt;&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;&gt;;</span></span></code></pre></div>
+            <p>If the pattern is to be reused, or if we just prefer the
+            aesthetic, we can declare the pattern first:</p>
+            <div class="sourceCode" id="cb11"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> linear_pattern <span class="op">=</span> in<span class="op">&lt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>      Add<span class="op">&lt;</span>Mul<span class="op">&lt;</span><span class="dt">double</span><span class="op">,</span>_<span class="op">&gt;,</span><span class="dt">double</span><span class="op">&gt;,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>      Add<span class="op">&lt;</span>Mul<span class="op">&lt;</span>_<span class="op">,</span><span class="dt">double</span><span class="op">&gt;,</span><span class="dt">double</span><span class="op">&gt;,</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>      Add<span class="op">&lt;</span><span class="dt">double</span><span class="op">,</span>Mul<span class="op">&lt;</span><span class="dt">double</span><span class="op">,</span>_<span class="op">&gt;&gt;,</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      Add<span class="op">&lt;</span><span class="dt">double</span><span class="op">,</span>Mul<span class="op">&lt;</span>_<span class="op">,</span><span class="dt">double</span><span class="op">&gt;&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>is_like_v<span class="op">&lt;</span>T<span class="op">,</span> linear_pattern<span class="op">&gt;;</span></span></code></pre></div>
+            <p>Implementing a function with forwarding reference
+            parameters may then look something like this:</p>
+            <div class="sourceCode" id="cb12"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span>T<span class="op">&amp;&amp;</span> x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="kw">constexpr</span> <span class="op">(</span>is_like_v<span class="op">&lt;</span><span class="bu">std::</span>decay_t<span class="op">&lt;</span>T<span class="op">&gt;,</span> linear_pattern<span class="op">&gt;)</span> <span class="op">{</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// implementation for linear expression</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(linear x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// implementation for everything else</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> <span class="st">&quot;f(T&amp;&amp; x)&quot;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>This approach may reduce code size compared to separate
+            function overloads for each of the linear expression
+            types.</p>
+            <h2 id="limitations">Limitations</h2>
+            <p>There are some limitations to pattern matching template
+            types in this way.</p>
+            <p>Because the wildcard <code>_</code> is defined as a type,
+            it cannot be substituted for non-type template parameters.
+            That precludes its use where value template parameters are
+            involved, as for the second argument of
+            <code>std::array</code> (which gives the static size of the
+            array):</p>
+            <div class="sourceCode" id="cb13"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">class</span> T<span class="op">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">std::</span>size_t N</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> <span class="kw">struct</span> array<span class="op">;</span></span></code></pre></div>
+            <p>or where template template parameters are involved, as
+            for the <a
+            href="/blog/is-type-instantiation-of-template"><code>is_instance_of_v</code>
+            introduced previously</a>.</p>
+            <p>Where duck-typed class templates are involved, we get
+            away with using <code>_</code> as a template argument in
+            patterns because, while those patterns are types, they are
+            not used in such a way that requires their instantiation. On
+            the other hand, where class templates with concept or SFINAE
+            constraints are involved, <code>_</code> may be rejected as
+            a template argument prior to instantiation, in which case
+            the approach will not work.</p>
+            <p>The same applies to the set type <code>in</code>.</p>
+            <p>A workaround for some of these limitations is to
+            specialize <code>is_like_v</code> for particular types.
+            Consider <code>std::array</code> again; if appropriate for
+            the use case, we could specialize <code>is_like_v</code> to
+            match the value type <code>T</code>, but ignore the length
+            <code>D</code>:</p>
+            <div class="sourceCode" id="cb14"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">,</span> <span class="dt">size_t</span> M<span class="op">,</span> <span class="kw">class</span> U<span class="op">,</span> <span class="dt">size_t</span> N<span class="op">&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_like_v<span class="op">&lt;</span><span class="bu">std::</span>array<span class="op">&lt;</span>T<span class="op">,</span>M<span class="op">&gt;,</span><span class="bu">std::</span>array<span class="op">&lt;</span>U<span class="op">,</span>N<span class="op">&gt;&gt;</span> <span class="op">=</span> is_like_v<span class="op">&lt;</span>T<span class="op">,</span>U<span class="op">&gt;;</span></span></code></pre></div>
+            <p>Where concept or SFINAE constraints are in use, we might
+            also specialize those constraints for the wildcard
+            <code>_</code> and set <code>in</code> types to satisfy them
+            artificially. How will depend on the specifics of the
+            constraints, but will likely involve the specialization of
+            certain other type traits for these two types.</p>
+            <p>Mileage will vary, and the implementation of
+            <code>is_like_v</code> may need to be specific to the
+            circumstances.</p>
+            <h2 id="conclusion">Conclusion</h2>
+            <p>This is the final of three posts inspired by the idea of
+            establishing a design pattern for overloading functions in
+            the presence of forwarding references, with greater control
+            over overload resolution. Putting them all together, the
+            suggested paradigm is to:</p>
+            <ol type="1">
+            <li>Combine all function overloads into one with forwarding
+            reference parameters.</li>
+            <li>Within the body of that one function, use
+            <code>if constexpr</code> to provide implementations for
+            different argument types.</li>
+            <li>Within each <code>if constexpr</code> condition, use
+            type traits such as <code>std::is_same_v</code>, or the new
+            type traits introduced in these posts,
+            <code>is_instance_of_v</code> and <code>is_like_v</code>, to
+            check for types.</li>
+            <li>Within each <code>if constexpr</code> body, provide the
+            appropriate implementation for those types.</li>
+            </ol>
+            <p>Taking this approach can reduce repeated code in
+            situations where multiple function overloads would otherwise
+            be required, especially so where several of those overloads
+            would have essentially the same implementation. It can also
+            provide finer control over behavior where the usual overload
+            resolution rules do not yield the desired precedence, as the
+            body of the one function can be implemented with arbitrary
+            selection logic for the argument types.</p>
+            <p>Here’s a complete example for further experimentation
+            with <code>is_like_v</code>:</p>
+            <div class="sourceCode" id="cb15"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;type_traits&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;list&gt;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;array&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">,</span> <span class="kw">class</span> P<span class="op">&gt;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_like_v <span class="op">=</span> <span class="bu">std::</span>is_same_v<span class="op">&lt;</span>T<span class="op">,</span>P<span class="op">&gt;;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> _ <span class="op">{};</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">&gt;</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_like_v<span class="op">&lt;</span>T<span class="op">,</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span><span class="op">...&gt;</span> <span class="kw">class</span> T<span class="op">,</span> <span class="kw">class</span><span class="op">...</span> Ts<span class="op">,</span> <span class="kw">class</span><span class="op">...</span> Us<span class="op">&gt;</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="kw">requires</span> <span class="op">(</span><span class="kw">sizeof</span><span class="op">...(</span>Ts<span class="op">)</span> <span class="op">==</span> <span class="kw">sizeof</span><span class="op">...(</span>Us<span class="op">))</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_like_v<span class="op">&lt;</span>T<span class="op">&lt;</span>Ts<span class="op">...&gt;,</span>T<span class="op">&lt;</span>Us<span class="op">...&gt;&gt;</span> <span class="op">=</span> <span class="op">(</span>is_like_v<span class="op">&lt;</span>Ts<span class="op">,</span>Us<span class="op">&gt;</span> <span class="op">&amp;&amp;</span> <span class="op">...);</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">,</span> <span class="dt">size_t</span> M<span class="op">,</span> <span class="kw">class</span> U<span class="op">,</span> <span class="dt">size_t</span> N<span class="op">&gt;</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_like_v<span class="op">&lt;</span><span class="bu">std::</span>array<span class="op">&lt;</span>T<span class="op">,</span>M<span class="op">&gt;,</span><span class="bu">std::</span>array<span class="op">&lt;</span>U<span class="op">,</span>N<span class="op">&gt;&gt;</span> <span class="op">=</span> is_like_v<span class="op">&lt;</span>T<span class="op">,</span>U<span class="op">&gt;;</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span><span class="op">...</span> Ps<span class="op">&gt;</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> in <span class="op">{};</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> T<span class="op">,</span> <span class="kw">class</span><span class="op">...</span> Ps<span class="op">&gt;</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="kw">constexpr</span> <span class="dt">bool</span> is_like_v<span class="op">&lt;</span>T<span class="op">,</span>in<span class="op">&lt;</span>Ps<span class="op">...&gt;&gt;</span> <span class="op">=</span> <span class="op">(</span>is_like_v<span class="op">&lt;</span>T<span class="op">,</span>Ps<span class="op">&gt;</span> <span class="op">||</span> <span class="op">...);</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_like_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span> <span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span>_<span class="op">&gt;&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_like_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>_<span class="op">,</span>_<span class="op">&gt;&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_like_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span> <span class="bu">std::</span>list<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span>_<span class="op">&gt;&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>  <span class="co">// false</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_like_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span> <span class="bu">std::</span>list<span class="op">&lt;</span>_<span class="op">,</span>_<span class="op">&gt;&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>  <span class="co">// false</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_like_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span> <span class="bu">std::</span>vector<span class="op">&lt;</span>_<span class="op">,</span> <span class="bu">std::</span>allocator<span class="op">&lt;</span>_<span class="op">&gt;&gt;&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_like_v<span class="op">&lt;</span><span class="bu">std::</span>array<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span><span class="dv">10</span><span class="op">&gt;,</span> <span class="bu">std::</span>array<span class="op">&lt;</span>_<span class="op">,</span><span class="dv">20</span><span class="op">&gt;&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>  <span class="co">// true, due to specialization</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>  <span class="kw">using</span> pattern <span class="op">=</span> in<span class="op">&lt;</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>vector<span class="op">&lt;</span>_<span class="op">,</span><span class="bu">std::</span>allocator<span class="op">&lt;</span>_<span class="op">&gt;&gt;,</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>        <span class="bu">std::</span>list<span class="op">&lt;</span>_<span class="op">,</span><span class="bu">std::</span>allocator<span class="op">&lt;</span>_<span class="op">&gt;&gt;</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>      <span class="op">&gt;;</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> is_like_v<span class="op">&lt;</span><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">int</span><span class="op">&gt;,</span>pattern<span class="op">&gt;</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+    </div>
+  </article>
+</main>
+
+<div class="w-100 mt-5" style="clear:both;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Feeds</h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Everything
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/blog.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Blog only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/software.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Software only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/research.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Research only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/photography.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Photography only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/creative.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Creative only
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Newsletter</h1>
+      <p><small>Subscribe to the newletter for announcements of new posts.</small></p>
+      <form action="https://indii.us11.list-manage.com/subscribe/post?u=6c39d985ee6d7e2a4f83f52c2&amp;id=6022e2b633&amp;f_id=00c4d7e3f0" method="post" target="_self" novalidate="">
+        <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="Email" value="" class="form-control w-100 my-2">
+        <input type="submit" name="subscribe" value="Subscribe" class="btn btn-primary w-100 my-2">
+
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="hidden" name="tags" value="10280626">
+          <input type="text" name="b_6c39d985ee6d7e2a4f83f52c2_6022e2b633" tabindex="-1" value="">
+        </div>
+      </form>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence
+Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

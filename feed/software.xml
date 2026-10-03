@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>Lawrence Murray</title>
+    <link>https://indii.org</link>
+    <description>Personal site of Lawrence Murray, collating blog articles, scientific research, software artifacts, and creative outputs</description>
+    
+    <pubDate>Sat, 03 Oct 2026 16:55:24 +0700</pubDate>
+    <lastBuildDate>Sat, 03 Oct 2026 16:55:24 +0700</lastBuildDate>
+        <item>
+      <title>Mending Wall</title>
+      <link>https://indii.org/software/mendingwall/</link>
+      <description>Try another desktop environment</description>
+      <category>software</category>
+      <pubDate>2025-02-22</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+        <item>
+      <title>Doxide</title>
+      <link>https://indii.org/software/doxide/</link>
+      <description>Documentation generation and code coverage reports for modern C++</description>
+      <category>software</category>
+      <pubDate>2023-06-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+        <item>
+      <title>Jekyll Responsive Magick</title>
+      <link>https://indii.org/software/jekyll-responsive-magick/</link>
+      <description>A Jekyll plugin to automate responsive images with Jekyll 4</description>
+      <category>software</category>
+      <pubDate>2022-11-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+        <item>
+      <title>Birch</title>
+      <link>https://indii.org/software/birch/</link>
+      <description>An open source probabilistic programming language</description>
+      <category>software</category>
+      <pubDate>2018-03-24</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+        <item>
+      <title>LibBi</title>
+      <link>https://indii.org/software/libbi/</link>
+      <description>A high-performance probabilistic programming language for state-space models with GPU and distributed computing support</description>
+      <category>software</category>
+      <pubDate>2013-06-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+        <item>
+      <title>Urban Lightscape</title>
+      <link>https://indii.org/software/urbanlightscape/</link>
+      <description>Exposure correction and local lighting adjustments</description>
+      <category>software</category>
+      <pubDate>2010-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+        <item>
+      <title>Tintii</title>
+      <link>https://indii.org/software/tintii/</link>
+      <description>Selective colour and saturation control</description>
+      <category>software</category>
+      <pubDate>2007-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+      </channel>
+</rss>

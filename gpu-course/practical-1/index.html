@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Foundations of GPU Computing: Practical Exercises #1</title>
+
+    <meta name="description" content="Working with C code that trains a deep neural network">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Foundations of GPU Computing: Practical Exercises #1">
+    <meta name="twitter:description" content="Working with C code that trains a deep neural network">
+    <meta name="twitter:image" content="/assets/gpu.svg">
+
+    <meta property="og:title" content="Foundations of GPU Computing: Practical Exercises #1">
+    <meta property="og:description" content="Working with C code that trains a deep neural network">
+    <meta property="og:url" content="https://indii.org/gpu-course/practical-1/">
+    <meta property="og:image" content="/assets/gpu.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="canonical" href="https://indii.org/gpu-course/practical-1/">
+    <link rel="icon" href="/assets/favicon.svg?v=2">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.min.js" async></script>
+  </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feed
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container text-center align-center w-75 mb-5">
+        <div class="py-2">
+      <img src="/assets/gpu.svg" style="width:auto;max-height:128px;" class="img-fluid" width="128" height="128" alt="Simple line drawing of a GPU">
+      </div>
+      
+      <div class="category">course</div>
+      <h1 class="mt-0">Foundations of GPU Computing: Practical Exercises #1</h1>
+      <p class="h5"><strong>Working with C code that trains a deep neural network</strong></p>
+      
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      </header>
+            
+    <div class="body">
+            <p>In this practical, we work with C code that trains a deep
+            neural network to predict trips in a bike sharing network.
+            Both the C code and data set are provided for you. We review
+            the code to understand the implementation, investigate
+            performance by tweaking basic configuration options, and
+            explore some essentials of CUDA programming such as memory
+            management and kernel launches.</p>
+            <p>This practical is part of the course <a
+            href="/gpu-course/">Foundations of GPU Computing</a>.</p>
+            <div class="note">
+            <p><strong>Not familiar with C?</strong></p>
+            <p>You will not be required to write any C code from
+            scratch, only read and make guided modifications. Tips are
+            provided along the way.</p>
+            </div>
+                        <div class="toc">
+        <ul>
+        <li><a href="#prerequisites"
+        id="toc-prerequisites">Prerequisites</a></li>
+        <li><a href="#introduction-10-minutes"
+        id="toc-introduction-10-minutes">Introduction (10
+        minutes)</a></li>
+        <li><a href="#orientation-10-minutes"
+        id="toc-orientation-10-minutes">Orientation (10
+        minutes)</a></li>
+        <li><a href="#building-and-running-10-minutes"
+        id="toc-building-and-running-10-minutes">Building and running
+        (10 minutes)</a></li>
+        <li><a href="#simple-tests-10-minutes"
+        id="toc-simple-tests-10-minutes">Simple tests (10 minutes)</a>
+        <ul>
+        <li><a href="#kernels" id="toc-kernels">Kernels</a></li>
+        <li><a href="#streams" id="toc-streams">Streams</a></li>
+        <li><a href="#floating-point-precision"
+        id="toc-floating-point-precision">Floating point
+        precision</a></li>
+        <li><a href="#cleaning-up" id="toc-cleaning-up">Cleaning
+        up</a></li>
+        </ul></li>
+        <li><a href="#exploration-20-minutes"
+        id="toc-exploration-20-minutes">Exploration (20 minutes)</a>
+        <ul>
+        <li><a href="#building" id="toc-building">Building</a></li>
+        <li><a href="#floating-point-literals"
+        id="toc-floating-point-literals">Floating point
+        literals</a></li>
+        <li><a href="#memory-allocation"
+        id="toc-memory-allocation">Memory allocation</a></li>
+        <li><a href="#kernels-1" id="toc-kernels-1">Kernels</a></li>
+        <li><a href="#model-forward-and-backward-passes"
+        id="toc-model-forward-and-backward-passes">Model forward and
+        backward passes</a></li>
+        </ul></li>
+        <li><a href="#summary" id="toc-summary">Summary</a></li>
+        <li><a href="#possible-extensions"
+        id="toc-possible-extensions">Possible extensions</a></li>
+        </ul>
+      </div>
+            <h2 id="prerequisites">Prerequisites</h2>
+            <p>Make sure that your system satisfies the prerequisites
+            given on the <a href="/gpu-course">main course page</a>. We
+            will use Visual Studio Code, but not Nsight Systems, in this
+            practical.</p>
+            <div class="info">
+            <p>Start Visual Studio code and, if you plan to run code on
+            a remote machine, <a
+            href="/blog/develop-in-the-cloud-with-visual-studio-code">connect
+            to it</a>.</p>
+            </div>
+            <h2 id="introduction-10-minutes">Introduction (10
+            minutes)</h2>
+            <p>The example code implements a simple feed-forward neural
+            network to predict hourly trips of the Capital bike sharing
+            scheme in Washington D.C. It implements both the forward and
+            backward passes (there is no automatic differentiation!), an
+            Adam optimizer, and the training and testing loop. The data
+            (provided) gives the number of trips for each hour of 2019,
+            aggregated over the entire city. Features include weather
+            and sunlight.</p>
+            <p>The model can be described mathematically as follows. For
+            each hour we predict the number of trips
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+            from features
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒙</mi><annotation encoding="application/x-tex">\mathbf{x}</annotation></semantics></math>
+            using a neural network with
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+            number of layers. The forward pass is given by:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi mathvariant="bold-italic">𝒛</mi><mn>1</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi mathvariant="bold-italic">𝑾</mi><mn>1</mn></msub><mi mathvariant="bold-italic">𝒙</mi><mo>+</mo><msub><mi mathvariant="bold-italic">𝒃</mi><mn>1</mn></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi mathvariant="bold-italic">𝒛</mi><mi>l</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi mathvariant="bold-italic">𝑾</mi><mi>l</mi></msub><msubsup><mi mathvariant="bold-italic">𝒛</mi><mrow><mi>l</mi><mo>−</mo><mn>1</mn></mrow><mo>+</mo></msubsup><mo>+</mo><msub><mi mathvariant="bold-italic">𝒃</mi><mi>l</mi></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> for </mtext><mspace width="0.333em"></mspace></mrow><mi>l</mi><mo>=</mo><mn>2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>L</mi><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \mathbf{z}_{1} &amp; =\mathbf{W}_{1}\mathbf{x}+\mathbf{b}_{1}\\
+            \mathbf{z}_{l} &amp; =\mathbf{W}_{l}\mathbf{z}_{l-1}^{+}+\mathbf{b}_{l}\text{ for }l=2,\ldots,L,\\
+            \end{aligned}</annotation></semantics></math></p>
+            <p>where superscript
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>+</mi><annotation encoding="application/x-tex">+</annotation></semantics></math>
+            denotes rectification and the final layer
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="bold-italic">𝒛</mi><mi>L</mi></msub><annotation encoding="application/x-tex">\mathbf{z}_L</annotation></semantics></math>
+            (which will actually be a scalar, so we also write
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>L</mi></msub><annotation encoding="application/x-tex">z_L</annotation></semantics></math>)
+            forms the prediction (we reserve
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>
+            for the actual observation). The parameters are the weight
+            matrices
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="bold-italic">𝑾</mi><mi>l</mi></msub><annotation encoding="application/x-tex">\mathbf{W}_l</annotation></semantics></math>
+            and bias vectors
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="bold-italic">𝒃</mi><mi>l</mi></msub><annotation encoding="application/x-tex">\mathbf{b}_l</annotation></semantics></math>
+            for
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mo>=</mo><mn>1</mn><mi>…</mi><mo>,</mo><mi>L</mi></mrow><annotation encoding="application/x-tex">l=1\ldots,L</annotation></semantics></math>.</p>
+            <p>We train the model by minimizing the mean of the squared
+            error
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>z</mi><mi>L</mi></msub><mo>−</mo><mi>y</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">(z_L - y)^2</annotation></semantics></math>
+            over all data points. The backward pass computes the
+            gradient of this loss with respect to the parameters. Recall
+            that, for a scalar function with vector argument,
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi mathvariant="bold-italic">𝒙</mi><mo stretchy="false" form="postfix">)</mo><mo>→</mo><mi mathvariant="double-struck">ℝ</mi></mrow><annotation encoding="application/x-tex">f(\mathbf{x}) \rightarrow \mathbb{R}</annotation></semantics></math>,
+            given
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝒚</mi><mo>=</mo><mi mathvariant="bold-italic">𝑨</mi><mi mathvariant="bold-italic">𝒙</mi></mrow><annotation encoding="application/x-tex">\mathbf{y}=\mathbf{A}\mathbf{x}</annotation></semantics></math>
+            and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∂</mi><mi>f</mi><mi>/</mi><mi>∂</mi><mi mathvariant="bold-italic">𝒚</mi></mrow><annotation encoding="application/x-tex">\partial f/\partial\mathbf{y}</annotation></semantics></math>,
+            we have:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒙</mi></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msup><mi mathvariant="bold-italic">𝑨</mi><mi>⊤</mi></msup><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒚</mi></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝑨</mi></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><mi mathvariant="bold-italic">𝒚</mi></mrow></mfrac><msup><mi mathvariant="bold-italic">𝒙</mi><mi>⊤</mi></msup><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \frac{\partial f}{\partial\mathbf{x}} &amp; =\mathbf{A}^{\top}\frac{\partial f}{\partial\mathbf{y}}\\
+            \frac{\partial f}{\partial\mathbf{A}} &amp; =\frac{\partial f}{\partial\mathbf{y}}\mathbf{x}^{\top}.
+            \end{aligned}</annotation></semantics></math></p>
+            <p>The loss function is such a scalar function. We can
+            compute all necessary gradients by working backward,
+            recursively applying the chain rule (the same order as for
+            reverse-mode automatic differentiation):</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi>z</mi><mi>L</mi></msub></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>2</mn><mo stretchy="false" form="prefix">(</mo><msub><mi>z</mi><mi>L</mi></msub><mo>−</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msubsup><mi mathvariant="bold-italic">𝒛</mi><mrow><mi>l</mi><mo>−</mo><mn>1</mn></mrow><mo>+</mo></msubsup></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msubsup><mi mathvariant="bold-italic">𝑾</mi><mi>l</mi><mi>⊤</mi></msubsup><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi mathvariant="bold-italic">𝒛</mi><mi>l</mi></msub></mrow></mfrac><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> for </mtext><mspace width="0.333em"></mspace></mrow><mi>l</mi><mo>=</mo><mn>2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>L</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi mathvariant="bold-italic">𝒛</mi><mrow><mi>l</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msubsup><mi mathvariant="bold-italic">𝒛</mi><mrow><mi>l</mi><mo>−</mo><mn>1</mn></mrow><mo>+</mo></msubsup></mrow></mfrac><mo>⊙</mo><mi>H</mi><mo stretchy="false" form="prefix">(</mo><msubsup><mi mathvariant="bold-italic">𝒛</mi><mrow><mi>l</mi><mo>−</mo><mn>1</mn></mrow><mo>+</mo></msubsup><mo stretchy="false" form="postfix">)</mo><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> for </mtext><mspace width="0.333em"></mspace></mrow><mi>l</mi><mo>=</mo><mn>2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>L</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi mathvariant="bold-italic">𝑾</mi><mi>l</mi></msub></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi mathvariant="bold-italic">𝒛</mi><mi>l</mi></msub></mrow></mfrac><msubsup><mi mathvariant="bold-italic">𝒛</mi><mrow><mi>l</mi><mo>−</mo><mn>1</mn></mrow><mrow><mi>+</mi><mi>⊤</mi></mrow></msubsup><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> for </mtext><mspace width="0.333em"></mspace></mrow><mi>l</mi><mo>=</mo><mn>2</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>L</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi mathvariant="bold-italic">𝑾</mi><mn>1</mn></msub></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi mathvariant="bold-italic">𝒛</mi><mn>1</mn></msub></mrow></mfrac><msup><mi mathvariant="bold-italic">𝒙</mi><mi>⊤</mi></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi mathvariant="bold-italic">𝒃</mi><mi>l</mi></msub></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mrow><mi>∂</mi><mi>f</mi></mrow><mrow><mi>∂</mi><msub><mi mathvariant="bold-italic">𝒛</mi><mi>l</mi></msub></mrow></mfrac><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> for </mtext><mspace width="0.333em"></mspace></mrow><mi>l</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>L</mi><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \frac{\partial f}{\partial z_L} &amp; = 2(z_L - y) \\
+            \frac{\partial f}{\partial\mathbf{z}_{l-1}^{+}} &amp; =\mathbf{W}_{l}^{\top}\frac{\partial f}{\partial\mathbf{z}_{l}}\text{ for }l=2,\ldots,L\\
+            \frac{\partial f}{\partial\mathbf{z}_{l-1}} &amp; =\frac{\partial f}{\partial\mathbf{z}_{l-1}^{+}}\odot H(\mathbf{z}_{l-1}^{+})\text{ for }l=2,\ldots,L\\
+            \frac{\partial f}{\partial\mathbf{W}_{l}} &amp; =\frac{\partial f}{\partial\mathbf{z}_{l}}\mathbf{z}_{l-1}^{+\top}\text{ for }l=2,\ldots,L\\
+            \frac{\partial f}{\partial\mathbf{W}_{1}} &amp; =\frac{\partial f}{\partial\mathbf{z}_{1}}\mathbf{x}^{\top}\\
+            \frac{\partial f}{\partial\mathbf{b}_{l}} &amp; =\frac{\partial f}{\partial\mathbf{z}_{l}}\text{ for }l=1,\ldots,L.
+            \end{aligned}</annotation></semantics></math></p>
+            <p>where
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>
+            denotes the Heaviside step function:</p>
+            <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mfrac><mi mathvariant="normal">d</mi><mrow><mi mathvariant="normal">d</mi><mi>x</mi></mrow></mfrac><msup><mi>x</mi><mo>+</mo></msup></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>H</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>1</mn><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>x</mi><mo>&gt;</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>x</mi><mo>≤</mo><mn>0</mn></mtd></mtr></mtable></mrow><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}
+            \frac{\mathrm{d}}{\mathrm{d}x}x^{+} &amp; = H(x):=\begin{cases}
+            1, &amp; x&gt;0\\
+            0, &amp; x\leq0
+            \end{cases}.
+            \end{aligned}</annotation></semantics></math></p>
+            <p>Notice that we need to preserve the values of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="bold-italic">𝑾</mi><mi>l</mi></msub><annotation encoding="application/x-tex">\mathbf{W}_l</annotation></semantics></math>,
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="bold-italic">𝒃</mi><mi>l</mi></msub><annotation encoding="application/x-tex">\mathbf{b}_l</annotation></semantics></math>
+            and
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi mathvariant="bold-italic">𝒛</mi><mi>l</mi><mo>+</mo></msubsup><annotation encoding="application/x-tex">\mathbf{z}_l^+</annotation></semantics></math>
+            from the forward pass in order to perform these
+            calculations. We can discard the
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi mathvariant="bold-italic">𝒛</mi><mi>l</mi></msub><annotation encoding="application/x-tex">\mathbf{z}_l</annotation></semantics></math>,
+            however, which simplifies the implementation somewhat. In
+            practice we will use mini-batches of data by stacking
+            multiple data points as columns of a matrix of
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝑿</mi><annotation encoding="application/x-tex">\mathbf{X}</annotation></semantics></math>
+            and elements of a vector
+            <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒚</mi><annotation encoding="application/x-tex">\mathbf{y}</annotation></semantics></math>.
+            The computations are analogous.</p>
+            <div class="note">
+            <p>For more detail on reverse-mode automatic
+            differentiation, which we have just unrolled above, see <a
+            href="/blog/matrix-gradients-of-scalar-functions">Matrix
+            Gradients of Scalar Functions</a>.</p>
+            </div>
+            <h2 id="orientation-10-minutes">Orientation (10
+            minutes)</h2>
+            <p>We will start by obtaining the source code from
+            GitHub.</p>
+            <div class="info">
+            <p>From within Visual Studio Code, <a
+            href="/blog/develop-in-the-cloud-with-visual-studio-code">connect
+            to your GPU instance</a>, open a new terminal, and
+            enter:</p>
+            <div class="sourceCode" id="cb1"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/lawmurray/gpu-course.git</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> gpu-course</span></code></pre></div>
+            <p>On the left <em>Explorer</em> pane in Visual Studio Code,
+            open the <code>gpu-course</code> directory to access the
+            files.</p>
+            </div>
+            <p>The source code is split into the following files:</p>
+            <ul>
+            <li><dl>
+            <dt><code>src/config.h</code></dt>
+            <dd>
+            Contains global configuration options. We will experiment
+            with these shortly.
+            </dd>
+            </dl></li>
+            <li><dl>
+            <dt><code>src/init.h</code> and <code>src/init.c</code></dt>
+            <dd>
+            Contains routines for CUDA initialization.
+            </dd>
+            </dl></li>
+            <li><dl>
+            <dt><code>src/data.h</code> and <code>src/data.c</code></dt>
+            <dd>
+            Contains routines for the data, including initialization,
+            termination, and shuffling.
+            </dd>
+            </dl></li>
+            <li><dl>
+            <dt><code>src/model.h</code> and
+            <code>src/model.c</code></dt>
+            <dd>
+            Contains routines for the model, including initialization,
+            termination, forward and backward passes.
+            </dd>
+            </dl></li>
+            <li><dl>
+            <dt><code>src/optimizer.h</code> and
+            <code>src/optimizer.c</code></dt>
+            <dd>
+            Contains routines for the Adam optimizer, including
+            initialization, temination and gradient-based updates of
+            parameters.
+            </dd>
+            </dl></li>
+            <li><dl>
+            <dt><code>src/function.h</code> and
+            <code>src/function.cu</code></dt>
+            <dd>
+            Contains kernels to execute on the GPU.
+            </dd>
+            </dl></li>
+            <li><dl>
+            <dt><code>src/main.c</code></dt>
+            <dd>
+            Contains the main program that reads in the data,
+            initializes the model and optimizer, and runs the training
+            and testing loop.
+            </dd>
+            </dl></li>
+            </ul>
+            <div class="note">
+            <p><strong>Not familiar with C?</strong></p>
+            <p>C code is separated into <em>header</em> files and
+            <em>source</em> files. The header files <em>declare</em>
+            functions and the source files <em>define</em> them.
+            Alternatively, we can think of the headers as providing the
+            <em>interface</em> and the source files the
+            <em>implementation</em>. Within any header or source file we
+            can <em>#include</em> any number of header files to access
+            additional functionality, analogous to importing packages in
+            other languages.</p>
+            <p>By convention we use the following file extensions: -
+            <code>*.h</code> for header files, - <code>*.c</code> for
+            source files, - <code>*.cu</code> for source files that
+            contain CUDA language extensions.</p>
+            </div>
+            <p>The build is controlled by the <code>Makefile</code>,
+            which provides the commands to execute when calling
+            <code>make</code> on the terminal. These commands use the
+            CUDA compiler <code>nvcc</code> to compile
+            <code>function.cu</code>, and your system compiler (probably
+            <code>gcc</code>) for the remaining <code>*.c</code>
+            files.</p>
+            <div class="note">
+            <p><strong>Not familiar with C?</strong></p>
+            <p>Header files do not get compiled, only source files.</p>
+            </div>
+            <p>The data is provided in <code>bikeshare.csv</code>. The
+            last column is the standardized label, the other columns are
+            all features.</p>
+            <h2 id="building-and-running-10-minutes">Building and
+            running (10 minutes)</h2>
+            <div class="info">
+            <p>From within the <code>gpu-course</code> directory, build
+            the program with:</p>
+            <div class="sourceCode" id="cb2"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span></span></code></pre></div>
+            <p>then run it with:</p>
+            <div class="sourceCode" id="cb3"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./main</span></span></code></pre></div>
+            </div>
+            <p>If either of these commands fails you may be missing some
+            dependencies. If the code is running successfully, you will
+            see one line per epoch, reporting test loss and elapsed
+            time.</p>
+            <div class="note">
+            <p>Throughout the following, whenever you are asked to build
+            and run the code again, just rerun those two commands:
+            <code>make</code> to build and <code>./main</code> to
+            run.</p>
+            </div>
+            <h2 id="simple-tests-10-minutes">Simple tests (10
+            minutes)</h2>
+            <p>Let’s verify some of the assertions in the opening
+            lecture. The file <code>src/config.h</code> defines macros
+            (<code>#define NAME value</code>) with various configuraiton
+            options that we can modify.</p>
+            <div class="info">
+            <p>Open <code>src/config.h</code> for editing in Visual
+            Studio Code.</p>
+            </div>
+            <h3 id="kernels">Kernels</h3>
+            <div class="info">
+            <p>For <code>BLOCK_SIZE</code>, try a few different
+            power-of-two values, e.g. 32, 64, 128, …, 1024. After each
+            change, build and run the program. How does performance
+            vary? Choose a value that seems to optimize performance and
+            set it to this. The existing choice, or something larger, is
+            likely optimal.</p>
+            </div>
+            <p>When the block size is too small, we do not use the full
+            capacity of the GPU, and so execution is slower. Setting the
+            block size above 1024 will not work, as 1024 is the maximum
+            size supported (this may vary by hardware and CUDA
+            version).</p>
+            <div class="danger">
+            <p>The example code does not do much error checking and may
+            appear to run with <code>BLOCK_SIZE</code> greater than
+            1024. We will touch on more robust practices in the closing
+            lecture.</p>
+            </div>
+            <h3 id="streams">Streams</h3>
+            <div class="info">
+            <p>Run the code with:</p>
+            <div class="sourceCode" id="cb4"><pre
+            class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">CUDA_LAUNCH_BLOCKING</span><span class="op">=</span>1 <span class="ex">./main</span></span></code></pre></div>
+            </div>
+            <p>This command sets the environment variable
+            <code>CUDA_LAUNCH_BLOCKING</code> to a value of
+            <code>1</code>. CUDA recognizes this and makes all kernel
+            launches <em>blocking</em>, which is to say
+            <em>synchronous</em> rather than <em>asynchronous</em> with
+            respect to the CPU. Each time the CPU enqueues a kernel for
+            the GPU, it will wait for the GPU to complete the work
+            before proceeding.</p>
+            <p>The execution time should increase as a result of running
+            this way. This highlights the importance of streaming
+            computation when working with GPUs.</p>
+            <h3 id="floating-point-precision">Floating point
+            precision</h3>
+            <div class="info">
+            <p>Set <code>ENABLE_SINGLE</code> to <code>0</code> to use
+            double precision instead of single precision. Build and run
+            again to see how the execution time increases. How much
+            slower is double precision? Once finished, restore
+            <code>ENABLE_SINGLE</code> to <code>1</code>.</p>
+            </div>
+            <p>Depending on your hardware, it could be anywhere from 2
+            to 64 times slower in double precision than single
+            precision.</p>
+            <p>If you see a degradation in line with the ratio of single
+            to double precision performance of your hardware, as
+            measured in peak FLOPS, this might be interpreted as a good
+            sign: at least the program performance is <em>compute
+            bound</em> by instruction throughput rather <em>memory
+            bound</em> by memory access latency.</p>
+            <h3 id="cleaning-up">Cleaning up</h3>
+            <div class="info">
+            <p>To finish up this section, make sure that the only change
+            remaining in <code>src/config.h</code> is your choice of
+            <code>BLOCK_SIZE</code>. Build one last time to make sure it
+            is up to date.</p>
+            </div>
+            <div class="info">
+            <p>Using <code>git diff</code> will identify any
+            unintentional changes. If you simply want to reset back to
+            the original sources, use <code>git checkout .</code> from
+            within the <code>gpu-course</code> directory.</p>
+            </div>
+            <h2 id="exploration-20-minutes">Exploration (20
+            minutes)</h2>
+            <div class="info">
+            <p>Take some time to browse through the code to better
+            understand how it works.</p>
+            </div>
+            <p>The remaining material highlights some of the important
+            points that you may discover during your exploration.</p>
+            <h3 id="building">Building</h3>
+            <p>The <code>Makefile</code> is worth a brief look. The CUDA
+            compiler is <code>nvcc</code>. It works mostly as a wrapper
+            around the system compiler (probably <code>gcc</code>), but
+            behind-the-scenes calls the CUDA toolchain to compile
+            CUDA-specific code.</p>
+            <h3 id="floating-point-literals">Floating point
+            literals</h3>
+            <p>Throughout the code, notice that floating point literals
+            are written with the suffix <code>f</code>,
+            e.g. <code>0.0f</code> and <code>1.0f</code> instead of
+            <code>0.0</code> and <code>1.0</code>. Literals in C are
+            typed: for floating point literals the <code>f</code> suffix
+            denotes type <code>float</code>, while the absence of a
+            suffix denotes type <code>double</code>.</p>
+            <p>In C, operands to arithmetic operations undergo numerical
+            <em>promotion</em>, e.g. - adding a <code>float</code> to a
+            <code>float</code> returns a <code>float</code>, - adding a
+            <code>double</code> to a <code>double</code> returns a
+            <code>double</code>, - adding a <code>float</code> to a
+            <code>double</code> or vice-versa returns a
+            <code>double</code>.</p>
+            <p>In the final case, the operand of <code>float</code> type
+            is promoted to <code>double</code> type before the
+            addition.</p>
+            <p>If we are sloppy with literals, we can inadvertently
+            perform computations that we intend to be in single
+            precision in double precision instead. On GPUs in particular
+            this has significant performance implications.</p>
+            <h3 id="memory-allocation">Memory allocation</h3>
+            <div class="note">
+            <p><strong>Not familiar with C?</strong></p>
+            <p>C is not a managed language, so it is the programmer’s
+            responsibility to allocate and free memory as required. In a
+            managed language this is handled by the runtime when, for
+            example, objects and arrays are created and eventually
+            garbage collected.</p>
+            </div>
+            <p>Note the initialization and finalization idiom: the
+            source files <code>src/data.c</code>,
+            <code>src/model.c</code> and <code>src/optimizer.c</code>
+            define the structs <code>data_t</code>, <code>model_t</code>
+            and <code>optimizer_t</code>, which are initialized by the
+            functions <code>data_init()</code>,
+            <code>model_init()</code> and <code>optimizer_init()</code>,
+            and finalized by the functions <code>data_term()</code>,
+            <code>model_term()</code> and <code>optimizer_term()</code>.
+            The former set of functions allocate memory for all
+            variables in the structs, while the latter set free it.</p>
+            <div class="note">
+            <p><strong>Not familiar with C?</strong></p>
+            <p>A <code>struct</code> declares a compound type consisting
+            of several variables. These are like classes in other
+            languages, without support for member functions.</p>
+            </div>
+            <p>To allocate virtual memory accessible only by the CPU, we
+            use the standard C library functions <a
+            href="https://en.cppreference.com/w/c/memory/malloc"><code>malloc()</code></a>
+            and <a
+            href="https://en.cppreference.com/w/c/memory/free"><code>free()</code></a>.
+            To allocate virtual memory that can be accessed by both the
+            CPU and GPU, we use the CUDA Runtime API functions <a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1gd228014f19cc0975ebe3e0dd2af6dd1b"><code>cudaMallocManaged()</code></a>
+            and <a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1ga042655cbbf3408f01061652a075e094"><code>cudaFree()</code></a>.
+            We have a number of different memory allocation alternatives
+            available:</p>
+            <table>
+            <colgroup>
+            <col style="width: 35%" />
+            <col style="width: 28%" />
+            <col style="width: 15%" />
+            <col style="width: 20%" />
+            </colgroup>
+            <thead>
+            <tr>
+            <th>Allocate</th>
+            <th>Free</th>
+            <th>Description</th>
+            <th>Accessible by</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td><a
+            href="https://en.cppreference.com/w/c/memory/malloc"><code>malloc()</code></a></td>
+            <td><a
+            href="https://en.cppreference.com/w/c/memory/free"><code>free()</code></a></td>
+            <td>Virtual host memory</td>
+            <td>Host only</td>
+            </tr>
+            <tr>
+            <td><a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1g37d37965bfb4803b6d4e59ff26856356"><code>cudaMalloc()</code></a></td>
+            <td><a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1ga042655cbbf3408f01061652a075e094"><code>cudaFree()</code></a></td>
+            <td>Device memory</td>
+            <td>Device only</td>
+            </tr>
+            <tr>
+            <td><a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY__POOLS.html#group__CUDART__MEMORY__POOLS_1gbbf70065888d61853c047513baa14081"><code>cudaMallocAsync()</code></a></td>
+            <td><a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY__POOLS.html#group__CUDART__MEMORY__POOLS_1g3398a689c75448c1bf99368e490ac878"><code>cudaFreeAsync()</code></a></td>
+            <td>Device memory</td>
+            <td>Device only, asynchronous</td>
+            </tr>
+            <tr>
+            <td><a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1gab84100ae1fa1b12eaca660207ef585b"><code>cudaMallocHost()</code></a></td>
+            <td><a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1g71c078689c17627566b2a91989184969"><code>cudaFreeHost()</code></a></td>
+            <td>Pinned host memory</td>
+            <td>Host and device</td>
+            </tr>
+            <tr>
+            <td><a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1gd228014f19cc0975ebe3e0dd2af6dd1b"><code>cudaMallocManaged()</code></a></td>
+            <td><a
+            href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1ga042655cbbf3408f01061652a075e094"><code>cudaFree()</code></a></td>
+            <td>Managed memory</td>
+            <td>Host and device on demand</td>
+            </tr>
+            </tbody>
+            </table>
+            <p>In the exercises above, <code>ENABLE_PINNED</code> had
+            the effect of converting all
+            <code>cudaMallocManaged()</code> calls to
+            <code>cudaMallocHost()</code>, and all
+            <code>cudaFree()</code> calls to
+            <code>cudaFreeHost()</code>.</p>
+            <h3 id="kernels-1">Kernels</h3>
+            <p>The source file <code>src/function.cu</code> provides
+            kernel functions and, for each, an associated wrapper
+            function. For example rectification is implemented in the
+            kernel <code>kernel_rectify()</code>, which we call via the
+            associated wrapper function <code>rectify()</code>. This
+            pattern makes calling code that runs on GPU more convenient,
+            as the wrapper function can establish the execution
+            configuration rather than the caller.</p>
+            <p>The code follows BLAS/LAPACK conventions on the
+            representation of vectors and matrices. A vector is
+            specified by providing:</p>
+            <ul>
+            <li>a base pointer (e.g. <code>x</code>), and</li>
+            <li>an <em>increment</em> between elements
+            (e.g. <code>incx</code>), such that</li>
+            <li>the <code>i</code>th element is given by
+            <code>x[i*incx]</code>.</li>
+            </ul>
+            <div class="note">
+            <p><strong>Not familiar with C?</strong></p>
+            <p>Arrays a zero-based, i.e. for array <code>x</code> the
+            first element is <code>x[0]</code> and the second
+            <code>x[1]</code>, etc.</p>
+            </div>
+            <p>For example, the elements of a vector of length 4 with an
+            increment of 3 appear in memory as:</p>
+            <p><img src="1.svg" /></p>
+            <p>If we wish to apply a transformation to all elements of a
+            vector, we might write a loop:</p>
+            <div class="sourceCode" id="cb5"><pre
+            class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> nelements<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  x<span class="op">[</span>incx<span class="op">*</span>i<span class="op">]</span> <span class="op">=</span> f<span class="op">(</span>x<span class="op">[</span>incx<span class="op">*</span>i<span class="op">]);</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>We could instead parallelize it by writing a kernel:</p>
+            <div class="sourceCode" id="cb6"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>__global__ kernel_f<span class="op">(</span><span class="dt">int</span> nelements<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> x<span class="op">,</span> <span class="dt">int</span> incx<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> blockIdx<span class="op">.</span>x<span class="op">*</span>blockDim<span class="op">.</span>x <span class="op">+</span> threadIdx<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> nelements<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    x<span class="op">[</span>incx<span class="op">*</span>i<span class="op">]</span> <span class="op">=</span> f<span class="op">(</span>x<span class="op">[</span>incx<span class="op">*</span>i<span class="op">]);</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>The <code>__global__</code> keyword is a CUDA language
+            extension for specifying a kernel. Once launched, the kernel
+            is executed <em>for each</em> thread in a grid of blocks of
+            threads (recall: the execution configuration). To determine
+            which particular thread an execution pertains to, we use the
+            built-in variables:</p>
+            <ul>
+            <li><code>blockIdx.x</code>, which gives the coordinate of
+            the block within the grid,</li>
+            <li><code>threadIdx.x</code>, which gives the coordinate of
+            the thread within the block,</li>
+            <li><code>blockDim.x</code>, which gives the size of each
+            block.</li>
+            </ul>
+            <p>Notice the guard
+            <code>if (i &lt; nelements) { ... }</code>. The execution
+            configuration may not evenly divide through the number of
+            elements, so we should ensure—with a conditional like
+            this—that the particular thread actually has any work to
+            do.</p>
+            <p>We can launch the kernel on the GPU with:</p>
+            <div class="sourceCode" id="cb7"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dim3 block<span class="op">(</span><span class="dv">256</span><span class="op">);</span> <span class="co">// ❶</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>dim3 grid<span class="op">((</span>nelements <span class="op">+</span> block<span class="op">.</span>x <span class="op">-</span> <span class="dv">1</span><span class="op">)/</span>block<span class="op">.</span>x<span class="op">);</span> <span class="co">// ❷</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>kernel_f<span class="op">&lt;&lt;&lt;</span>grid<span class="op">,</span>block<span class="op">&gt;&gt;&gt;(</span>x<span class="op">,</span> incx<span class="op">);</span> <span class="co">// ❸</span></span></code></pre></div>
+            <p>Recall from the opening lecture that we launch a kernel
+            using an <em>execution configuration</em> that specifies the
+            size of a grid of blocks of threads. Line ❶ configures the
+            block size to 256 threads (setting the <code>block</code>
+            variable). Line ❷ configures the grid size to a sufficient
+            number of blocks for one thread per element (setting the
+            <code>grid</code> variable). Line ❸ launches the kernel,
+            passing <code>grid</code> and <code>block</code> in triple
+            angle brackets after the name of the kernel—this is a CUDA
+            language extension for specifying execution
+            configurations.</p>
+            <div class="note">
+            <blockquote>
+            <p><strong>Not familiar with C?</strong></p>
+            <p>The code <code>(nelements + block.x - 1)/block.x</code>
+            above is a convenient way to write the &gt; integer division
+            “<code>nelements</code> divided by <code>block.x</code>,
+            rounding up”.</p>
+            </blockquote>
+            </div>
+            <p>A matrix is stored column-major, and is specified by
+            providing:</p>
+            <ul>
+            <li>a base pointer (e.g. <code>A</code>), and</li>
+            <li>a <em>lead</em> between columns (e.g. <code>ldA</code>),
+            such that</li>
+            <li>the <code>(i,j)</code>th element is given by
+            <code>A[i + ldA*j]</code>.</li>
+            </ul>
+            <p>For example, the elements of a 3 by 4 matrix with a lead
+            of 4 and column-major layout appear in memory as:</p>
+            <p><img src="2.svg" /></p>
+            <p>If we wish to apply a transformation to all elements of a
+            matrix, we might write a loop:</p>
+            <div class="sourceCode" id="cb8"><pre
+            class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> nrows<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> ncols<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    A<span class="op">[</span>i <span class="op">+</span> ldA<span class="op">*</span>j<span class="op">]</span> <span class="op">=</span> <span class="op">...;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>We could instead parallelize it by writing a kernel:</p>
+            <div class="sourceCode" id="cb9"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>__global__ transform_f<span class="op">(</span><span class="dt">int</span> nrows<span class="op">,</span> <span class="dt">int</span> ncols<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> A<span class="op">,</span> <span class="dt">int</span> ldA<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> blockIdx<span class="op">.</span>x<span class="op">*</span>blockDim<span class="op">.</span>x <span class="op">+</span> threadIdx<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> j <span class="op">=</span> blockIdx<span class="op">.</span>y<span class="op">*</span>blockDim<span class="op">.</span>y <span class="op">+</span> threadIdx<span class="op">.</span>y<span class="op">;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> nrows <span class="op">&amp;&amp;</span> j <span class="op">&lt;</span> ncols<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    A<span class="op">[</span>i <span class="op">+</span> ldA<span class="op">*</span>j<span class="op">]</span> <span class="op">=</span> f<span class="op">(</span>A<span class="op">[</span>i <span class="op">+</span> ldA<span class="op">*</span>j<span class="op">]);</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+            <p>and launch it with:</p>
+            <div class="sourceCode" id="cb10"><pre
+            class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dim3 block<span class="op">(</span><span class="dv">256</span><span class="op">,</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>dim3 grid<span class="op">((</span>nrows <span class="op">+</span> block<span class="op">.</span>x <span class="op">-</span> <span class="dv">1</span><span class="op">)/</span>block<span class="op">.</span>x<span class="op">,</span> ncols<span class="op">);</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>transform_f<span class="op">&lt;&lt;&lt;</span>grid<span class="op">,</span>block<span class="op">&gt;&gt;&gt;(</span>nrows<span class="op">,</span> ncols<span class="op">,</span> A<span class="op">,</span> ldA<span class="op">);</span></span></code></pre></div>
+            <p>Note the similar conventions to the vector case, but we
+            are now working with a two-dimensional execution
+            configuration, and so use the additional <code>y</code>
+            members of <code>blockIdx</code>, <code>threadIdx</code> and
+            <code>blockDim</code>. A further <code>z</code> member is
+            available to support three-dimensional execution
+            configurations.</p>
+            <h3 id="model-forward-and-backward-passes">Model forward and
+            backward passes</h3>
+            <p>With respect to the model, the most important functions
+            are <code>model_forward()</code> and
+            <code>model_backward()</code> in <code>src/model.c</code>,
+            which implement the forward and backward passes,
+            respectively. The forward pass takes a minibatch of features
+            and outputs a prediction. The backward pass takes the
+            prediction and computes the gradient of the loss with
+            respect to the parameters. The implementation aligns with
+            the mathematical description above.</p>
+            <h2 id="summary">Summary</h2>
+            <p>In this practical we have learned how to build and run a
+            CUDA program. We have done some simple experiments on
+            floating point precision and execution configurations to
+            better understand performance tradeoffs. Finally, we have
+            had a deep dive into the code to see how memory for the GPU
+            is allocated and freed, and how kernels are specified and
+            launched using specific CUDA language extensions.</p>
+            <h2 id="possible-extensions">Possible extensions</h2>
+            <dl>
+            <dt>Alternative activation function</dt>
+            <dd>
+            The model is implemented using rectification. We could
+            replace this with an alternative activation function, such
+            as a sigmoid, by implementing functions analogous to
+            <code>rectify()</code> and <code>rectify_grad()</code>.
+            </dd>
+            </dl>
+    </div>
+  </article>
+</main>
+
+<div class="w-100 mt-5" style="clear:both;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="mailto:lawrence@indii.org" title="Lawrence Murray email">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Email
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Feeds</h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/index.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Everything
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/blog.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Blog only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/software.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Software only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/research.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Research only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/photography.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Photography only
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/feed/creative.xml" title="RSS Feed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>            
+            Creative only
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>Newsletter</h1>
+      <p><small>Subscribe to the newletter for announcements of new posts.</small></p>
+      <form action="https://indii.us11.list-manage.com/subscribe/post?u=6c39d985ee6d7e2a4f83f52c2&amp;id=6022e2b633&amp;f_id=00c4d7e3f0" method="post" target="_self" novalidate="">
+        <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="Email" value="" class="form-control w-100 my-2">
+        <input type="submit" name="subscribe" value="Subscribe" class="btn btn-primary w-100 my-2">
+
+        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+          <input type="hidden" name="tags" value="10280626">
+          <input type="text" name="b_6c39d985ee6d7e2a4f83f52c2_6022e2b633" tabindex="-1" value="">
+        </div>
+      </form>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence
+Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>
