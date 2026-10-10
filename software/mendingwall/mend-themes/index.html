@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Mend Themes</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Mend Themes">
+    
+    <meta name="twitter:image" content="/software/mendingwall/logo.svg">
+
+    <meta property="og:title" content="Mend Themes">
+    
+    <meta property="og:url" content="https://indii.org/software/mendingwall/mend-themes/">
+    <meta property="og:image" content="https://indii.org/software/mendingwall/logo.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/mendingwall.min.css">
+    
+    <link rel="canonical" href="https://indii.org/software/mendingwall/mend-themes/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+      </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/software/mendingwall">
+                <img src="/software/mendingwall/logo.svg" alt="Logo" width="24" height="24" class="d-inline-block align-text-top">
+                  Mending Wall
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                  <a href="/software/mendingwall" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Main
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/mendingwall/getting-started/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Get Started
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/mendingwall/mend-themes/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Mend Themes
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/mendingwall/tidy-menus/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Tidy Menus
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/mendingwall/contributing/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  How To Help
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/mendingwall/faq/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Q &amp; A
+                  </a>
+                </li>
+
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container mb-5">
+      <div class="row">
+        <div class="col-12 col-lg-9 mx-auto text-center">
+                <img src="/software/mendingwall/logo.svg" loading="lazy" style="width:auto;max-height:128px;" class="img-fluid py-2" alt="Mending Wall application icon, a wall of green and grey bricks">
+          
+          <div class="category">Mending Wall</div>
+          <h1 class="mt-0">Mend Themes</h1>
+          
+          
+
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+              </div>
+      </div>
+    </header>
+            
+                <div class="post">
+<p>Applications native to one desktop environment can look out of place when run on another. For example, a GNOME app running on KDE Plasma may have a different title bar, button style, and icon style; similarly for a KDE Plasma app run on GNOME.</p>
+<p>To unify their look, desktop environments tweak themes to have non-native applications blend in better. They may not revert those tweaks on log out, however, leaving you with a mess when you then log in to a different desktop environment.</p>
+<div class="row">
+<div class="col-sm-12 col-lg-6">
+<figure>
+<picture> <source srcset="/software/mendingwall/gnome_fixed_light.png" media="(prefers-color-scheme: light)" /> <source srcset="/software/mendingwall/gnome_fixed_dark.png" media="(prefers-color-scheme: dark)" /> <img src="/software/mendingwall/gnome_fixed_light.png" width="616" height="804" class="img-fluid " alt="Screenshot of Nautilus (a file manager) on GNOME before using KDE Plasma: the icons and cursor follow the default Adwaita theme." /> </picture>
+<figcaption>
+GNOME before using KDE Plasma: the icons and cursor follow the default Adwaita theme.
+</figcaption>
+</figure>
+</div>
+<div class="col-sm-12 col-lg-6">
+<figure>
+<picture> <source srcset="/software/mendingwall/gnome_broken_light.png" media="(prefers-color-scheme: light)" /> <source srcset="/software/mendingwall/gnome_broken_dark.png" media="(prefers-color-scheme: dark)" /> <img src="/software/mendingwall/gnome_broken_light.png" width="616" height="804" class="img-fluid " alt="Screenshot of Nautilus (a file manager) on GNOME after using KDE: the cursor is enlarged and pixellated, the icons and cursors now follow the Breeze theme (default for KDE Plasma)." /> </picture>
+<figcaption>
+GNOME after using KDE Plasma: the cursor is large and pixellated, the icons and cursors now follow the Breeze theme (default for KDE Plasma).
+</figcaption>
+</figure>
+</div>
+</div>
+<p>To have Mending Wall fix all this, enable the <em>Mend Themes</em> feature. It ensures that the theme chosen for each desktop environment is maintained across sessions, even when running other desktop environments in between.</p>
+<h2 id="what-it-does">What it does</h2>
+<p><em>Mend Themes</em> saves the theme during each desktop session, then restores it when you next log in to the same desktop environment. For example:</p>
+<ol type="1">
+<li>While you are running GNOME, Mending Wall saves the theme.</li>
+<li>If you log out of GNOME and into KDE Plasma, KDE will make some changes to the GNOME theme to improve the user experience on KDE. Mending Wall will save the theme for KDE too.</li>
+<li>If you then log out of KDE and back into GNOME, Mending Wall will restore the GNOME theme that it previously saved, so that KDE’s changes do not interfere with GNOME. GNOME may also make some tweaks to the KDE theme at this stage.</li>
+<li>Similarly, when you log back into KDE in future, Mending Wall will restore the KDE theme that it previously saved, so that GNOME’s tweaks do not interfere with KDE either.</li>
+</ol>
+<h2 id="how-it-works">How it works</h2>
+<div class="note">
+<p>This section is for users who want to know exactly what Mending Wall is doing to their system.</p>
+</div>
+<p>When <em>Mend Themes</em> is enabled, Mending Wall starts a background process named <code>mendingwalld</code> that will also auto-start every time you log in. The process starts in one of two modes:</p>
+<ol type="1">
+<li><em>Save</em> to make a copy of the theme, monitor for changes, and update the save. This mode is used when <em>Mend Themes</em> is enabled for the first time (or re-enabled after being disabled).</li>
+<li><em>Restore</em> to restore the previous save, monitor for changes, and update it. This is used for the auto-start every time you log in.</li>
+</ol>
+<p>A save includes:</p>
+<ol type="1">
+<li>Any number of <a href="https://docs.gtk.org/gio/class.Settings.html">GSettings</a> paths. These are typically used for configuration by desktop environments based on <a href="https://gtk.org">GTK</a>, such as GNOME and Cinnamon. The save is kept as a keyfile at <code>$XDG_DATA_HOME/mendingwall/save/$XDG_CURRENT_DESKTOP.gsettings</code>, where groups identify the GSettings paths and keys the GSettings keys.</li>
+<li>Any number of config files under <code>$XDG_CONFIG_HOME/</code>. Such config files may be used by any desktop environments, including those based on GTK, but also <a href="https://contribute.qt-project.org/">Qt</a>, such as KDE Plasma, or other toolkits. Saved files are kept under <code>$XDG_DATA_HOME/mendingwall/save/$XDG_CURRENT_DESKTOP/</code>.</li>
+</ol>
+<p><code>XDG_CURRENT_DESKTOP</code> is an environment variable set by the desktop environment. <code>XDG_DATA_HOME</code> is an environment variable that may or may not be set by the desktop environment; if not set, the default value of <code>$HOME/.local/share</code> is used.</p>
+<h2 id="configuration">Configuration</h2>
+<div class="note">
+<p>This section is for contributors to help improve Mending Wall. The installed configuration is meant to be suitable for everyone with no adjustments required, rather than something that is routinely modified.</p>
+</div>
+<p>The specific GSettings paths and config files to back up and restore are set in the config file <code>themes.conf</code>. If the environment variable <code>XDG_DATA_HOME</code> is set and <code>$XDG_DATA_HOME/mendingwall/themes.conf</code> exists then that file is used, otherwise <code>$HOME/.local/share/mendingwall/themes.conf</code>, otherwise the directories listed in <code>XDG_DATA_DIRS</code> are checked in order for <code>mendingwall/themes.conf</code> until the file is found.</p>
+<p>If <code>themes.conf</code> is in a system directory and you wish to make changes to it, first copy it to <code>$XDG_DATA_HOME/mendingwall/themes.conf</code> or <code>$HOME/.local/share/mendingwall/themes.conf</code>.</p>
+<p>The config file is a <a href="https://docs.gtk.org/glib/struct.KeyFile.html">KeyFile</a>. It contains any number of group headers to identify desktop environments, each followed by key-value pairs that specify the GSettings paths and config files to backup and restore. For example:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode ini"><code class="sourceCode ini"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[GNOME]</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">GSettings</span><span class="ot">=</span><span class="st">org.gnome.desktop.interface</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">[KDE]</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">ConfigFiles</span><span class="ot">=</span><span class="st">kwinrc;kcminputrc</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">[Default]</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="dt">GSettings</span><span class="ot">=</span><span class="st">org.gnome.desktop.interface</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="dt">ConfigFiles</span><span class="ot">=</span><span class="st">kwinrc;kcminputrc</span></span></code></pre></div>
+<p>The group headers are surrounded by square brackets (<code>[...]</code>) and identify the desktop environments. The environment variable <code>XDG_CURRENT_DESKTOP</code> is used to determine which group to use, and if no such group exists, then the <code>Default</code> group is used. If <code>XDG_CURRENT_DESKTOP</code> lists multiple desktop environments (e.g. <code>Budgie:GNOME</code>, note colon-separated in this case, as per the <a href="https://specifications.freedesktop.org/desktop-entry-spec/latest/">specification</a>) then it is treated as if one value; in this context such combinations really indicate a distinct desktop environment (e.g. <code>Budgie:GNOME</code> really just indicates <a href="https://buddiesofbudgie.org/">Budgie</a>).</p>
+<p>Each key is followed by an equals sign (<code>=</code>), and where multiple values are required they are separated by semicolons (<code>;</code>). Recognized keys are:</p>
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GSettings</code></td>
+<td>GSettings schemas to save and restore.</td>
+</tr>
+<tr>
+<td><code>ConfigFiles</code></td>
+<td>Config files to save and restore. Each should be relative to the <code>$XDG_CONFIG_HOME/</code> (or default <code>$HOME/.config/</code>) directory. There is no support for directories or recursion.</td>
+</tr>
+</tbody>
+</table>
+<div class="note">
+<p>After modifying <code>themes.conf</code>, disable the Mend Themes feature, then enable it again, to apply changes.</p>
+</div>
+<h2 id="related-specifications">Related specifications</h2>
+<ul>
+<li>The <a href="https://specifications.freedesktop.org/basedir-spec/latest/">XDG Base Directory Specification</a> for the <code>XDG_DATA_HOME</code> environment variable.</li>
+<li>The <a href="https://specifications.freedesktop.org/desktop-entry-spec/latest/recognized-keys.html">Recognized desktop entry keys</a> section of the <a href="https://specifications.freedesktop.org/desktop-entry-spec/latest/">XDG Desktop Entry Specification</a> for the <code>XDG_CURRENT_DESKTOP</code> environment variable.</li>
+</ul>
+    </div>
+  </article>
+
+  </main>
+
+<div class="w-100 pb-4 bg-body-tertiary" style="clear:both;margin-top:96px;">
+<div class="container">
+  <nav class="row g-4">
+        <div class="nav-bottom">
+      <h1><a href="/software/mendingwall">Mending Wall</a></h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/software/mendingwall" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Main
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/mendingwall/getting-started/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Get Started
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/mendingwall/mend-themes/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Mend Themes
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/mendingwall/tidy-menus/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Tidy Menus
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/mendingwall/contributing/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          How To Help
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/mendingwall/faq/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Q &amp; A
+          </a>
+        </li>
+
+      </ul>
+    </div>
+    
+    <div class="nav-bottom">
+            <h1><a href="/">Lawrence Murray</a></h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

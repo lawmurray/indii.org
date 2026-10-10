@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>build</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="build">
+    
+    
+
+    <meta property="og:title" content="build">
+    
+    <meta property="og:url" content="https://indii.org">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    
+    <link rel="canonical" href="https://indii.org">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+      </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/software/birch/">
+                      Birch
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                  <a href="/software/birch/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Main
+                  </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+                  Getting Started
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/software/birch/getting-started/">Getting Started</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/getting-started/hello-world/">Hello, World!</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/getting-started/linear-regression/">Bayesian Linear Regression</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/getting-started/markov-model/">Markov Model</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/getting-started/next-steps/">Next Steps</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+                  Concepts
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/software/birch/concepts/">Introduction</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/distributions/">Distributions</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/randoms/">Randoms</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/expressions/">Expressions</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/models/">Models</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/graphical-models/">Graphical models</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/programmatic-models/">Programmatic models</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/automatic-differentiation/">Automatic differentiation</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/automatic-marginalization/">Automatic marginalization</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/automatic-conditioning/">Automatic conditioning</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/delayed-sampling/">Delayed sampling</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/probabilistic-inference/">Probabilistic inference</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/summary/">Summary</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+                  Language
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/software/birch/language/">Comments</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/variables/">Variables</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/types/">Types</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/assignments/">Assignments</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/control_flow/">Control Flow</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/assertions/">Assertions</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/arrays/">Arrays</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/optionals/">Optionals</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/tuples/">Tuples</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/functions/">Functions</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/lambdas/">Lambdas</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/programs/">Programs</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/operators/">Operators</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/classes/">Classes</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/aliases/">Aliases</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/casts/">Casts</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/probability/">Probability</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/birch/docs/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Docs
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/birch/about/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  About
+                  </a>
+                </li>
+
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <div class="plain">
+            <h1 id="build">build</h1>
+<p><a name="build"></a></p>
+<p><strong>program build()</strong></p>
+<p>Bootstrap, configure and build the package.</p>
+<pre><code>birch build</code></pre>
+<p>The build is influenced by command-line options, environment variables, and a <em>build configuration file</em>.</p>
+<h3 id="command-line-options">Command-line options</h3>
+<ul>
+<li><p><code>--mode</code> (default <code>debug</code>, valid values <code>debug</code>, <code>test</code>, <code>release</code>): Set the mode of the build to run.</p></li>
+<li><p><code>--enable-debug</code> / <code>--disable-debug</code> (default enabled): Enable/disable debug mode build. In debug mode, assertion checking is enabled for e.g. array bounds, and many compiler optimizations are disabled. This is recommended when developing code.</p></li>
+<li><p><code>--enable-test</code> / <code>--disable-test</code> (default disabled): Enable/disable test mode build. Test mode is similar to debug mode, but additionally tracks code coverage.</p></li>
+<li><p><code>--enable-release</code> / <code>--disable-release</code> (default disabled): Enable/disable release mode build. In release mode, all assertion checking is disabled and all compiler optimizations are enabled. This is recommended for running tested code when performance is critical. It offers substantial performance gains over debug and test mode.</p></li>
+<li><p><code>--enable-warnings</code> / <code>--disable-warnings</code> (default enabled): Enable/disable compiler warnings.</p></li>
+<li><p><code>--enable-notes</code> / <code>--disable-notes</code> (default enabled): Enable/disable compiler notes.</p></li>
+<li><p><code>--enable-translate</code> / <code>--disable-translate</code> (default enabled): Enable/disable translation of C++ error messages and line numbers to Birch error messages and line numbers.</p></li>
+<li><p><code>--enable-verbose</code> / <code>--disable-verbose</code> (default disabled): Enable/disable verbose reporting.</p></li>
+<li><p><code>--enable-openmp</code> / <code>--disable-openmp</code> (default enabled): Enable/disable OpenMP. OpenMP is used for multi-threading. When running single-threaded, disabling OpenMP can have significant performance advantages, as it also disables the atomic operations used for thread synchronization.</p></li>
+<li><p><code>--enable-shared</code> / <code>--disable-shared</code> (default enabled): Enable/disable building of a shared library.</p></li>
+<li><p><code>--enable-static</code> / <code>--disable-static</code> (default disabled): Enable/disable building of a static library.</p></li>
+<li><p><code>--arch</code> (default empty, valid values <code>native</code>): Target architecture for the build. If empty, then default settings are used. If <code>native</code>, additional optimizations for the current architecture can be applied (e.g. SIMD instructions).</p></li>
+<li><p><code>--unit</code> (default <code>dir</code>, valid values <code>unity</code>, <code>dir</code>, <code>file</code>): Set the compile unit when transpiling Birch to C++. This can significantly influence build times. If <code>unity</code>, a single C++ source file is generated for all Birch source files. If <code>dir</code>, a single C++ source file is generated for each directory of Birch source files. If <code>file</code>, a C++ source file is generated for each Birch source file. Typically, <code>unity</code> builds can provide the fastest build times from scratch but cannot be parallelized; <code>file</code> builds can provide the fastest build times incrementally and can be parallelized, but for large projects can be very slow due to the overhead for each compile unit; <code>dir</code> offers a good balance, and can be parallelized.</p></li>
+<li><p><code>--prefix</code> (default imputed): Installation prefix. Defaults to the same prefix used when installing the <code>birch</code> driver program.</p></li>
+<li><p><code>--precision</code> (default <code>double</code>, valid values <code>single</code>, <code>double</code>): Set the floating point precision of the build to run.</p></li>
+<li><p><code>--jobs</code> (default imputed): Number of parallel jobs when building. Defaults to twice the number of hardware threads.</p></li>
+</ul>
+<h3 id="environment-variables">Environment variables</h3>
+<p>The following environment variables influence the build:</p>
+<ul>
+<li><code>$BIRCH_MODE</code> (valid values <code>debug</code>, <code>test</code>, <code>release</code>): Overrides the default run mode as set by the command-line option <code>--mode</code>.</li>
+<li><code>$BIRCH_UNIT</code> (valid values <code>file</code>, <code>dir</code>, <code>unity</code>): Overrides the default build unit as set by the command-line option <code>--unit</code>.</li>
+<li><code>$BIRCH_PRECISION</code> (valid values <code>single</code>, <code>double</code>): Overrides the default floating point precision as set by the command-line option <code>--precision</code>.</li>
+<li><code>$BIRCH_PREFIX</code>: Overrides the default installation prefix as set by the command-line option <code>--unit</code>.</li>
+<li><code>$BIRCH_SHARE_PATH</code>: Additional paths to search for shared files (those that typically install to <code>share</code> directories), separated by <code>:</code>.</li>
+<li><code>$BIRCH_INCLUDE_PATH</code>: Additional paths to search for header files (those that typically install to <code>include</code> directories), separated by <code>:</code>.</li>
+<li><code>$BIRCH_LIBRARY_PATH</code>: Additional path to search for libraries (those that typically install to <code>lib</code> or <code>lib64</code> directories), separated by <code>:</code>.</li>
+</ul>
+<p>Birch will search for shared files in the following directories, in order, where <code>$PREFIX</code> is the prefix used when installing the <code>birch</code> driver program:</p>
+<ol type="1">
+<li>paths given in <code>$BIRCH_SHARE_PATH</code>, then</li>
+<li><code>$PREFIX/share</code>.</li>
+</ol>
+<p>For header files:</p>
+<ol type="1">
+<li>paths given in <code>$BIRCH_INCLUDE_PATH</code>,</li>
+<li><code>$PREFIX/include</code>,</li>
+<li>system defaults, e.g. <code>/usr/local/include</code> then <code>/usr/include</code>.</li>
+</ol>
+<p>For libraries:</p>
+<ol type="1">
+<li><code>.libs</code> in the current directory,</li>
+<li>paths given in <code>$BIRCH_LIBRARY_PATH</code>,</li>
+<li><code>$PREFIX/lib64</code> then <code>$PREFIX/lib</code>,</li>
+<li>system defaults, e.g. <code>/usr/local/lib</code> then <code>/usr/lib</code>.</li>
+</ol>
+<h3 id="build-configuration-file">Build configuration file</h3>
+<p>The build configuration file is a file named <code>birch.yml</code> in the root directory of the package. Alternative names that are supported include <code>birch.yaml</code> and <code>birch.json</code>.</p>
+<p>The file is a YAML or JSON file with the following keys:</p>
+<ul>
+<li><dl>
+<dt><code>name</code></dt>
+<dd>
+The name of the package.
+</dd>
+</dl></li>
+<li><dl>
+<dt><code>version</code></dt>
+<dd>
+The version of the package.
+</dd>
+</dl></li>
+<li><dl>
+<dt><code>description</code></dt>
+<dd>
+A short description of the package.
+</dd>
+</dl></li>
+<li><dl>
+<dt><code>manifest</code></dt>
+<dd>
+An object containing the following keys, listing the files to be included in the package.
+</dd>
+<dt>- <code>source</code></dt>
+<dd>
+A list of patterns identifying the Birch source files to be compiled. Each pattern is either the name of a file with a file extension of <code>.birch</code>, or a glob pattern that expands to a list of such files. The glob patterns supported are as for C <code>glob</code> function (see <code>man 3 glob</code>).
+</dd>
+<dt>- <code>data</code></dt>
+<dd>
+A list of data files to be installed. These are typically config and input files provided by the package.
+</dd>
+<dt>- <code>other</code></dt>
+<dd>
+A list of other files to be distributed but not installed. These are typically meta files, such as <code>README.md</code>, <code>LICENSE</code>, and the build configuration file itself.
+</dd>
+</dl></li>
+<li><dl>
+<dt><code>require</code></dt>
+<dd>
+An object containing the following keys, describing the dependencies of the package. These dependencies are checked by <code>configure</code>.
+</dd>
+<dt>- <code>package</code></dt>
+<dd>
+A list of other Birch packages.
+</dd>
+<dt>- <code>header</code></dt>
+<dd>
+A list of external C/C++ header files.
+</dd>
+<dt>- <code>library</code></dt>
+<dd>
+A list of external libraries.
+</dd>
+<dt>- <code>program</code></dt>
+<dd>
+A list of external programs.
+</dd>
+</dl></li>
+</ul>
+    </div>
+  </article>
+
+  </main>
+
+<div class="w-100 pb-4 bg-body-tertiary" style="clear:both;margin-top:96px;">
+<div class="container">
+  <nav class="row g-4">
+        <div class="nav-bottom">
+      <h1><a href="/software/birch/">Birch</a></h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/software/birch/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Main
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+          Getting Started
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/software/birch/getting-started/">Getting Started</a></li>
+            <li><a class="dropdown-item" href="/software/birch/getting-started/hello-world/">Hello, World!</a></li>
+            <li><a class="dropdown-item" href="/software/birch/getting-started/linear-regression/">Bayesian Linear Regression</a></li>
+            <li><a class="dropdown-item" href="/software/birch/getting-started/markov-model/">Markov Model</a></li>
+            <li><a class="dropdown-item" href="/software/birch/getting-started/next-steps/">Next Steps</a></li>
+            </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+          Concepts
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/software/birch/concepts/">Introduction</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/distributions/">Distributions</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/randoms/">Randoms</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/expressions/">Expressions</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/models/">Models</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/graphical-models/">Graphical models</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/programmatic-models/">Programmatic models</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/automatic-differentiation/">Automatic differentiation</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/automatic-marginalization/">Automatic marginalization</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/automatic-conditioning/">Automatic conditioning</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/delayed-sampling/">Delayed sampling</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/probabilistic-inference/">Probabilistic inference</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/summary/">Summary</a></li>
+            </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+          Language
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/software/birch/language/">Comments</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/variables/">Variables</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/types/">Types</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/assignments/">Assignments</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/control_flow/">Control Flow</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/assertions/">Assertions</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/arrays/">Arrays</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/optionals/">Optionals</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/tuples/">Tuples</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/functions/">Functions</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/lambdas/">Lambdas</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/programs/">Programs</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/operators/">Operators</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/classes/">Classes</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/aliases/">Aliases</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/casts/">Casts</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/probability/">Probability</a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+          <a href="/software/birch/docs/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Docs
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/birch/about/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          About
+          </a>
+        </li>
+
+      </ul>
+    </div>
+    
+    <div class="nav-bottom">
+            <h1><a href="/">Lawrence Murray</a></h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

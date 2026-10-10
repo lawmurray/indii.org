@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Serve a website locally and rebuild on changes</title>
+    <meta name="description" content="Bash scripting a quality-of-life feature for web development">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Serve a website locally and rebuild on changes">
+    <meta name="twitter:description" content="Bash scripting a quality-of-life feature for web development">
+    
+
+    <meta property="og:title" content="Serve a website locally and rebuild on changes">
+    <meta property="og:description" content="Bash scripting a quality-of-life feature for web development">
+    <meta property="og:url" content="https://indii.org/blog/serve-a-website-locally-and-rebuild-on-changes/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    
+    <link rel="canonical" href="https://indii.org/blog/serve-a-website-locally-and-rebuild-on-changes/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+      </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container mb-5">
+      <div class="row">
+        <div class="col-12 col-lg-9 mx-auto text-center">
+          
+          <div class="category">dev</div>
+          <h1 class="mt-0">Serve a website locally and rebuild on changes</h1>
+          <p class="h5"><strong>Bash scripting a quality-of-life feature for web development</strong></p>
+          
+
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+              </div>
+      </div>
+    </header>
+            <p class="date">
+      <time pubdate datetime="2026-10-06" title="2026-10-06">2026-10-06</time>
+      
+    </p>
+        
+        <p>Getting back to blogging after a hiatus and I’ve hit the inevitable: untangling Ruby, Python and JavaScript dependencies to get websites building again, even before writing again.</p>
+        <p>This time I abandoned all that and rolled my own static site generator with a shell script and Makefile, leaning into <a href="https://pandoc.org">Pandoc</a> and <a href="https://imagemagick.org">ImageMagick</a> for the hard work. But that left me lacking a few quality-of-life features. One was serving websites locally while working on them. Another was automatically rebuilding on source files changes.</p>
+        <p>I’ve spun up what I want in a few lines of Bash. This post explains how.</p>
+        <div class="note">
+        <p>The rebuild step uses <code>inotifywait</code>, which is only available on Linux. You are using Linux, right?</p>
+        </div>
+                <div class="toc">
+    <ul>
+    <li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+    <li><a href="#serve-a-directory-of-files-over-http" id="toc-serve-a-directory-of-files-over-http">Serve a directory of files over HTTP</a></li>
+    <li><a href="#monitor-source-files-for-changes" id="toc-monitor-source-files-for-changes">Monitor source files for changes</a></li>
+    <li><a href="#rebuild-when-source-files-change-a-basic-approach" id="toc-rebuild-when-source-files-change-a-basic-approach">Rebuild when source files change: a basic approach</a></li>
+    <li><a href="#rebuild-when-source-files-change-an-improved-approach" id="toc-rebuild-when-source-files-change-an-improved-approach">Rebuild when source files change: an improved approach</a></li>
+    <li><a href="#combining-this-into-a-watch-command" id="toc-combining-this-into-a-watch-command">Combining this into a <code>watch</code> command</a></li>
+    <li><a href="#summary" id="toc-summary">Summary</a></li>
+    </ul>
+    </div>
+        <div class="post">
+<h2 id="introduction">Introduction</h2>
+<p>Using a static site generator such as <a href="https://www.mkdocs.org">MkDocs</a> or <a href="https://jekyllrb.com">Jekyll</a> (from which I’m migrating), one has a setup something like the following:</p>
+<ol type="1">
+<li><dl>
+<dt>Source files</dt>
+<dd>
+A directory of image, JavaScript, CSS and other assets, plus a file for each page and post that will appear on the site, often formatted in Markdown.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Build artifacts</dt>
+<dd>
+Another directory where the final site is built, ready to deploy. One runs a command to build this from the source files (e.g. <code>mkdocs build</code> or <code>jekyll build</code>).
+</dd>
+</dl></li>
+<li><dl>
+<dt>Local serving</dt>
+<dd>
+The build artifacts can be served using a local HTTP server and inspected in a web browser, to see how the final site will look. This is usually done by running another command (e.g. <code>mkdocs serve</code> or <code>jekyll serve</code>).
+</dd>
+</dl></li>
+<li><dl>
+<dt>Rebuild on changes</dt>
+<dd>
+As a convenience, some tools provide the option to monitor for changes to the source files (item 1), automatically rebuild the build artifacts when they change (step 2), and continue serving the website all the while (item 3). This may be a separate command or command-line option (e.g. MkDocs and Jekyll both have a <code>--watch</code> option to their <code>serve</code> command).
+</dd>
+</dl></li>
+</ol>
+<p>Rather than using MkDocs or Jekyll or something else, I’ve recently rolled my own static site generator. Its main tasks are organising my source files (item 1) and building my websites (item 2), but I would also like to preserve the workflow of local serving (item 3) and automatic rebuilding (item 4). This post describes how I’ve done that.</p>
+<h2 id="serve-a-directory-of-files-over-http">Serve a directory of files over HTTP</h2>
+<p>The simplest approach to serving files locally might be the HTTP server built into Python. Being built-in, there are no additional packages to wrestle with. To launch it just run, from within the directory of files to serve:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> http.server</span></code></pre></div>
+<p>The output of this command includes a local address where the website can be accessed in a web browser, something like:</p>
+<pre><code>Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/)</code></pre>
+<p>Equivalently, <code>127.0.0.1:8000</code> and <code>localhost:8000</code> will work here too. This is running locally, of course.</p>
+<h2 id="monitor-source-files-for-changes">Monitor source files for changes</h2>
+<div class="note">
+<p>This part is Linux-specific. All platforms have their own, very different, ways of monitoring files.</p>
+</div>
+<p>On Linux, we can monitor for file changes using <code>inotifywait</code>. To monitor for changes in the current directory, recursively:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">inotifywait</span> <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--monitor</span> <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--recursive</span> <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> create <span class="dt">\</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> delete <span class="dt">\</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> move <span class="dt">\</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> close_write .</span></code></pre></div>
+<p>Key parts of the command are:</p>
+<ul>
+<li><dl>
+<dt><code>--monitor</code></dt>
+<dd>
+to continously watch for events until terminated, rather than exiting after the first event.
+</dd>
+</dl></li>
+<li><dl>
+<dt><code>--recursive</code></dt>
+<dd>
+to recursively watch the whole directory structure under the current directory, not just the immediate files and subdirectories contained in the current directory.
+</dd>
+</dl></li>
+<li><dl>
+<dt><code>--event</code></dt>
+<dd>
+to specify which events to catch (see <code>man inotifyway</code> for details).
+</dd>
+</dl></li>
+</ul>
+<p>When running, the default output of <code>inotifywait</code> is something like:</p>
+<pre><code>Setting up watches.  Beware: since -r was given, this may take a while!
+Watches established.
+./software/ CLOSE_WRITE,CLOSE index.md
+./creative/ CLOSE_WRITE,CLOSE index.md
+./blog/ CLOSE_WRITE,CLOSE index.md
+./ CLOSE_WRITE,CLOSE index.md</code></pre>
+<p>Here, I’m just using <code>touch</code> to update a few files while it’s running to show how it works. We can control the output by adding the command-line option <code>--format</code>, e.g. <code>--format '%w%f'</code> prints the full path of the modified file, only:</p>
+<pre><code>./software/index.md
+./creative/index.md
+./blog/index.md
+./index.md</code></pre>
+<p>While we’re at it, <code>--quiet</code> silences the initial message about setting up watches.</p>
+<h2 id="rebuild-when-source-files-change-a-basic-approach">Rebuild when source files change: a basic approach</h2>
+<p>The next step is a script to consume the output of <code>inotifywait</code> and rebuild the website whenever a change event arrives. I use a simple <code>make</code> to rebuild my website, so will use the same command here for illustration. A simple script (we’ll improve on this in the <a href="#rebuild-when-source-files-change-an-improved-approach">next section</a>):</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">inotifywait</span> <span class="dt">\</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--format</span> <span class="st">&#39;%w%f&#39;</span> <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--quiet</span> <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--monitor</span> <span class="dt">\</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--recursive</span> <span class="dt">\</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> create <span class="dt">\</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> delete <span class="dt">\</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> move <span class="dt">\</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> close_write . <span class="kw">|</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="bu">read</span> <span class="at">-r</span> <span class="va">path</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">&quot;changed: </span><span class="va">$path</span><span class="st">&quot;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">make</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<p>Note the way that <code>inotifywait</code> output is piped into the <code>while</code> loop. In its condition, the <code>while</code> loop reads the output of <code>inotifywait</code> using <code>read</code>, which waits for a line to arrive if necessary. When a line arrives, the <code>read</code> is successful and we enter the body of the loop, which calls <code>make</code> to rebuild the website. We then return to the condition of the loop, awaiting the next line with <code>read</code>, and so on, and so on. The arrival of each line, of course, indicates that a file has changed.</p>
+<p>This establishes the basic logic, but we can do better. An issue is that it rebuilds the website once for every file change event. Imagine if multiple files change in quick succession, or a bunch of files are deleted, or a bunch of new files are copied into the source directory: this approach calls <code>make</code> for every one of them. That could be tens, hundreds, thousands of times, and if file changes come in faster than <code>make</code> takes to run, this approach may not even keep up.</p>
+<h2 id="rebuild-when-source-files-change-an-improved-approach">Rebuild when source files change: an improved approach</h2>
+<p>We can batch multiple changes into a single rebuild:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">inotifywait</span> <span class="dt">\</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">--format</span> <span class="st">&#39;%w%f&#39;</span> <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--quiet</span> <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--monitor</span> <span class="dt">\</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--recursive</span> <span class="dt">\</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> create <span class="dt">\</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> delete <span class="dt">\</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> move <span class="dt">\</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--event</span> close_write . <span class="kw">|</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="bu">read</span> <span class="at">-r</span> <span class="va">path</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">&quot;changed: </span><span class="va">$path</span><span class="st">&quot;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sleep</span> 1</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="bu">read</span> <span class="at">-t</span> 0</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">do</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="bu">read</span> <span class="at">-r</span> <span class="va">path</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="bu">echo</span> <span class="st">&quot;also changed: </span><span class="va">$path</span><span class="st">&quot;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">done</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">make</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<p>This new approach has an inner <code>while</code> loop that consumes as many lines as available before calling <code>make</code>. The additional code works as follows:</p>
+<ul>
+<li><dl>
+<dt><code>sleep 1</code></dt>
+<dd>
+waits for one second to accumulate further file changes; a short wait for the user, a long wait for the computer.
+</dd>
+</dl></li>
+<li><dl>
+<dt><code>read -t 0</code></dt>
+<dd>
+returns immediately rather than waiting for a new line, giving success if a new line is available. It is used to ensure that a new line is available before reading, to avoid waiting.
+</dd>
+</dl></li>
+</ul>
+<p>This new approach improves on the original by not calling <code>make</code> once for every file change. Rather, <code>make</code> is called at most once per second, and between calls, all outstanding file change events are consumed. There is no longer a problem with keeping up.</p>
+<div class="note">
+<p><code>read -t 0</code> is a Bash extension over POSIX, in case compatibility is of concern.</p>
+</div>
+<h2 id="combining-this-into-a-watch-command">Combining this into a <code>watch</code> command</h2>
+<p>Finally, we can combine all this into a script that serves the current directory (item 3 above) and rebuilds on changes to source files (item 4 above):</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">serve()</span> <span class="kw">{</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-m</span> http.server</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">watch()</span> <span class="kw">{</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-m</span> http.server <span class="kw">&amp;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="va">pid</span><span class="op">=</span><span class="va">$!</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">trap</span> <span class="st">&#39;kill $pid&#39;</span> EXIT  <span class="co"># kill the HTTP server on exit</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="ex">inotifywait</span> <span class="dt">\</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">--format</span> <span class="st">&#39;%w%f&#39;</span> <span class="dt">\</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">--quiet</span> <span class="dt">\</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">--monitor</span> <span class="dt">\</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">--recursive</span> <span class="dt">\</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">--event</span> create <span class="dt">\</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">--event</span> delete <span class="dt">\</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">--event</span> move <span class="dt">\</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">--event</span> close_write . <span class="kw">|</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="bu">read</span> <span class="at">-r</span> <span class="va">path</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">do</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="bu">echo</span> <span class="st">&quot;changed: </span><span class="va">$path</span><span class="st">&quot;</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sleep</span> 1</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> <span class="bu">read</span> <span class="at">-t</span> 0</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">do</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>            <span class="bu">read</span> <span class="at">-r</span> <span class="va">path</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>            <span class="bu">echo</span> <span class="st">&quot;also changed: </span><span class="va">$path</span><span class="st">&quot;</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">done</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">make</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">done</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span></code></pre></div>
+<p>We could put this in a file called <code>run</code>, say (remember to make it executable with <code>chmod +x run</code>). The <code>"$@"</code> at the end is a little trick to enable the following usage:</p>
+<ul>
+<li><dl>
+<dt><code>./run serve</code></dt>
+<dd>
+to serve the current directory.
+</dd>
+</dl></li>
+<li><dl>
+<dt><code>./run watch</code></dt>
+<dd>
+to serve the current directory and watch for changes.
+</dd>
+</dl></li>
+</ul>
+<p>Use <code>Ctrl+C</code> to terminate either command.</p>
+<p>This all-in-one script has one additional element: at the top of <code>watch()</code>, the HTTP server starts in the background (note <code>&amp;</code> at the end of the line), and we would like it to terminate with the script on <code>Ctrl+C</code> too, not continue running. The two lines that follow retrieve its process identifier for termination on exit.</p>
+<h2 id="summary">Summary</h2>
+<p>This post showed how to serve a website locally with Python’s built-in HTTP server and, with a little shell scripting, how to monitor source files for changes and rebuild a website accordingly. This can be useful while developing a website or adding content to a website, faciliating live previews while working.</p>
+    </div>
+  </article>
+
+  <ul class="my-4 px-0" style="clear:both;list-style:none;">
+      <li class="mb-3"><small class="text-secondary text-capitalize">related</small><br><a href="/blog/responsive-images-with-jekyll-and-imagemagick/" class="fs-5">Responsive Images with Jekyll and ImageMagick</a></li>
+      <li class="mb-3"><small class="text-secondary text-capitalize">related</small><br><a href="/blog/admonitions-in-markdown/" class="fs-5">Admonitions in Markdown</a></li>
+      </div>
+  </ul>
+</main>
+
+<div class="w-100 pb-4 bg-body-tertiary" style="clear:both;margin-top:96px;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

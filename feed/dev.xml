@@ -1,0 +1,275 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>Lawrence Murray</title>
+    <link>https://indii.org</link>
+    <description>Personal site of Lawrence Murray, collating blog articles, scientific research, software artifacts, and creative outputs</description>
+    
+    <pubDate>Sun, 11 Oct 2026 00:18:21 +0700</pubDate>
+    <lastBuildDate>Sun, 11 Oct 2026 00:18:21 +0700</lastBuildDate>
+    <item>
+      <title>Serve a website locally and rebuild on changes</title>
+      <link>https://indii.org/blog/serve-a-website-locally-and-rebuild-on-changes/</link>
+      <description>Bash scripting a quality-of-life feature for web development</description>
+      <category>dev</category>
+      <pubDate>2026-10-06</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Mending Wall</title>
+      <link>https://indii.org/software/mendingwall/</link>
+      <description>Try another desktop environment</description>
+      <category>software</category>
+      <pubDate>2025-02-22</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>A static for loop in C++</title>
+      <link>https://indii.org/blog/cplusplus-static-for-loop/</link>
+      <description>You have <code>if constexpr</code>, but you want <code>for constexpr</code></description>
+      <category>dev</category>
+      <pubDate>2024-11-27</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Improving C++ Code Coverage with Gcov, Gcovr and Doxide</title>
+      <link>https://indii.org/blog/cplusplus-code-coverage-with-gcov-gcovr-doxide/</link>
+      <description>Doxide can now produce line data on function templates, even when not instantiated, to mix with execution data for more accurate test coverage reports. This is especially useful when testing header-only libraries.</description>
+      <category>dev</category>
+      <pubDate>2024-11-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Limit clock speed and memory speed on an Nvidia GPU</title>
+      <link>https://indii.org/blog/fix-clock-speed-on-nvidia-gpu/</link>
+      <description>How to limit clock speed and memory speed for more consistent results when benchmarking and profiling CUDA kernels</description>
+      <category>dev</category>
+      <pubDate>2024-10-21</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Matrix Multiplication On GPU: Part 3, Coding for Speed</title>
+      <link>https://indii.org/blog/gpu-matrix-multiply-code-level-tips-and-tricks/</link>
+      <description>Tips and tricks to help the compiler optimize</description>
+      <category>dev</category>
+      <pubDate>2024-10-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Matrix Multiplication On GPU: Part 2, Tiling</title>
+      <link>https://indii.org/blog/gpu-matrix-multiply-tiling/</link>
+      <description>Breaking down large matrix multiplications into tiles</description>
+      <category>dev</category>
+      <pubDate>2024-10-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Matrix Multiplication on GPU: Faster than Nvidia, Sometimes</title>
+      <link>https://indii.org/blog/gpu-matrix-multiply/</link>
+      <description>It works on my laptop</description>
+      <category>dev</category>
+      <pubDate>2024-10-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Gradients of Softmax and Logsumexp</title>
+      <link>https://indii.org/blog/gradients-of-softmax-and-logsumexp/</link>
+      <description>Essential functions for categorical distributions and attention mechanisms in machine learning</description>
+      <category>dev</category>
+      <pubDate>2024-05-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Pattern Matching Template Types</title>
+      <link>https://indii.org/blog/pattern-matching-template-types/</link>
+      <description>How to check if a template type matches a pattern? Something like <code>is_like_v&lt;T, vector&lt;int,_&gt;&gt;</code></description>
+      <category>dev</category>
+      <pubDate>2024-03-02</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Overloading the Spaceship Operator, A Recipe</title>
+      <link>https://indii.org/blog/overloading-the-spaceship-operator/</link>
+      <description>How to overload the three-way comparison (spaceship) <code>operator&lt;=&gt;</code>, and a reminder to overload <code>operator==</code> as well</description>
+      <category>dev</category>
+      <pubDate>2024-02-09</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Check if a type is an instantiation of a given class template</title>
+      <link>https://indii.org/blog/is-type-instantiation-of-template/</link>
+      <description>How to implement an <code>is_instance_of</code> type trait</description>
+      <category>dev</category>
+      <pubDate>2024-02-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Forwarding references, overload resolution, and taking back control</title>
+      <link>https://indii.org/blog/forwarding-references/</link>
+      <description>Consider merging overloads into one function with forwarding reference parameters</description>
+      <category>dev</category>
+      <pubDate>2024-01-27</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Disable implicit conversion in specific contexts only</title>
+      <link>https://indii.org/blog/cplusplus-disable-implicit-conversion-in-specific-contexts/</link>
+      <description>You get one implicit conversion, so burn it with a wrapper</description>
+      <category>dev</category>
+      <pubDate>2023-11-14</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Revisiting combinatorial instantiation of templates with std::variant</title>
+      <link>https://indii.org/blog/revisited-combinatorial-instantiation-of-templates-with-std-variant/</link>
+      <description>Compiler optimizations can break it, function attributes can fix it</description>
+      <category>dev</category>
+      <pubDate>2023-08-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Combinatorial instantiation of templates with std::variant</title>
+      <link>https://indii.org/blog/combinatorial-instantiation-of-templates-with-std-variant/</link>
+      <description>An alternative to explicit instantiations and macros</description>
+      <category>dev</category>
+      <pubDate>2023-06-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Doxide</title>
+      <link>https://indii.org/software/doxide/</link>
+      <description>Documentation and code coverage reports for C++ projects</description>
+      <category>software</category>
+      <pubDate>2023-06-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Avoiding Argument Dependent Lookup</title>
+      <link>https://indii.org/blog/avoiding-argument-dependent-lookup-in-cpp/</link>
+      <description>A little trick using an extra namespace and cross-import</description>
+      <category>dev</category>
+      <pubDate>2023-04-30</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sums of Discrete Random Variables as Banded Matrix Products</title>
+      <link>https://indii.org/blog/sum-of-discrete/</link>
+      <description>Zero-stride catch and a custom CUDA kernel</description>
+      <category>dev</category>
+      <pubDate>2023-03-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Fast Enumeration of Sums of Discrete Random Variables</title>
+      <link>https://indii.org/blog/fast-discrete-enumeration/</link>
+      <description>A CUDA kernel</description>
+      <category>dev</category>
+      <pubDate>2023-02-22</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Fix Scaling Issues on KDE Plasma</title>
+      <link>https://indii.org/blog/fix-scaling-issues-on-kde-plasma/</link>
+      <description>In case of issues switching between Wayland and X11</description>
+      <category>dev</category>
+      <pubDate>2023-01-22</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Profile in the Cloud with Nsight Systems</title>
+      <link>https://indii.org/blog/profile-in-the-cloud-with-nsight-systems/</link>
+      <description>How to profile CUDA code on cloud GPU instances using Nsight Systems</description>
+      <category>dev</category>
+      <pubDate>2023-01-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Develop in the Cloud with Visual Studio Code</title>
+      <link>https://indii.org/blog/develop-in-the-cloud-with-visual-studio-code/</link>
+      <description>How to develop on remote cloud instances using Visual Studio Code</description>
+      <category>dev</category>
+      <pubDate>2023-01-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>GPU Programming in the Cloud</title>
+      <link>https://indii.org/blog/gpu-programming-in-the-cloud/</link>
+      <description>A round-up of cloud service providers, and a how-to guide for each</description>
+      <category>dev</category>
+      <pubDate>2022-11-22</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Open Source Alternatives for Two Factor Authentication (2FA) Across Multiple Devices</title>
+      <link>https://indii.org/blog/open-source-alternatives-for-two-factor-authentication/</link>
+      <description>Gnome Authenticator for Desktop, Aegis Authenticator for Android, import and export between. Some other alternatives below</description>
+      <category>dev</category>
+      <pubDate>2022-11-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Matrix Gradients of Scalar Functions</title>
+      <link>https://indii.org/blog/matrix-gradients-of-scalar-functions/</link>
+      <description>Understanding the building blocks of reverse-mode automatic differentiation</description>
+      <category>dev</category>
+      <pubDate>2022-11-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Jekyll Responsive Magick</title>
+      <link>https://indii.org/software/jekyll-responsive-magick/</link>
+      <description>A Jekyll plugin to automate responsive images with Jekyll 4</description>
+      <category>software</category>
+      <pubDate>2022-11-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Admonitions in Markdown</title>
+      <link>https://indii.org/blog/admonitions-in-markdown/</link>
+      <description>Working or failing gracefully across Apostrophe, Kramdown, and Jekyll. No plugins required</description>
+      <category>dev</category>
+      <pubDate>2022-11-02</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Responsive Images with Jekyll and ImageMagick</title>
+      <link>https://indii.org/blog/responsive-images-with-jekyll-and-imagemagick/</link>
+      <description>Step by step through the HTML, ImageMagick and Ruby. Works with Jekyll 4</description>
+      <category>dev</category>
+      <pubDate>2022-10-30</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Birch: Probabilistic Inference, Programmatic Models</title>
+      <link>https://indii.org/software/birch/</link>
+      <description>An open source probabilistic programming language for machine learning and statistics</description>
+      <category>software</category>
+      <pubDate>2018-03-24</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>LibBi</title>
+      <link>https://indii.org/software/libbi/</link>
+      <description>A high-performance probabilistic programming language for state-space models with GPU and distributed computing support</description>
+      <category>software</category>
+      <pubDate>2013-06-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Urban Lightscape</title>
+      <link>https://indii.org/software/urbanlightscape/</link>
+      <description>Exposure correction and local lighting adjustments</description>
+      <category>software</category>
+      <pubDate>2010-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Tintii</title>
+      <link>https://indii.org/software/tintii/</link>
+      <description>Selective colour and saturation control</description>
+      <category>software</category>
+      <pubDate>2007-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+  </channel>
+</rss>

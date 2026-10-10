@@ -1,0 +1,579 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>Lawrence Murray</title>
+    <link>https://indii.org</link>
+    <description>Personal site of Lawrence Murray, collating blog articles, scientific research, software artifacts, and creative outputs</description>
+    
+    <pubDate>Sun, 11 Oct 2026 00:18:06 +0700</pubDate>
+    <lastBuildDate>Sun, 11 Oct 2026 00:18:06 +0700</lastBuildDate>
+    <item>
+      <title>Enjoying the View</title>
+      <link>https://indii.org/photography/enjoying-the-view/</link>
+      <description>City lights from a rooftop pool, Bangkok, Thailand</description>
+      <category>photography</category>
+      <pubDate>2024-08-17</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Gum Tree</title>
+      <link>https://indii.org/photography/sydney-botanic-gardens/</link>
+      <description>Gum tree at the Royal Botanic Gardens, Sydney, Australia</description>
+      <category>photography</category>
+      <pubDate>2024-02-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Vista Perugia</title>
+      <link>https://indii.org/photography/vista-perugia/</link>
+      <description>View over and out of Perugia, Umbria, Italy</description>
+      <category>photography</category>
+      <pubDate>2023-09-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Tattoo the Sea</title>
+      <link>https://indii.org/creative/tattoo-the-sea/</link>
+      <description>Fat rain poked the terrace. Separate splots—caliper-sizeable, measurable, aged and faded by the sun and vanished back to sky</description>
+      <category>writing</category>
+      <pubDate>2023-04-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Girl with Headphones</title>
+      <link>https://indii.org/creative/girl-with-headphones/</link>
+      <description>Charcoal, chalk and pastel on paper, 2015</description>
+      <category>drawing</category>
+      <pubDate>2023-04-02</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Elements of Chiang Mai</title>
+      <link>https://indii.org/photography/elements-of-chiang-mai/</link>
+      <description>Hiking and village stays near Doi Inthanon national park</description>
+      <category>photography</category>
+      <pubDate>2023-02-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Chiang Mai Mood</title>
+      <link>https://indii.org/photography/chiang-mai-mood/</link>
+      <description>Afternoon sun breaks through the mountains near Doi Inthanon National Park, Chiang Mai, Thailand</description>
+      <category>photography</category>
+      <pubDate>2022-12-23</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Canadian Rockies</title>
+      <link>https://indii.org/photography/canadian-rockies/</link>
+      <description>Mountain vistas and the private life of snow</description>
+      <category>photography</category>
+      <pubDate>2020-02-15</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Yosemite Falls</title>
+      <link>https://indii.org/photography/yosemite-falls/</link>
+      <description>Illilouette Falls, Yosemite National Park</description>
+      <category>photography</category>
+      <pubDate>2019-06-15</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Gecko</title>
+      <link>https://indii.org/photography/gecko/</link>
+      <description>Slow and fast</description>
+      <category>photography</category>
+      <pubDate>2019-01-27</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>The Wet Comes To Bali</title>
+      <link>https://indii.org/photography/wet-in-bali/</link>
+      <description>Light and dark</description>
+      <category>photography</category>
+      <pubDate>2018-11-26</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>The Kimberley</title>
+      <link>https://indii.org/photography/the-kimberley/</link>
+      <description>Gorges and waterholes in the remote north-west of Australia</description>
+      <category>photography</category>
+      <pubDate>2018-11-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Saltoluokta</title>
+      <link>https://indii.org/photography/saltoluokta/</link>
+      <description>Summer north of the arctic circle.</description>
+      <category>photography</category>
+      <pubDate>2018-10-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sahara</title>
+      <link>https://indii.org/photography/sahara/</link>
+      <description>Back to Morocco</description>
+      <category>photography</category>
+      <pubDate>2018-03-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Under the Dhow Sail</title>
+      <link>https://indii.org/photography/under-the-dhow-sail/</link>
+      <description>Sailing in Zanzibar</description>
+      <category>photography</category>
+      <pubDate>2018-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Riddarholmen</title>
+      <link>https://indii.org/photography/riddarholmen/</link>
+      <description>The island of Riddarholmen</description>
+      <category>photography</category>
+      <pubDate>2017-11-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Hötorget Tunnel</title>
+      <link>https://indii.org/photography/hotorget-tunnel/</link>
+      <description>There may be a world at the other end of this</description>
+      <category>photography</category>
+      <pubDate>2017-08-12</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Summer Colours of Stockholm</title>
+      <link>https://indii.org/photography/summer-colours-of-stockholm/</link>
+      <description>Close to midnight in Mariatorget</description>
+      <category>photography</category>
+      <pubDate>2017-08-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Abisko and Torneträsk</title>
+      <link>https://indii.org/photography/abisko-and-tornetrask/</link>
+      <description>Arctic panorama</description>
+      <category>photography</category>
+      <pubDate>2017-06-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Breaking Ice</title>
+      <link>https://indii.org/photography/breaking-ice/</link>
+      <description>Getting acquainted with the Arctic</description>
+      <category>photography</category>
+      <pubDate>2017-06-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Minus Twenty</title>
+      <link>https://indii.org/photography/minus-twenty/</link>
+      <description>Monochromes of a frozen Stockholm</description>
+      <category>photography</category>
+      <pubDate>2017-04-23</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Industrilandskapet</title>
+      <link>https://indii.org/photography/industrilandskapet/</link>
+      <description>Industrilandskapet in Norrköping, Sweden</description>
+      <category>photography</category>
+      <pubDate>2017-03-25</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Gamla Stan Waters</title>
+      <link>https://indii.org/photography/gamla-stan-waters/</link>
+      <description>Choppy waters around the old town</description>
+      <category>photography</category>
+      <pubDate>2017-03-18</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Winter Colours of Stockholm</title>
+      <link>https://indii.org/photography/winter-colours-of-stockholm/</link>
+      <description>Contrast on snow</description>
+      <category>photography</category>
+      <pubDate>2017-01-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Uppsala University</title>
+      <link>https://indii.org/photography/uppsala-university/</link>
+      <description></description>
+      <category>photography</category>
+      <pubDate>2017-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Beas De Granada</title>
+      <link>https://indii.org/photography/beas-de-granada/</link>
+      <description>Duotone landscapes along the ridge to Granada</description>
+      <category>photography</category>
+      <pubDate>2016-10-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Alhambra Muqarnas</title>
+      <link>https://indii.org/photography/alhambra-muqarnas/</link>
+      <description>A palace for mathematicians</description>
+      <category>photography</category>
+      <pubDate>2016-10-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Elements of Calm</title>
+      <link>https://indii.org/photography/elements-of-calm/</link>
+      <description>Forty-degree heat and the fountains of the Generalife</description>
+      <category>photography</category>
+      <pubDate>2016-09-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Open To Interpretation</title>
+      <link>https://indii.org/photography/open-to-interpretation/</link>
+      <description>Spacious landscapes and still-life scenes</description>
+      <category>photography</category>
+      <pubDate>2016-08-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Storm and Laundry</title>
+      <link>https://indii.org/photography/storm-and-laundry/</link>
+      <description>A camera and a riad rooftop</description>
+      <category>photography</category>
+      <pubDate>2016-06-18</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Minimal Mediterranean</title>
+      <link>https://indii.org/photography/minimal-mediterranean/</link>
+      <description>Abstract and minimal photography from Andalusia and northern Morocco</description>
+      <category>photography</category>
+      <pubDate>2016-06-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Bifurcation</title>
+      <link>https://indii.org/creative/bifurcation/</link>
+      <description>Revealing the intricate behaviour of the Lorenz ’96 chaotic equations</description>
+      <category>graphics</category>
+      <pubDate>2016-04-17</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Winter Tree Textures</title>
+      <link>https://indii.org/photography/winter-tree-textures/</link>
+      <description>Photographic abstractions of branching trees</description>
+      <category>photography</category>
+      <pubDate>2016-04-08</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>The Gulls of Old Mogador</title>
+      <link>https://indii.org/photography/the-gulls-of-old-mogador/</link>
+      <description>Sea gulls, fortress walls and ruins in the seaside medina of Essaouira</description>
+      <category>photography</category>
+      <pubDate>2016-04-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Essaouira Ramparts</title>
+      <link>https://indii.org/photography/essaouira-ramparts/</link>
+      <description>The ramparts of the old wall</description>
+      <category>photography</category>
+      <pubDate>2016-01-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Alaska Earth and Ice</title>
+      <link>https://indii.org/photography/alaska-earth-and-ice/</link>
+      <description>Glacial landscapes of Alaska in black and white</description>
+      <category>photography</category>
+      <pubDate>2015-11-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sunset Wadi Rum</title>
+      <link>https://indii.org/photography/sunset-wadi-rum/</link>
+      <description>Setting camp through Rakabat Canyon from Rum village</description>
+      <category>photography</category>
+      <pubDate>2015-11-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Camping Between the Rocks, Under the Stars</title>
+      <link>https://indii.org/photography/camping-between-the-rocks-under-the-stars/</link>
+      <description>Somewhere in the white desert, sometime after the orange sunset, brewing tea</description>
+      <category>photography</category>
+      <pubDate>2015-11-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Parking in Marrakesh</title>
+      <link>https://indii.org/photography/parking-in-marrakesh/</link>
+      <description>A quiet day in the souk</description>
+      <category>photography</category>
+      <pubDate>2015-11-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Valley of the Moon</title>
+      <link>https://indii.org/photography/valley-of-the-moon/</link>
+      <description>Dana village perched high above the townships of the Arabah</description>
+      <category>photography</category>
+      <pubDate>2015-10-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Wadi Rum Domes</title>
+      <link>https://indii.org/photography/wadi-rum-domes/</link>
+      <description>Ancient rock formations and a patchwork of sun and shadow</description>
+      <category>photography</category>
+      <pubDate>2015-08-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Closing Clouds</title>
+      <link>https://indii.org/photography/closing-clouds/</link>
+      <description>A convoy of clouds in the valley, bringing patchy desert rain</description>
+      <category>photography</category>
+      <pubDate>2015-07-14</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sundown Wadi Rum</title>
+      <link>https://indii.org/photography/sundown-wadi-rum/</link>
+      <description>Panorama over the red desert to the setting sun</description>
+      <category>photography</category>
+      <pubDate>2015-06-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>The Temple of Hercules</title>
+      <link>https://indii.org/photography/the-temple-of-hercules/</link>
+      <description>Kites overhead</description>
+      <category>photography</category>
+      <pubDate>2015-04-27</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lake Atitlan Sunrise</title>
+      <link>https://indii.org/photography/lake-atitlan-sunrise/</link>
+      <description>Morning rays embrace the hilltop, above San Juan La Laguna</description>
+      <category>photography</category>
+      <pubDate>2014-12-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>El Tunco</title>
+      <link>https://indii.org/photography/el-tunco/</link>
+      <description>Lightning out to sea, a party to watch the spectacle</description>
+      <category>photography</category>
+      <pubDate>2014-12-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Stradbroke Island</title>
+      <link>https://indii.org/photography/stradbroke-island/</link>
+      <description>The setting sun reflects off wet sands</description>
+      <category>photography</category>
+      <pubDate>2014-06-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>The Three Sisters</title>
+      <link>https://indii.org/photography/the-three-sisters/</link>
+      <description>Star trails from the Echo Point viewpoint</description>
+      <category>photography</category>
+      <pubDate>2014-06-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Aiguille du Midi</title>
+      <link>https://indii.org/photography/aiguille-du-midi/</link>
+      <description>Beneath the peak of Aiguille du Midi</description>
+      <category>photography</category>
+      <pubDate>2014-06-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>No More Starry Nights</title>
+      <link>https://indii.org/photography/no-more-starry-nights/</link>
+      <description>Searching for star trails through suburban glow and the last of the winter rainmakers</description>
+      <category>photography</category>
+      <pubDate>2013-10-08</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Ta Seng</title>
+      <link>https://indii.org/photography/ta-seng/</link>
+      <description>Watching Muy Thai on television with the locals</description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sambor Prei Kuk Woodlands</title>
+      <link>https://indii.org/photography/sambor-prei-kuk-woodlands/</link>
+      <description>Sun gilds the trees on an afternoon walk through the temples of Sambor Prei Kuk</description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Preah Khan</title>
+      <link>https://indii.org/photography/preah-khan/</link>
+      <description></description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Phnom Bakheng</title>
+      <link>https://indii.org/photography/phnom-bakheng/</link>
+      <description>The popular hill for sunset</description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Fig Tree Tower</title>
+      <link>https://indii.org/photography/fig-tree-tower/</link>
+      <description>Once they tore it apart, now they hold it together</description>
+      <category>photography</category>
+      <pubDate>2013-01-12</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Beng Mealea</title>
+      <link>https://indii.org/photography/beng-mealea/</link>
+      <description></description>
+      <category>photography</category>
+      <pubDate>2013-01-12</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lake Pedder Evening</title>
+      <link>https://indii.org/photography/lake-pedder-evening/</link>
+      <description>View of the lake at dusk, from near the Mt Eliza hut</description>
+      <category>photography</category>
+      <pubDate>2012-11-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Alpine Snow Melt</title>
+      <link>https://indii.org/photography/alpine-snow-melt/</link>
+      <description>Patches of snow melt into an alpine pool</description>
+      <category>photography</category>
+      <pubDate>2012-11-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Alpine Plateau</title>
+      <link>https://indii.org/photography/alpine-plateau/</link>
+      <description>Alpine foliage in its crooked forms and ruddy hues</description>
+      <category>photography</category>
+      <pubDate>2012-11-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Being Different</title>
+      <link>https://indii.org/photography/being-different/</link>
+      <description>Supposedly, the fiercest dolls bring the greatest fortunes</description>
+      <category>photography</category>
+      <pubDate>2012-07-14</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Fishing Around the Perfume Pagoda</title>
+      <link>https://indii.org/photography/fishing-around-the-perfume-pagoda/</link>
+      <description>Locals fish from the shore along the waterway that links the many pagodas of the region by row boat</description>
+      <category>photography</category>
+      <pubDate>2012-03-25</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Emperors and Poetry</title>
+      <link>https://indii.org/photography/emperors-and-poetry/</link>
+      <description>The summer house at Tu Doc Tomb, where the Nguyen emperor once came to write poetry</description>
+      <category>photography</category>
+      <pubDate>2012-03-25</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Milford Sound Waterfalls</title>
+      <link>https://indii.org/photography/milford-sound-waterfalls/</link>
+      <description>A moody day on the water after recent rain</description>
+      <category>photography</category>
+      <pubDate>2011-10-06</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lake Ballard</title>
+      <link>https://indii.org/photography/lake-ballard/</link>
+      <description>Abstract figures on a remote salt lake</description>
+      <category>photography</category>
+      <pubDate>2011-02-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Phanak Island</title>
+      <link>https://indii.org/photography/phanak-island/</link>
+      <description>Photo-fluorescent plankton in sheltered caves, to a buzz-saw cicada symphony</description>
+      <category>photography</category>
+      <pubDate>2010-11-26</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lake Magic</title>
+      <link>https://indii.org/photography/lake-magic/</link>
+      <description>Captivating colours of salt lakes</description>
+      <category>photography</category>
+      <pubDate>2010-09-29</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>On the Road to Pugilist Hill</title>
+      <link>https://indii.org/photography/on-the-road-to-pugilist-hill/</link>
+      <description>Long exposure after sunset, looking out to Rawnsley Bluff</description>
+      <category>photography</category>
+      <pubDate>2010-06-29</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Albina Lake</title>
+      <link>https://indii.org/photography/albina-lake/</link>
+      <description>A day of shifting showers</description>
+      <category>photography</category>
+      <pubDate>2010-01-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Watarrka Domes</title>
+      <link>https://indii.org/photography/watarrka-domes/</link>
+      <description>Ancient rock forms at the top of the Rim Walk</description>
+      <category>photography</category>
+      <pubDate>2009-10-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Last Night’s Campsite</title>
+      <link>https://indii.org/photography/last-nights-campsite/</link>
+      <description>Ellery Creek Bighole</description>
+      <category>photography</category>
+      <pubDate>2009-09-29</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Goodbye Edinburgh</title>
+      <link>https://indii.org/photography/goodbye-edinburgh/</link>
+      <description>The Balmoral Hotel from Bailie Fyfe’s Close, off the Royal Mile</description>
+      <category>photography</category>
+      <pubDate>2009-02-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+  </channel>
+</rss>

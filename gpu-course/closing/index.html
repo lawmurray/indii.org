@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Foundations of GPU Computing: Closing Lecture</title>
+    <meta name="description" content="Closing lecture slides, tying up some loose ends and a taste of more advanced kernel programming">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Foundations of GPU Computing: Closing Lecture">
+    <meta name="twitter:description" content="Closing lecture slides, tying up some loose ends and a taste of more advanced kernel programming">
+    <meta name="twitter:image" content="/assets/gpu.svg">
+
+    <meta property="og:title" content="Foundations of GPU Computing: Closing Lecture">
+    <meta property="og:description" content="Closing lecture slides, tying up some loose ends and a taste of more advanced kernel programming">
+    <meta property="og:url" content="https://indii.org/gpu-course/closing/">
+    <meta property="og:image" content="/assets/gpu.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    
+    <link rel="canonical" href="https://indii.org/gpu-course/closing/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+      </head>
+  <body>
+<div class="container">
+<div class="slides">
+<h1 id="foundations-of-gpu-computing-closing-lecture">Foundations of GPU Computing: Closing Lecture</h1>
+<h6 id="lawrence-murray">Lawrence Murray</h6>
+<hr />
+<h2 id="outline">Outline</h2>
+<ol type="1">
+<li>Tie up some loose threads from the practicals.</li>
+<li>A taste of more advanced kernel programming.</li>
+</ol>
+<div class="note">
+<p>This lecture is part of the course <a href="/gpu-course/">Foundations of GPU Computing</a>.</p>
+</div>
+<hr />
+<h2 id="error-checking">Error checking</h2>
+<div class="danger">
+<p>In the practicals, we’ve been very lazy about error checking.</p>
+</div>
+<p>Instead, the usual idiom is:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cudaError_t err <span class="op">=</span> cudaMalloc<span class="op">(...);</span>  <span class="co">// or kernel call, kernel&lt;&lt;&lt;...&gt;&gt;&gt;()</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>err <span class="op">!=</span> cudaSuccess<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  printf<span class="op">(</span><span class="st">&quot;error: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> cudaGetErrorString<span class="op">(</span>err<span class="op">));</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>See <a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__ERROR.html">Error Handling</a> in the CUDA Runtime API documentation.</p>
+<hr />
+<h2 id="streaming-memory-allocation">Streaming memory allocation</h2>
+<div class="note">
+<p>In the practicals, we allocated all memory upfront. What about situations where we do not know memory requirements upfront?</p>
+</div>
+<ul>
+<li>CUDA has <a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY__POOLS.html#group__CUDART__MEMORY__POOLS_1gbbf70065888d61853c047513baa14081"><code>cudaMallocAsync</code></a> and <a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY__POOLS.html#group__CUDART__MEMORY__POOLS_1g3398a689c75448c1bf99368e490ac878"><code>cudaFreeAsync</code></a> for streaming allocation of <strong>device memory</strong>. It achieves this with memory pools.</li>
+</ul>
+<p>Some alternatives:</p>
+<ul>
+<li><a href="https://rapids.ai">Rapids</a>, also with memory pools.</li>
+<li><a href="/software/birch">Birch</a>, via its numerical library NumBirch, by integrating with <a href="https://jemalloc.net">jemalloc</a> for pools, arenas and thread caching. It works with <strong>managed memory</strong>.</li>
+</ul>
+<hr />
+<h2 id="multiple-streams">Multiple streams</h2>
+<div class="note">
+<p>In the practicals, we used one stream to enqueue kernels for the GPU. We can in fact use many.</p>
+</div>
+<ul>
+<li>Multiple streams can execute concurrently, allowing <em>concurrent kernel execution</em>.</li>
+<li>When we say that a GPU can do task parallelism, not just data parallelism, this is mostly what we mean.</li>
+<li>Where individual kernels are not large enough to occupy the GPU, launching several concurrently may be.</li>
+<li>Multiple streams can also be used to run on multiple GPUs.</li>
+</ul>
+<hr />
+<h2 id="events">Events</h2>
+<div class="note">
+<p>In the practicals, we used <code>cudaDeviceSynchronize()</code> to wait for the GPU to complete work enqueued in a stream. Events facilitate more fine-grained synchronization.</p>
+</div>
+<ul>
+<li>We create and destroy events with <a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__EVENT.html#group__CUDART__EVENT_1g7c581e3613a2110ba4d4e7fd5c7da418"><code>cudaEventCreate()</code></a> and <a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__EVENT.html#group__CUDART__EVENT_1g2cb6baa0830a1cd0bd957bfd8705045b"><code>cudaEventDestroy()</code></a>.</li>
+<li>We <em>record</em> an event in a stream with <a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__EVENT.html#group__CUDART__EVENT_1gf4fcb74343aa689f4159791967868446"><code>cudaEventRecord()</code></a>.</li>
+<li>We can have the CPU wait for the event with <a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__EVENT.html#group__CUDART__EVENT_1g949aa42b30ae9e622f6ba0787129ff22"><code>cudaEventSynchronize()</code></a>.</li>
+<li>We can have another stream wait for the event with <a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__STREAM.html#group__CUDART__STREAM_1g7840e3984799941a61839de40413d1d9"><code>cudaStreamWaitEvent()</code></a>.</li>
+</ul>
+<hr />
+<h2 id="advanced-kernel-programming">Advanced kernel programming</h2>
+<div class="note">
+<p>In the practicals, we only looked at kernels that perform simple <em>transformations</em>, where an operation is applied element-wise to a vector or matrix, and threads do not need to interact.</p>
+</div>
+<ul>
+<li>We may be interested in kernels that involve interacting threads, such as <em>reductions</em>, <em>scans</em>, <em>sorts</em> and other such primitive operations. The <em>shuffle</em> that we used in the practicals is one such kernel, although we avoided implementing it for GPU.</li>
+<li>We can write more complex transformations that involve arbitrary C++ code, including conditionals (<code>if</code>, <code>else</code>), loops (<code>for</code>, <code>while</code>) and function calls.</li>
+</ul>
+<div class="note">
+<p>When might we need to write our own custom kernel?</p>
+</div>
+<hr />
+<h2 id="example-sum-of-two-discrete-random-variables">Example: sum of two discrete random variables</h2>
+<div class="note">
+<p>This is needed for <em>automatic marginalization</em> in <a href="/software/birch">Birch</a>.</p>
+</div>
+<p>The problem: 1. given a random variable <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> on the integers <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{0,\ldots,m-1\}</annotation></semantics></math> with a vector of probabilities <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒑</mi><annotation encoding="application/x-tex">\mathbf{p}</annotation></semantics></math> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>=</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p_i = P(x = i)</annotation></semantics></math>, and 2. another random variable <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> on the integers <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{0,\ldots,n-1\}</annotation></semantics></math> with a vector of probabilities <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒒</mi><annotation encoding="application/x-tex">\mathbf{q}</annotation></semantics></math> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><mi>i</mi></msub><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>=</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">q_i = P(y = i)</annotation></semantics></math>, 3. consider the sum <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x + y</annotation></semantics></math> on the integers <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo>−</mo><mn>2</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{0, m + n - 2\}</annotation></semantics></math> and compute its vector of probabilities <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒓</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math> with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>=</mo><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_i = P(x + y = i)</annotation></semantics></math>.</p>
+<p>The basic computation:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mrow><mi mathvariant="normal">max</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi>i</mi><mo>−</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mrow><mi mathvariant="normal">min</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo></mrow></munderover><msub><mi>p</mi><mi>j</mi></msub><msub><mi>q</mi><mrow><mi>i</mi><mo>−</mo><mi>j</mi></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">r_i = \sum_{j = \max(0,i-n+1)}^{\min (m-1,i)} p_j q_{i-j}.</annotation></semantics></math></p>
+<hr />
+<h2 id="example-sum-of-two-discrete-random-variables-1">Example: sum of two discrete random variables</h2>
+<p>We can write this in matrix form as:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">𝒓</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>p</mi><mn>0</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>p</mi><mn>0</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>p</mi><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow></msub></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>p</mi><mn>0</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>p</mi><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow></msub></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mo>⋱</mo></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>p</mi><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow></msub></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>p</mi><mn>0</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mo>⋱</mo></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>p</mi><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd></mtr></mtable><mo stretchy="true" form="postfix">)</mo></mrow><mi mathvariant="bold-italic">𝒒</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">\mathbf{r} = \left(\begin{array}{cccccc}
+p_0     &amp; 0       &amp; \ldots  &amp; \ldots &amp; \ldots \\
+\vdots  &amp; p_0     &amp; 0       &amp; \ldots &amp; \ldots \\
+p_{m-1} &amp; \vdots  &amp; p_0     &amp; 0      &amp; \ldots \\
+0       &amp; p_{m-1} &amp; \vdots  &amp; \ddots &amp; 0      \\
+\vdots  &amp; 0       &amp; p_{m-1} &amp; \vdots &amp; p_0    \\
+\vdots  &amp; \vdots  &amp; 0       &amp; \ddots &amp; \vdots \\
+\vdots  &amp; \vdots  &amp; \vdots  &amp; 0      &amp; p_{m-1} \\
+\end{array}\right) \mathbf{q},</annotation></semantics></math></p>
+<p>where there are <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> number of columns.</p>
+<hr />
+<h2 id="example-sum-of-two-discrete-random-variables-2">Example: sum of two discrete random variables</h2>
+<p>Or illustrate it for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mi>n</mi><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">m = n = 4</annotation></semantics></math>:</p>
+<p><img src="1.svg" /></p>
+<p>The numbers are not representing the values of the elements here, but rather the associated <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>. We can see that the matrix-vector product accumulates the probabilities of pairs of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> that sum to the same outcome.</p>
+<div class="note">
+<p>This is the product of a <em>banded matrix</em> and a vector.</p>
+</div>
+<hr />
+<h2 id="example-sum-of-two-discrete-random-variables-3">Example: sum of two discrete random variables</h2>
+<ul>
+<li>cuBLAS provides the function family <a href="https://docs.nvidia.com/cuda/cublas/index.html#cublas-t-gbmv"><code>gbmv</code></a> for the multiplication of banded matrices and vectors.</li>
+<li>Recall from the practicals that we specify a matrix with a base pointer (e.g. <code>A</code>) and lead (e.g. <code>ldA</code>).</li>
+<li>For this banded matrix we could use a lead of <code>-1</code>.</li>
+</ul>
+<p><img src="2.svg" /></p>
+<ul>
+<li>Off-band elements are ignored, so it does not matter if they are invalid.</li>
+</ul>
+<div class="danger">
+<p>Unfortunately, as with most (all?) BLAS implementations, the lead must be positive and at least as large as the number of rows in the matrix or an error is given. So we’ll need a custom kernel!</p>
+</div>
+<hr />
+<h2 id="version-0">Version 0</h2>
+<p>The length of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒓</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>+</mo><mi>n</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m + n - 1</annotation></semantics></math>. We can assign one thread to compute each element of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒓</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel_enumerate<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* element of r for which thread is responsible */</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> threadIdx<span class="op">.</span>y <span class="op">+</span> blockIdx<span class="op">.</span>y<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* sum across elements in each thread */</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span> result <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span>j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span><span class="dv">0</span> <span class="op">&lt;=</span> i <span class="op">-</span> j <span class="op">&amp;&amp;</span> i <span class="op">-</span> j <span class="op">&lt;</span> m<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      result <span class="op">+=</span> p<span class="op">[(</span>i <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q<span class="op">[</span>j<span class="op">*</span>incq<span class="op">];</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* write element */</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  r<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> result<span class="op">;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="warning">
+<p><strong>Next issue:</strong> Each thread has a different amount of work to do, leading to <em>warp divergence</em>.</p>
+</div>
+<hr />
+<h2 id="warp-divergence">Warp divergence</h2>
+<ul>
+<li>The threads in a warp can execute only one common instruction at a time.</li>
+<li>If threads take different execution paths, those execution paths must be serialized, e.g.
+<ul>
+<li>Threads split between true and false branches of a conditional: first threads on the true branch execute then threads on the false branch execute.</li>
+<li>Threads have different trip counts for a loop: each thread stops after its trip count is reached while others may continue.</li>
+</ul></li>
+<li>This is called <em>warp divergence</em>.</li>
+</ul>
+<div class="note">
+<p>The fact that warps <strong>can</strong> diverge makes programming kernels much easier, but reducing warp divergence will improve performance.</p>
+</div>
+<hr />
+<h2 id="version-1-reducing-warp-divergence">Version 1: Reducing warp divergence</h2>
+<p>Consider the following transformation of the problem:</p>
+<p><img src="3.svg" /></p>
+<ul>
+<li>We now use <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math> threads, where each computes two elements of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> (besides thread <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m - 1</annotation></semantics></math>, which only computes one).</li>
+<li>Each thread now has an equal amount of work to do.</li>
+</ul>
+<hr />
+<h2 id="version-1-reducing-warp-divergence-1">Version 1: Reducing warp divergence</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel_enumerate<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* first element of r for which thread is responsible */</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> threadIdx<span class="op">.</span>y <span class="op">+</span> blockIdx<span class="op">.</span>y<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* sum across elements in each thread */</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span> result1 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">,</span> result2 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span>j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> n<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span><span class="dv">0</span> <span class="op">&lt;=</span> i <span class="op">-</span> j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      result1 <span class="op">+=</span> p<span class="op">[(</span>i <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q<span class="op">[</span>j<span class="op">*</span>incq<span class="op">];</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      result2 <span class="op">+=</span> p<span class="op">[(</span>m <span class="op">+</span> i <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q<span class="op">[</span>j<span class="op">*</span>incq<span class="op">];</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* write elements */</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  r<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> result1<span class="op">;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> m <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    r<span class="op">[</span>i <span class="op">+</span> m<span class="op">]</span> <span class="op">=</span> result2<span class="op">;</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="warning">
+<p><strong>Next issue:</strong> Each thread reads the whole vector <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒒</mi><annotation encoding="application/x-tex">\mathbf{q}</annotation></semantics></math> from device memory.</p>
+</div>
+<hr />
+<h2 id="shared-memory">Shared memory</h2>
+<div class="note">
+<p>We can use <em>shared memory</em> to read <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="bold-italic">𝒓</mi><annotation encoding="application/x-tex">\mathbf{r}</annotation></semantics></math> from device memory only once per thread <strong>block</strong>, i.e. threads in the same block can share a single read.</p>
+</div>
+<ul>
+<li>Within a thread block, shared memory can be used for communication between threads.</li>
+<li>Shared memory is fast. It takes a chunk of L1 cache, the amount of which can be configured with <a href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__DEVICE.html#group__CUDART__DEVICE_1g6c9cc78ca80490386cf593b4baa35a15"><code>cudaDeviceSetCacheConfig()</code></a>.</li>
+</ul>
+<hr />
+<h2 id="version-2-using-shared-memory">Version 2: Using shared memory</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel_enumerate<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  __shared__ <span class="dt">float</span><span class="op">*</span> q_shared<span class="op">;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> threadIdx<span class="op">.</span>y <span class="op">+</span> blockIdx<span class="op">.</span>y<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span> result1 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">,</span> result2 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> base <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> base <span class="op">&lt;</span> n<span class="op">;</span> base <span class="op">+=</span> blockDim<span class="op">.</span>y<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* read the next batch into shared memory */</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> j <span class="op">=</span> threadIdx<span class="op">.</span>y<span class="op">;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    q_shared<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> base <span class="op">+</span> j <span class="op">&lt;</span> n <span class="op">?</span> q<span class="op">[(</span>base <span class="op">+</span> j<span class="op">)*</span>incq<span class="op">]</span> <span class="op">:</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    __syncthreads<span class="op">();</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* sum across elements in each thread  */</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span>j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> blockDim<span class="op">.</span>y<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span><span class="dv">0</span> <span class="op">&lt;=</span> i <span class="op">-</span> j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        result1 <span class="op">+=</span> p<span class="op">[(</span>base <span class="op">+</span> i <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q_shared<span class="op">[</span>j<span class="op">];</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        result2 <span class="op">+=</span> p<span class="op">[(</span>base <span class="op">+</span> m <span class="op">+</span> i <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q_shared<span class="op">[</span>j<span class="op">];</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* set the final result */</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  r<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> result1<span class="op">;</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> m <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    r<span class="op">[</span>i <span class="op">+</span> m<span class="op">]</span> <span class="op">=</span> result2<span class="op">;</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>When calling the kernel, a third argument is given to specify the amount of shared memory required: <code>kernel_enumerate&lt;&lt;&lt;grid,block,shared&gt;&gt;&gt;(...)</code>.</p>
+<div class="warning">
+<p><strong>Next issue:</strong> The kernel offers <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>-way parallelism, which may not be enough to occupy the GPU.</p>
+</div>
+<hr />
+<h2 id="increasing-parallelism">Increasing parallelism</h2>
+<div class="note">
+<p>The current kernel uses a <strong>thread</strong> per two elements of the output, giving <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>-way parallelism. If we use a <strong>warp</strong> per two elements of the output, we can increase this to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>32</mn><mi>m</mi></mrow><annotation encoding="application/x-tex">32m</annotation></semantics></math>-way parallelism.</p>
+</div>
+<p>Each thread of the warp computes a partial sum, then they interact to compute the total sum. We have a few options for the second step:</p>
+<ul>
+<li><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html?highlight=constant%20memory#synchronization-functions">Synchronization functions</a>, the most basic of which is <code>__syncthreads()</code>.</li>
+<li><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html?highlight=constant%20memory#memory-fence-functions">Fence functions</a></li>
+<li><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html?highlight=constant%20memory#atomic-functions">Atomic functions</a></li>
+<li><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#warp-shuffle-functions">Warp shuffle functions</a></li>
+<li><a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#warp-reduce-functions">Warp reduce functions</a></li>
+</ul>
+<hr />
+<h2 id="version-3-increasing-parallelism">Version 3: Increasing parallelism</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>__global__ <span class="dt">void</span> kernel_enumerate<span class="op">(</span><span class="at">const</span> <span class="dt">int</span> m<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> n<span class="op">,</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> p<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incp<span class="op">,</span> <span class="at">const</span> <span class="dt">float</span><span class="op">*</span> q<span class="op">,</span> <span class="at">const</span> <span class="dt">int</span> incq<span class="op">,</span> <span class="dt">float</span><span class="op">*</span> r<span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> <span class="dt">int</span> incr<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">(</span>blockDim<span class="op">.</span>x <span class="op">==</span> warpSize <span class="op">&amp;&amp;</span> gridDim<span class="op">.</span>x <span class="op">==</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  __shared__ <span class="dt">float</span><span class="op">*</span> q_shared<span class="op">;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> blockIdx<span class="op">.</span>x<span class="op">*</span>blockDim<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span> result1 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">,</span> result2 <span class="op">=</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> base <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> base <span class="op">&lt;</span> n<span class="op">;</span> base <span class="op">+=</span> warpSize<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* read the next batch into shared memory */</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> j <span class="op">=</span> threadIdx<span class="op">.</span>y<span class="op">*</span>warpSize <span class="op">+</span> threadIdx<span class="op">.</span>x<span class="op">;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    q_shared<span class="op">[</span>j<span class="op">]</span> <span class="op">=</span> base <span class="op">+</span> j <span class="op">&lt;</span> n <span class="op">?</span> q<span class="op">[(</span>base <span class="op">+</span> j<span class="op">)*</span>incq<span class="op">]</span> <span class="op">:</span> <span class="fl">0.0</span><span class="bu">f</span><span class="op">;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    __syncthreads<span class="op">();</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* sum across elements in each thread  */</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span>j <span class="op">=</span> threadIdx<span class="op">.</span>x<span class="op">;</span> j <span class="op">&lt;</span> warpSize<span class="op">*</span>blockDim<span class="op">.</span>y<span class="op">;</span> j <span class="op">+=</span> warpSize<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>      <span class="co">/* read the next batch into shared memory */</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span><span class="dv">0</span> <span class="op">&lt;=</span> i <span class="op">-</span> j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        result1 <span class="op">+=</span> p<span class="op">[(</span>base <span class="op">+</span> i <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q_shared<span class="op">[</span>j<span class="op">];</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        result2 <span class="op">+=</span> p<span class="op">[(</span>base <span class="op">+</span> m <span class="op">+</span> i <span class="op">-</span> j<span class="op">)*</span>incp<span class="op">]*</span>q_shared<span class="op">[</span>j<span class="op">];</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* sum across threads of warp, using butterfly sum */</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">16</span><span class="op">;</span> k <span class="op">&gt;=</span> <span class="dv">1</span><span class="op">;</span> k <span class="op">/=</span> <span class="dv">2</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    result1 <span class="op">+=</span> __shfl_xor_sync<span class="op">(</span><span class="bn">0xffffffff</span><span class="op">,</span> result1<span class="op">,</span> k<span class="op">,</span> warpSize<span class="op">);</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    result2 <span class="op">+=</span> __shfl_xor_sync<span class="op">(</span><span class="bn">0xffffffff</span><span class="op">,</span> result2<span class="op">,</span> k<span class="op">,</span> warpSize<span class="op">);</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* set the final result, only first thread in each warp */</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>threadIdx<span class="op">.</span>x <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    r<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> result1<span class="op">;</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;</span> m <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>      r<span class="op">[</span>i <span class="op">+</span> m<span class="op">]</span> <span class="op">=</span> result2<span class="op">;</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="summary">Summary</h2>
+<dl>
+<dt>Version 0</dt>
+<dd>
+We started with a basic implementation of a kernel to enumerate a sum of two discrete random variables.
+</dd>
+<dt>Version 1</dt>
+<dd>
+We improved performance by reducing warp divergence.
+</dd>
+<dt>Version 2</dt>
+<dd>
+We improved performance by using shared memory to avoid repeated reads from device memory.
+</dd>
+<dt>Version 3</dt>
+<dd>
+We increased parallelism by having whole warps, rather than single threads, share the computation of each element of the output.
+</dd>
+</dl>
+<hr />
+<h2 id="general-tips">General tips</h2>
+<ul>
+<li>If results are different with and without synchronization, there is certainly a problem! You can debug such issues by setting <code>CUDA_LAUNCH_BLOCKING=1</code> to enable synchronization.</li>
+<li>For more focused interventions, insert <code>cudaDeviceSynchronize()</code> after any kernel launch and print out values for debugging.</li>
+<li>Printing those values is much easier if you stick to using managed memory with <code>cudaMallocManaged()</code> rather than device memory with <code>cudaMalloc()</code>. It avoids the nuisance of copying values back to host memory first.</li>
+<li>Using single precision during development can be a good way to detect and debug numerical issues, even if intending to use double precision for actual runs.</li>
+<li>Given lack of extended precision, and especially if tempted by single precision, be careful with numerics:
+<ul>
+<li>Look for opportunities to use <code>log-sum-exp</code> or <code>log-softmax</code> operations instead of <code>log(sum(exp(x)))</code> and <code>log(exp(x)/sum(exp(x)))</code>.</li>
+<li>Look for opportunities to use <code>log1p</code> and <code>expm1</code> instead of <code>log(1.0 + x)</code> and <code>exp(x) - 1.0</code>.</li>
+<li>Avoid large sums.</li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li>The <a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">CUDA Programming Guide</a> is worth browsing.</li>
+<li>The <a href="https://developer.nvidia.com/blog/tag/cuda/">Nvidia Technical Blog</a> has some good tutorial style articles on more specific topics.</li>
+<li>My work at <a href="https://indii.org">indii.org</a>.</li>
+</ul>
+</div>
+</div>
+
+</body>
+</html>

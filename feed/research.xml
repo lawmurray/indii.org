@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>Lawrence Murray</title>
+    <link>https://indii.org</link>
+    <description>Personal site of Lawrence Murray, collating blog articles, scientific research, software artifacts, and creative outputs</description>
+    
+    <pubDate>Sun, 11 Oct 2026 00:18:09 +0700</pubDate>
+    <lastBuildDate>Sun, 11 Oct 2026 00:18:09 +0700</lastBuildDate>
+    <item>
+      <title>Probabilistic programming: a powerful new approach to statistical phylogenetics’</title>
+      <link>https://indii.org/research/probabilistic-programming-statistical-phylogenetics/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2020-06-23</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lazy object copy as a platform for population-based probabilistic programming’</title>
+      <link>https://indii.org/research/lazy-object-copy/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2020-02-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Parameter elimination in particle Gibbs sampling’</title>
+      <link>https://indii.org/research/parameter-elimination-in-particle-gibbs-sampling/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2019-11-09</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Probabilistic programming for birth-death models of evolution using an alive particle filter with delayed sampling’</title>
+      <link>https://indii.org/research/probabilistic-programming-for-birth-death-models-of-evolution/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2019-07-14</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Automated learning with a probabilistic programming language: Birch’</title>
+      <link>https://indii.org/research/automated-learning-with-a-probabilistic-programming-language-birch/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2018-10-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Improving the particle filter for high-dimensional problems using artificial process noise’</title>
+      <link>https://indii.org/research/improving-the-particle-filter-for-high-dimensional-problems/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2018-03-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Delayed Sampling and Automatic Rao-Blackwellization of Probabilistic Programs’</title>
+      <link>https://indii.org/research/delayed-sampling-and-automatic-rao-blackwellization-of-probabilistic-programs/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2017-12-22</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Better together? Statistical learning in models made of modules’</title>
+      <link>https://indii.org/research/better-together-statistical-learning-in-models-made-of-modules/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2017-08-29</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Probabilistic learning of nonlinear dynamical systems using sequential Monte Carlo’</title>
+      <link>https://indii.org/research/probabilistic-learning-of-nonlinear-dynamical-systems-using-sequential-monte-carlo/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2017-03-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Anytime Monte Carlo</title>
+      <link>https://indii.org/research/anytime-monte-carlo/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2016-12-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Comparative Analysis of Dengue and Zika Outbreaks Reveals Differences by Setting and Virus</title>
+      <link>https://indii.org/research/comparative-analysis-of-dengue-and-zika-outbreaks-reveals-differences-by-setting-and-virus/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2016-12-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sequential Monte Carlo with Highly Informative Observations</title>
+      <link>https://indii.org/research/sequential-monte-carlo-with-highly-informative-observations/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2015-03-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Bayesian State-Space Modelling on High-Performance Hardware Using LibBi</title>
+      <link>https://indii.org/research/bayesian-state-space-modelling-on-high-performance-hardware-using-libbi/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2015-02-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Parallel Resampling in the Particle Filter</title>
+      <link>https://indii.org/research/parallel-resampling-in-the-particle-filter/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2015-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Path Storage in the Particle Filter</title>
+      <link>https://indii.org/research/path-storage-in-the-particle-filter/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2014-12-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Rethinking soil carbon modelling: a stochastic approach to quantify uncertainties</title>
+      <link>https://indii.org/research/rethinking-soil-carbon-modelling/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2014-02-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Bayesian Learning and Predictability in a Stochastic Nonlinear Dynamical Model</title>
+      <link>https://indii.org/research/bayesian-learning-and-predictability-in-a-stochastic-nonlinear-dynamical-model/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2013-12-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>On Disturbance State-Space Models and the Particle Marginal Metropolis–Hastings Sampler</title>
+      <link>https://indii.org/research/on-disturbance-state-space-models/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2013-03-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Feynman-Kac Particle Integration with Geometric Interacting Jumps</title>
+      <link>https://indii.org/research/feynman-kac-particle-integration-with-geometric-interacting-jumps/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2013-03-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>GPU Acceleration of Runge-Kutta Integrators</title>
+      <link>https://indii.org/research/gpu-acceleration-of-runge-kutta-integrators/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2012-09-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Assimilation of glider and mooring data into a coastal ocean model</title>
+      <link>https://indii.org/research/assimilation-of-glider-and-moorning-data-into-a-coastal-ocean-model/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2012-06-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Particle smoothing in continuous time: A fast approach via density estimation</title>
+      <link>https://indii.org/research/particle-smoothing-in-continuous-time-a-fast-approach-via-density-estimation/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2011-08-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>High-Performance Pseudo-Random Number Generation on Graphics Processing Units</title>
+      <link>https://indii.org/research/high-performance-pseudo-random-number-generation-on-graphics-processing-units/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2011-04-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>GPU acceleration of the particle filter: The Metropolis resampler</title>
+      <link>https://indii.org/research/gpu-acceleration-of-the-particle-filter-the-metropolis-resampler/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2011-03-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Distributed Markov chain Monte Carlo</title>
+      <link>https://indii.org/research/distributed-markov-chain-monte-carlo/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2010-12-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>A Bayesian approach to state and parameter estimation in a Phytoplankton-Zooplankton model</title>
+      <link>https://indii.org/research/a-bayesian-approach-to-state-and-parameter-estimation-in-a-phytoplankton-zooplankton-model/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2010-11-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Bayesian Learning of Continuous Time Dynamical Systems with Applications in Functional Magnetic Resonance Imaging</title>
+      <link>https://indii.org/research/bayesian-learning-of-continuous-time-dynamical-systems/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2009-11-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Continuous Time Particle Filtering for fMRI</title>
+      <link>https://indii.org/research/continuous-time-particle-filtering-for-fmri/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2008-12-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Learning structural equation models for fMRI</title>
+      <link>https://indii.org/research/learning-structural-equation-models-for-fmri/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2007-12-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+  </channel>
+</rss>

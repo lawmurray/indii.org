@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>GPU Programming in the Cloud</title>
+    <meta name="description" content="A round-up of cloud service providers, and a how-to guide for each">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="GPU Programming in the Cloud">
+    <meta name="twitter:description" content="A round-up of cloud service providers, and a how-to guide for each">
+    <meta name="twitter:image" content="/assets/gpu.svg">
+
+    <meta property="og:title" content="GPU Programming in the Cloud">
+    <meta property="og:description" content="A round-up of cloud service providers, and a how-to guide for each">
+    <meta property="og:url" content="https://indii.org/blog/gpu-programming-in-the-cloud/">
+    <meta property="og:image" content="/assets/gpu.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    
+    <link rel="canonical" href="https://indii.org/blog/gpu-programming-in-the-cloud/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+      </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container mb-5">
+      <div class="row">
+        <div class="col-12 col-lg-9 mx-auto text-center">
+                <img src="/assets/gpu.svg" style="width:auto;max-height:128px;" class="img-fluid py-2" width="128" height="128" alt="Simple line drawing of a GPU">
+          
+          <div class="category">dev</div>
+          <h1 class="mt-0">GPU Programming in the Cloud</h1>
+          <p class="h5"><strong>A round-up of cloud service providers, and a how-to guide for each</strong></p>
+          
+
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+              </div>
+      </div>
+    </header>
+            <p class="date">
+      <time pubdate datetime="2022-11-22" title="2022-11-22">2022-11-22</time>
+      (updated 2024-01-28)
+    </p>
+        
+        <p>I recently moved to the cloud for GPU computing, and in the process tested many of the GPU cloud service providers. I spun up an instance on each, connected to it with SSH, installed CUDA, compiled code and ran test programs. This post documents my experience. It includes a round up of GPU cloud service providers, advice on the best choice for you (easiest? cheapest? closest?) and how-to guides for getting started with each.</p>
+        <p>My own use case is C, C++ and CUDA development on Linux, with Nvidia GPUs; machine learning, scientific computing, the occasional PyTorch, but mostly bespoke code. The commentary is flavored by such.</p>
+                <div class="toc">
+    <ul>
+    <li><a href="#glossary" id="toc-glossary">Glossary</a></li>
+    <li><a href="#choosing-a-gpu-cloud-service-provider" id="toc-choosing-a-gpu-cloud-service-provider">Choosing a GPU cloud service provider</a>
+    <ul>
+    <li><a href="#tips-for-choosing-a-gpu-cloud-service-provider" id="toc-tips-for-choosing-a-gpu-cloud-service-provider">Tips for choosing a GPU cloud service provider</a></li>
+    <li><a href="#roundup-of-gpu-cloud-service-providers" id="toc-roundup-of-gpu-cloud-service-providers">Roundup of GPU cloud service providers</a></li>
+    <li><a href="#details-of-gpu-cloud-service-providers" id="toc-details-of-gpu-cloud-service-providers">Details of GPU cloud service providers</a></li>
+    </ul></li>
+    <li><a href="#configure-your-laptop-or-desktop-for-ssh" id="toc-configure-your-laptop-or-desktop-for-ssh">Configure your laptop or desktop for SSH</a></li>
+    <li><a href="#launch-an-instance-on-your-gpu-cloud-service-provider" id="toc-launch-an-instance-on-your-gpu-cloud-service-provider">Launch an instance on your GPU cloud service provider</a></li>
+    <li><a href="#connect-to-your-instance-with-ssh" id="toc-connect-to-your-instance-with-ssh">Connect to your instance with SSH</a></li>
+    <li><a href="#connect-to-your-instance-with-visual-studio-code" id="toc-connect-to-your-instance-with-visual-studio-code">Connect to your instance with Visual Studio Code</a></li>
+    <li><a href="#connect-to-your-instance-with-nsight-systems" id="toc-connect-to-your-instance-with-nsight-systems">Connect to your instance with Nsight Systems</a></li>
+    </ul>
+    </div>
+        <div class="post">
+<h2 id="glossary">Glossary</h2>
+<dl>
+<dt>Instance</dt>
+<dd>
+A virtual machine running in the cloud. Multiple virtual machines may share a single physical machine.
+</dd>
+<dt>Instance type</dt>
+<dd>
+The configuration of an instance, as in its number of cores, memory, and disk space. When launching an instance with a cloud service provider, one chooses from a menu of instance types on offer. Some of these will have GPUs.
+</dd>
+<dt>Region</dt>
+<dd>
+The location of the data center in which an instance is running. Typically described at a country or continent level, e.g. U.S. West, U.S. East, Europe, Asia-Pacific, South America.
+</dd>
+<dt>Machine Image</dt>
+<dd>
+The disk image that loads onto the instance when launched, providing an operating system and other software. Usually based on a major Linux distribution; additional software can be installed via its package manager.
+</dd>
+</dl>
+<h2 id="choosing-a-gpu-cloud-service-provider">Choosing a GPU cloud service provider</h2>
+<p>You will need to choose a cloud service provider. Factors to consider include cost, ease of getting started, and the location of data centers.</p>
+<div class="note">
+<p>I recommend <a href="https://console.paperspace.com/signup?R=0KV1IKZ">Paperspace</a>, now owned by <a href="https://m.do.co/c/4259cc5912eb">Digital Ocean</a>. Getting started is a breeze, and they offer a good mix of instance types, including cheaper options for development and testing, and cutting edge hardware for production runs. An added bonus is the ability to pause and resume a running instance, and only be billed for storage in between.</p>
+</div>
+<h3 id="tips-for-choosing-a-gpu-cloud-service-provider">Tips for choosing a GPU cloud service provider</h3>
+<dl>
+<dt>Prefer the bespokes (Paperspace, Lambda, Genesis Cloud) to the majors (Amazon Web Services, Microsoft Azure, Google Cloud)</dt>
+<dd>
+All three majors have a default quota of zero for GPU instances, so that a support ticket is necessary for GPU access. They do have extensive offerings for enterprise, but this can mean overwhelming complexity for individuals. The bespokes offer a better product for the individual developer: nonzero quotas, straightforward instance types, frictionless onboarding.
+</dd>
+<dd>
+<div class="note">
+<p>For me, quota increase requests were resolved in three minutes for Google Cloud, two days for Microsoft Azure, and four days for Amazon Web Services. I already had instances running within a few minutes on all of Paperspace, Lambda and Genesis Cloud.</p>
+</div>
+</dd>
+<dt>Prefer a region near you</dt>
+<dd>
+Latency degrades the development experience over SSH, adding lag to every keystroke. It reduces with distance, unnoticeable to an instance near you.
+</dd>
+<dd>
+<div class="note">
+<p>You may want to consider one of the majors over one of the bespokes if they offer better support to your region. All the majors have a global footprint, while the bespokes have more limited coverage, albeit still wide.</p>
+</div>
+</dd>
+<dt>Shop around for the best prices</dt>
+<dd>
+Exact prices are not reported here as they may change frequently, but expect about $0.50 USD per hour for a single GPU of older generation hardware (ideal for development at low cost) up to about $1.50 USD per hour for the latest generation (ideal for production runs). Prices do vary between providers and regions, but the market is competitive, and shopping around will keep it that way.
+</dd>
+<dt>Staying with the same provider for multiple use cases may be convenient, but consider embracing different providers for different use cases</dt>
+<dd>
+For development, older generation hardware may be sufficient. For production, latest generation hardware may be essential. Keeping compute close to data may be cheaper. Having access to CPU instances—not just GPU instances—may be convenient for supporting jobs like data preparation. But consider embracing different providers for different use cases—they all look the same through a terminal.
+</dd>
+</dl>
+<h3 id="roundup-of-gpu-cloud-service-providers">Roundup of GPU cloud service providers</h3>
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 10%" />
+<col style="width: 12%" />
+<col style="width: 11%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Difficulty</th>
+<th>GPU instances?</th>
+<th>CPU instances?</th>
+<th>Region</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://console.paperspace.com/signup?R=0KV1IKZ">Paperspace</a></td>
+<td>Easy</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>North America, Europe</td>
+</tr>
+<tr>
+<td><a href="https://cloud.lambdalabs.com">Lambda</a></td>
+<td>Easy</td>
+<td>Yes</td>
+<td>No</td>
+<td>North America, Europe, Asia-Pacific, Middle East</td>
+</tr>
+<tr>
+<td><a href="https://gnsiscld.co/ag3ecj">Genesis Cloud</a></td>
+<td>Medium</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Europe</td>
+</tr>
+<tr>
+<td><a href="https://linode.com">Linode</a></td>
+<td>Hard</td>
+<td>On request</td>
+<td>Yes</td>
+<td>North America, Europe, Asia-Pacific</td>
+</tr>
+<tr>
+<td><a href="https://aws.amazon.com">Amazon Web Services</a></td>
+<td>Hard</td>
+<td>On request</td>
+<td>Yes</td>
+<td>Global</td>
+</tr>
+<tr>
+<td><a href="https://cloud.google.com">Google Cloud Services</a></td>
+<td>Hard</td>
+<td>On request</td>
+<td>Yes</td>
+<td>Global</td>
+</tr>
+<tr>
+<td><a href="https://azure.microsoft.com">Microsoft Azure</a></td>
+<td>Painful</td>
+<td>On request</td>
+<td>Yes</td>
+<td>Global</td>
+</tr>
+</tbody>
+</table>
+<p>Providers not in this roundup include <a href="https://alibabacloud.com">Alibaba Cloud</a> and <a href="https://www.ibm.com/cloud">IBM Cloud</a>.</p>
+<h3 id="details-of-gpu-cloud-service-providers">Details of GPU cloud service providers</h3>
+<details>
+<summary>
+<strong>Paperspace</strong>
+</summary>
+<p><a href="https://console.paperspace.com/signup?R=0KV1IKZ">Paperspace</a> offers a complete range of instance types, from affordable older generation hardware to the latest generation. It strives for simplicity—and obtains it—with a straightforward sign up process that gets new users up and running in minutes. A particular advantage is the ability to pause a running instance and resume it later while paying only for storage in between, offering convenience and cost effectiveness over competitors that only offer complete shutdown and reconfiguration. There are several machine images available based on Ubuntu. Paperspace was acquired by <a href="https://m.do.co/c/4259cc5912eb">Digital Ocean</a> in August 2023 but, as of January 2024, still runs as a separate service besides billing.</p>
+</details>
+<details>
+<summary>
+<strong>Lambda</strong>
+</summary>
+<p><a href="https://cloud.lambdalabs.com">Lambda</a> focuses on state-of-the-art, having mostly latest generation hardware, but there are some cheaper instances with older hardware in limited quantities. Lambda specializes in GPU instances and does not provide CPU instances. All instances run Ubuntu and have LambdaStack pre-installed—Lambda’s software stack for deep learning that includes e.g. CUDA, TensorFlow and PyTorch. Getting started is frictionless and takes only minutes.</p>
+</details>
+<details>
+<summary>
+<strong>Genesis Clud</strong>
+</summary>
+<p><a href="https://gnsiscld.co/ag3ecj">Genesis Cloud</a> is unique in two ways: providing hardware from Nvidia’s GeForce consumer line, and operating from Iceland and Norway. GeForce are great for many applications, and certainly for development, but look elsewhere for Nvidia’s data center GPUs if double precision performance is important. All instances run Ubuntu. A good selection of instance types are available by default, with access to the others on request. Essential software, such as CUDA, must be self-installed.</p>
+</details>
+<details>
+<summary>
+<strong>Linode</strong>
+</summary>
+<p><a href="https://linode.com">Linode</a> offers a limited GPU service. All instance types use the Nvidia Quadro RTX 6000 which, while affordable for production, is a pricier floor for development than other providers. Access requires a support ticket, a description of the use case, and at least $100 USD of spend (which can be pre-purchased as credits). Once granted, instances are easy to setup with a simple web interface, but only base operating system images are provided, so that CUDA and other essential software must be self-installed.</p>
+</details>
+<details>
+<summary>
+<strong>Amazon Web Services</strong>
+</summary>
+<p><a href="https://aws.amazon.com">Amazon Web Services (AWS)</a> offers an extended range of instance types spanning multiple generations of hardware. There are a wide variety of machine images with GPU support. Access to GPU instances requires a support ticket, as initial quotas are zero. Frustratingly, you will likely find out the first time you try and fail to launch an instance, and you must repeat the process.</p>
+</details>
+<details>
+<summary>
+<strong>Google Cloud Services</strong>
+</summary>
+<p><a href="https://cloud.google.com">Google Cloud Services</a> offers an extended range of instance types covering multiple generations of hardware. There are a wide variety of machine images with GPU support. Access to GPU instances is on request, as initial quotas are zero. Frustratingly, you will likely find out the first time you try and fail to launch an instance—but, unlike the other majors, quota increase requests seem to be processed quickly, and there is a convenient retry button to avoid repeating the whole process again. The web interface is much more helpful than the other majors, presenting instance types in a human readable form rather than obscure codes, and making better default suggestions for machine images.</p>
+</details>
+<details>
+<summary>
+<strong>Microsoft Azure</strong>
+</summary>
+<p><a href="https://azure.microsoft.com">Microsoft Azure</a> offers an extended range of instance types covering multiple generations of hardware. There are a wide variety of machine images with GPU support. Access to GPU instances requires a support ticket, as initial quotas are zero. Frustratingly, you will likely find out the first time you try and fail to launch an instance—and good luck from there, as you navigate a quagmire of product SKUs, regional availability, and interface nuisances, while getting rejected for quota increases.</p>
+</details>
+<h2 id="configure-your-laptop-or-desktop-for-ssh">Configure your laptop or desktop for SSH</h2>
+<p>Access to an instance requires an SSH key pair, consisting of a <em>public key</em> and a <em>private key</em>. The public key is shared with your cloud service provider to manage access to your instances, while the private key is only for you. The public key is the lock that only the private key can open.</p>
+<p>You may already have an SSH key. Check for the files <code>~/.ssh/id_rsa.pub</code> and <code>~/.ssh/id_rsa</code>. If they exist, you can use them. If not, create them by running <code>ssh-keygen</code> in your terminal. The first file contains your public key, the second your private key.</p>
+<div class="note">
+<p>You will need the contents of <code>~/.ssh/id_rsa.pub</code> below. We will refer to it as your 🔑<code>key</code>.</p>
+</div>
+<h2 id="launch-an-instance-on-your-gpu-cloud-service-provider">Launch an instance on your GPU cloud service provider</h2>
+<p>The next step is to launch an instance via the web interface of your chosen provider. As part of this you will need to provide your 🔑<code>key</code>. Some providers require additional steps such as upgrading from a free trial to a paid plan, and submitting a support ticket to enable GPU access. Detailed instructions for each provider are below.</p>
+<p>By the end of this section you should have an instance running on your chosen cloud service provider, with a username and hostname (or IP address) that can be used to access it. We will refer to these as your 👤<code>user</code> and 🏠<code>host</code>.</p>
+<details>
+<summary>
+<strong>Paperspace</strong>
+</summary>
+<p>Work from the <a href="https://console.paperspace.com">console</a>.</p>
+<ol type="1">
+<li><dl>
+<dt>Import your 🔑<code>key</code></dt>
+<dd>
+Click your profile picture in the top right, then <em>Your account</em>, then the <em>SSH Keys</em> tab. Click the <em>Add new SSH Key</em> button, enter a name and copy in your 🔑<code>key</code>.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Launch an instance</dt>
+<dd>
+Select the <em>CORE Virtual Servers</em> product from the top left menu, then click the <em>Create a machine</em> button. Choose a region close to you, but otherwise keep the defaults. Click the <em>Create</em> button.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Find your 👤<code>user</code> and 🏠<code>host</code></dt>
+<dd>
+Wait for the instance to start then click the <em>Connect</em> button. You will see a command of the form <code>ssh user@host</code>. The 👤<code>user</code> is <code>paperspace</code> and the 🏠<code>host</code> some IP address.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Prepare the instance (after you log in for the first time, <a href="#connect-to-your-instance">see below</a>)</dt>
+<dd>
+Unfortunately while CUDA is installed it is not accessible out-of-the-box. Enter the following commands each time you login to make it accessible:
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span>/usr/local/cuda/bin:<span class="va">$PATH</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">CPATH</span><span class="op">=</span>/usr/local/cuda/include:<span class="va">$CPATH</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LIBRARY_PATH</span><span class="op">=</span>/usr/local/cuda/lib64:<span class="va">$LIBRARY_PATH</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/usr/local/cuda/lib64:<span class="va">$LD_LIBRARY_PATH</span></span></code></pre></div>
+These can be added to the end of <code>~/.profile</code> to avoid entering them on each login. Run:
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> ~/.profile</span></code></pre></div>
+Copy them into the bottom of the file, then hit <code>Ctrl+O</code> followed by <code>Enter</code> to save, and <code>Ctrl+X</code> to exit.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Terminate the instance (once you’re finished)</dt>
+<dd>
+On the <em>Machines</em> tab, find the instance, click the three dots in the top right of its card and then <em>Deactivate</em>.
+</dd>
+</dl></li>
+</ol>
+</details>
+<details>
+<summary>
+<strong>Lambda</strong>
+</summary>
+<p>Work from the <a href="https://cloud.lambdalabs.com">dashboard</a>.</p>
+<ol type="1">
+<li><dl>
+<dt>Launch an instance</dt>
+<dd>
+Select <em>Instances</em> on the left then click the <em>Launch Instance</em> button. You may be prompted to add a payment method if you have not done so already. Follow the steps to specify an instance type, region, and provide your 🔑<code>key</code>. Once complete you will be taken back to the <em>Instances</em> page. The new instance will have a status of <em>Booting</em>, which will progress to <em>Running</em> after a few minutes.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Find your 👤<code>user</code> and 🏠<code>host</code></dt>
+<dd>
+Under the <em>SSH Login</em> column you will see a command of the form <code>ssh user@host</code>.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Terminate the instance (once you’re finished)</dt>
+<dd>
+On the <em>Instances</em> page, select the checkbox next to the instance and a <em>Terminate</em> button will appear.
+</dd>
+</dl></li>
+</ol>
+</details>
+<details>
+<summary>
+<strong>Genesis Cloud</strong>
+</summary>
+<p>Work from the <a href="https://console.genesiscloud.com/dashboard">dashboard</a>.</p>
+<ol type="1">
+<li><dl>
+<dt>Launch an instance</dt>
+<dd>
+Click the <em>Create new instance</em> button in the top right. Select an instance type; the default may require an increase to your quota, but other types should be available. Keep the default Ubuntu image but be sure to check the <em>Install NVIDIA® GPU driver</em> box. Under <em>Authentication</em>, choose <em>SSH Key</em>, and copy in your 🔑<code>key</code>. Click <em>Create instance</em>. The <em>Instances</em> page will appear with the new instance listed. Its status will progress from <em>Enqueued</em> to <em>Creating…</em> to <em>Active</em>.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Find your 👤<code>user</code> and 🏠<code>host</code></dt>
+<dd>
+On the same page will be a command of the form <code>ssh user@host</code>.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Prepare the instance (after you log in for the first time, <a href="#connect-to-your-instance">see below</a>)</dt>
+<dd>
+The driver will install in the first few minutes of the instance running (as long as the <em>Install NVIDIA GPU driver</em> box was checked). CUDA can be installed with:
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install nvidia-cuda-toolkit</span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Terminate the instance (once you’re finished)</dt>
+<dd>
+From the <em>Instances</em> page, click the three dots icon to the right of the instance and select <em>Destroy</em> from the pop-up menu.
+</dd>
+</dl></li>
+</ol>
+</details>
+<details>
+<summary>
+<strong>Amazon Web Services</strong>
+</summary>
+<p>Work from the <a href="https://console.aws.amazon.com">AWS Management Console</a>.</p>
+<ol type="1">
+<li><dl>
+<dt>Choose a region</dt>
+<dd>
+Select a region in the top right.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Import your 🔑<code>key</code></dt>
+<dd>
+Select the <em>Services</em> menu in the top left, then <em>EC2</em>. Select <em>Network &amp; Security &gt; Key Pairs</em> on the left. Select <em>Actions &gt; Import key pair</em> at the top left. Provide a name and copy your 🔑<code>key</code> into the large text area. Click the <em>Import key pair</em> button.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Increase your quota</dt>
+<dd>
+You may have zero quota for the GPU instances that interest you. Just try launching what you want below, see if it fails, and if so follow the instructions that will be provided in that case to request an increase in quota.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Launch an instance</dt>
+<dd>
+Still on the <em>EC2</em> page, select <em>Instances</em> on the left then the <em>Launch Instances</em> button. Click <em>Browse more AMIs</em> (AMI = Amazon Machine Image), search for <code>gpu</code>, and under the Quickstart AMIs tab choose Ubuntu’s <em>Deep Learning AMI GPU PyTorch</em>. For the instance type select box choose <code>g4dn-xlarge</code> (the economical option—more information on instance types <a href="https://aws.amazon.com/ec2/instance-types/#Accelerated_Computing">available</a>). Under <em>Key Pair (login)</em> select the name of the key pair that you created in step 2. Click the <em>Launch instance</em> button. Once the instance starts click <em>View All Instances</em>. If it fails to start due to lack of quota, follow the instructions given to submit a support ticket, and try again once approved
+</dd>
+</dl></li>
+<li><dl>
+<dt>Find your 👤<code>user</code> and 🏠<code>host</code></dt>
+<dd>
+Select the instance and note the <em>Public IPv4 address</em> or <em>Public IPv4 DNS</em>, either works as your 🏠<code>host</code>. Your 👤<code>user</code> is <code>ubuntu</code>. To confirm these details, or if you chose a different machine image than that suggested above, click the instance name, then the <em>Connect</em> button, then the <em>SSH client</em> tab for detailed instructions. This will give an SSH command of the form <code>ssh -i key.pem user@host</code>; you will only need the 👤<code>user</code> and 🏠<code>host</code> parts of that.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Terminate the instance (once you’re finished)</dt>
+<dd>
+On the <em>Instances</em> page, check the box next to instance name, then select <em>Instance state &gt; Terminate instance</em> in the top right.
+</dd>
+</dl></li>
+</ol>
+</details>
+<details>
+<summary>
+<strong>Google Cloud Services</strong>
+</summary>
+<p>Work from the <a href="https://console.cloud.google.com">Google Cloud Console</a>.</p>
+<ol type="1">
+<li><dl>
+<dt>Upgrade to a paid account</dt>
+<dd>
+A banner should appear at the top of the page with an <em>Activate</em> button to use. If not, refresh. If not, perhaps you already have a paid account.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Add your SSH key</dt>
+<dd>
+From the main menu, select <em>Compute Engine &gt; Settings &gt; Metadata &gt; SSH Keys</em>. Paste your 🔑<code>key</code> into the box and hit <em>Save</em>.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Increase your quota</dt>
+<dd>
+You can update quotas by entering <code>quotas</code> in the search box at the top and selecting <em>All Quotas</em>. However, this firehose of regions and instance types assumes that you already know what you are doing. Easier is to try to start an instance, let it fail, and use the prompt to increase the relevant quota.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Launch an instance</dt>
+<dd>
+Steps:
+<ol type="1">
+<li>From the main menu, select <em>Compute Engine &gt; VM Instances</em>. Click the <em>Create Instance</em> button. First time users may be interrupted by a splash page for the Compute Engine API; click <em>Enable</em>.</li>
+<li>Under <em>Machine Configuration</em>, select <em>GPU</em>. It will select the cheapest GPU instance type by default.</li>
+<li>Under <em>Boot Disk</em> will be a suggestion to switch from the default machine image to one with CUDA pre-installed. Click the <em>Switch Image</em> button to do that. In the dialog that appears, keep the defaults, just click <em>Select</em>.</li>
+<li>Returning to the <em>VM Instances</em> page, the new instance should appear. You may receive an error message about quotas. If so, hover the mouse over the red status icon nex to the instance to reveal a popup with a <em>Raise Limit</em> button. Click that and follow the instructions. Wait for a response and, if approved, click the <em>Retry</em> icon in the rightmost column. With any luck second time, the instance will start.</li>
+</ol>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Find your 👤<code>user</code> and 🏠<code>host</code></dt>
+<dd>
+On the <em>VM Instances</em> page, the <em>External IP</em> column provides 🏠<code>host</code>. For 👤<code>user</code> you will need the username associated with your SSH key pair, which is likely just the username on the laptop or desktop where you create it. If that does not work, you can always generate a new SSH key pair using the <a href="#configure-your-laptop-or-desktop-for-ssh">instructions above</a>.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Prepare the instance (after you log in for the first time, <a href="#connect-to-your-instance">see below</a>)</dt>
+<dd>
+On first login, a prompt will ask about installing the Nvidia driver. Answer yes. Unfortunately, if you intend to use Visual Studio Code, this prompt also breaks its setup routine. The solution is to log in via SSH with your terminal first, answer yes, wait for the installation to complete, then try connecting Visual Studio Code.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Terminate the instance (once you’re finished)</dt>
+<dd>
+On the <em>VM Instances</em> page, check the box next to the instance, click the three dots in the menu above, and choose <em>Delete</em>.
+</dd>
+</dl></li>
+</ol>
+</details>
+<details>
+<summary>
+<strong>Microsoft Azure</strong>
+</summary>
+<div class="warning">
+<p>My Azure experience was frustrating. I found the user interface tedious to work with, and was caught in a cycle of rejected quota requests for a single GPU instance with no reason provided. Finally, a helpful support engineer found a GPU for me a continent away. To get that far took two days. Some prior study may help: perhaps start with the documentation on <a href="https://learn.microsoft.com/en-us/azure/virtual-machines/sizes-gpu">GPU instance types</a> and cross reference with <a href="https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/?regions=&amp;products=virtual-machines">regional availability</a>. You may still find it necessary to contact support as I did, however, and be flexible with regions: the availability of an instance type in a given region does not guarantee that a quota request is approved (demand management, presumably).</p>
+</div>
+<p>Work from the <a href="https://portal.azure.com/">Azure Portal</a>.</p>
+<ol type="1">
+<li><dl>
+<dt>Upgrade to a pay-as-you-go subscription</dt>
+<dd>
+This is necessary to action a quota increase. Click the upgrade prompt in the top menu. If it does not appear, you may already have such an account.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Import your 🔑<code>key</code></dt>
+<dd>
+Type <code>ssh keys</code> in the search box at the top of the dashboard. Click the <em>SSH keys</em> item. Click the <em>Create SSH key</em> button. Under <em>Resource group</em> select an existing group or create a new one. Under <em>Key pair name</em> enter a name to give the key. Under <em>SSH public key source</em> select <em>Upload existing public key</em> and copy your 🔑<code>key</code> into the text area. Click the <em>Review + Create</em> button. A validation screen appears, check the details and click the <em>Create</em> button.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Request a quota increase</dt>
+<dd>
+Type <code>quotas</code> in the search box at the top of the dashboard. Select <em>Quotas</em> then <em>Compute</em>. At the top, click on <em>Region</em> and select your preferred region to narrow the search. Search for a <a href="https://learn.microsoft.com/en-us/azure/virtual-machines/sizes-gpu">GPU instance type</a>. Click <em>Request quota increase &gt; Enter a new limit</em> in the top left. Enter a new limit equal to the number of vCPUs for the instance type and continue (emphasis: don’t just enter 1, enter the number of vCPUs). A response takes several minutes, and you need to keep the web page open while you wait for it (🤷). After waiting, you may find that the request is rejected, and that you must file a support ticket instead. There is a link to do so.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Launch an instance</dt>
+<dd>
+Steps:
+<ol type="1">
+<li>Type <code>virtual machines</code> in the search box at the top of the dashboard. Select the <em>Virtual Machines</em> item. Click the <em>Create</em> button and in the popup menu, <em>Azure Virtual Machine</em>.</li>
+<li>Select a region.</li>
+<li>Under <em>Image</em>, keep the default.</li>
+<li>Under <em>Size</em>, click <em>See all sizes</em> and see if you can find a <a href="https://learn.microsoft.com/en-us/azure/virtual-machines/sizes-gpu">GPU instance type</a>. The SKUs are obscure, but try searching for <code>T4</code>, <code>A100</code> or <code>A10</code>. You may find an instance for which you do not have sufficient quota—there should be a link next to it to request, and you can try again once (if!) approved.</li>
+<li>Under <em>SSH public key source</em> select <em>Use existing key stored in Azure</em>. A new select box labeled <em>Stored Keys</em> appears, select the key you created in step 1 above.</li>
+<li>Click the <em>Review + Create</em> button. A validation screen appears, check the details and click the <em>Create</em> button. A status page will appear as the instance is deployed. Once deployed, click the <em>Go to resource</em> button.</li>
+<li>Install the <a href="https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/hpccompute-gpu-linux">Nvidia GPU Driver Extension for Linux</a> to the instance. On the left menu, click <em>Extensions + Applications</em>. Click the <em>Add</em> button and search for <code>nvidia</code> to find the extension. Click on it, hit <em>Next</em>, <em>Review + Create</em>, <em>Create</em>. Wait for it to deploy—it takes several minutes.</li>
+</ol>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Find your 👤<code>user</code> and 🏠<code>host</code></dt>
+<dd>
+From the <em>Virtual Machines</em> page, select the instance. Your 🏠<code>host</code> is under <em>Public IP Address</em>. Your 👤<code>user</code> is <code>azureuser</code>.
+</dd>
+</dl></li>
+<li><dl>
+<dt>Prepare the instance (after you log in for the first time, <a href="#connect-to-your-instance">see below</a>)</dt>
+<dd>
+You will need to install CUDA:
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install nvidia-cuda-toolkit</span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Terminate the instance (once you’re finished)</dt>
+<dd>
+From the <em>Virtual Machines</em> page, check the box next to the instance and click the <em>Delete</em> button at the top.
+</dd>
+</dl></li>
+</ol>
+</details>
+<h2 id="connect-to-your-instance-with-ssh">Connect to your instance with SSH</h2>
+<p>Open a terminal and enter:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> user@host</span></code></pre></div>
+<p>where 👤<code>user</code> is the username and 🏠<code>host</code> the hostname for your instance. You will be prompted with a message “The authenticity of host… can’t be established… are you sure you want to continue connecting?”; this is normal, respond <code>yes</code>.</p>
+<p>You can now work with your instance via the terminal. If additional preparation of the instance is required according to the instructions above, you can do that preparation now.</p>
+<h2 id="connect-to-your-instance-with-visual-studio-code">Connect to your instance with Visual Studio Code</h2>
+<p>See <a href="/blog/develop-in-the-cloud-with-visual-studio-code">Develop in the Cloud with Visual Studio Code</a>.</p>
+<h2 id="connect-to-your-instance-with-nsight-systems">Connect to your instance with Nsight Systems</h2>
+<p>See <a href="/blog/profile-in-the-cloud-with-nsight-systems">Profile in the Cloud with Nsight Systems</a>.</p>
+    </div>
+  </article>
+
+  <ul class="my-4 px-0" style="clear:both;list-style:none;">
+      <li class="mb-3"><small class="text-secondary text-capitalize">related</small><br><a href="/blog/develop-in-the-cloud-with-visual-studio-code/" class="fs-5">Develop in the Cloud with Visual Studio Code</a></li>
+      <li class="mb-3"><small class="text-secondary text-capitalize">related</small><br><a href="/blog/profile-in-the-cloud-with-nsight-systems/" class="fs-5">Profile in the Cloud with Nsight Systems</a></li>
+      </div>
+  </ul>
+</main>
+
+<div class="w-100 pb-4 bg-body-tertiary" style="clear:both;margin-top:96px;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

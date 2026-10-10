@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Writing Documentation</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Writing Documentation">
+    
+    <meta name="twitter:image" content="/assets/doxide.svg">
+
+    <meta property="og:title" content="Writing Documentation">
+    
+    <meta property="og:url" content="https://indii.org/software/doxide/writing/">
+    <meta property="og:image" content="https://indii.org/assets/doxide.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/doxide.min.css">
+    
+    <link rel="canonical" href="https://indii.org/software/doxide/writing/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+      </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/software/doxide">
+                <img src="/assets/doxide.svg" alt="Logo" width="24" height="24" class="d-inline-block align-text-top">
+                  Doxide
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                  <a href="/software/doxide/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Main
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/demo/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Demo
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/installation/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Get Started
+                  </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+                  Documentation
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/software/doxide/getting-started/">Initializing Doxide</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/configuring/">Configuring Doxide</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/running/">Running Doxide</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/writing/">Writing Documentation</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/organizing/">Organizing Documentation</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/parsing/">Parsing Considerations</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/coverage/">Enabling Code Coverage</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/coverage-reports/">Understanding Code Coverage Reports</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/command-line/">Command-line reference</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/contributing/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  How To Help
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/questions-and-answers/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Q &amp; A
+                  </a>
+                </li>
+
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container mb-5">
+      <div class="row">
+        <div class="col-12 col-lg-9 mx-auto text-center">
+                <img src="/assets/doxide.svg" loading="lazy" style="width:auto;max-height:128px;" class="img-fluid py-2" alt="Doxide application icon, a red oxygen atom from a chemistry kit">
+          
+          <div class="category">Doxide</div>
+          <h1 class="mt-0">Writing Documentation</h1>
+          
+          
+
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+              </div>
+      </div>
+    </header>
+            
+                <div class="post">
+<p>Entities in C++ source code (e.g. classes, functions, operators, variables, macros) are documented by adding a <em>documentation comment</em> immediately before or after their declaration. Various conventions are supported to distinguish documentation comments from regular comments. The most basic is to put the comment immediately before the declaration style it as <code>/** ... */</code> rather than <code>/* ... */</code>. The contents of the documentation can be formatted with Markdown, and include various <a href="#commands">commands</a> using the syntax <code>@command</code>.</p>
+<div class="example">
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">/**</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"> * An example class with documentation. It might include a list:</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"> * - first item,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"> * - second item, and</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"> * - third item,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"> *</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"> * or even a table:</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"> *</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"> * | Heading 1 | Heading 2 |</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"> * | --------- | --------- |</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"> * | Content 1 | Content 2 |</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Example <span class="op">{</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">//</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">/**</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"> * An example function with documentation. This time we use commands.</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"> *</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@param</span><span class="co"> </span><span class="cv">x</span><span class="co"> First argument.</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@param</span><span class="co"> </span><span class="cv">y</span><span class="co"> Second argument.</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"> *</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@return</span><span class="co"> The result.</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"> */</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> f<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">);</span></span></code></pre></div>
+</div>
+<p>If the documentation is placed immediately before the declaration of an entity, the following styles are supported:</p>
+<ul>
+<li><code>/** ... */</code></li>
+<li><code>/*! ... */</code></li>
+<li><code>/// ...</code></li>
+<li><code>//! ...</code></li>
+</ul>
+<p>If the documentation is placed immediately after the declaration, e.g. as an end-of-line comment, the following styles are supported:</p>
+<ul>
+<li><code>/**&lt; ... */</code></li>
+<li><code>/*!&lt; ... */</code></li>
+<li><code>///&lt; ...</code></li>
+<li><code>//!&lt; ...</code></li>
+</ul>
+<div class="example">
+<p><strong>Example</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> Example <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  FIRST<span class="op">,</span>   <span class="co">///&lt; First possible value</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  SECOND<span class="op">,</span>  <span class="co">///&lt; Second possible value</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  THIRD<span class="op">,</span>   <span class="co">///&lt; Third possible value</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+</div>
+<h2 id="commands">Commands</h2>
+<p>The suggestion is to use Markdown wherever possible when writing documentation comments. Doxide provides a small set of commands that can be used to <a href="../organizing/">organize</a> documentation (e.g. <code>@ingroup</code>) and to ensure consistent formatting for common elements (e.g. <code>@param</code>).</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@param name</code>, <code>@param[in] name</code>, <code>@param[out] name</code>, <code>@param[in,out] name</code></td>
+<td>Document parameter <code>name</code>. The following paragraph is the description. The additional annotations <code>[in]</code>, <code>[out]</code> and <code>[in,out]</code> mark the parameter as an input (default), output or both input and output parameter. The following paragraph is the description.</td>
+</tr>
+<tr>
+<td><code>@tparam</code></td>
+<td>Document a template parameter <code>name</code>.</td>
+</tr>
+<tr>
+<td><code>@return</code></td>
+<td>Document the return value with the following paragraph.</td>
+</tr>
+<tr>
+<td><code>@pre</code>, <code>@post</code></td>
+<td>Document pre- or post-conditions with the following paragraph.</td>
+</tr>
+<tr>
+<td><code>@throw name</code></td>
+<td>Document an exception <code>name</code> with the following paragraph.</td>
+</tr>
+<tr>
+<td><code>@see</code></td>
+<td>Add a paragraph of “see also” references. The references themselves can be formatted in Markdown, using links if desired.</td>
+</tr>
+<tr>
+<td><code>@anchor name</code></td>
+<td>Insert anchor that can be linked to from elsewhere with the Markdown syntax <code>[text](#name)</code>.</td>
+</tr>
+<tr>
+<td><code>@ingroup name</code></td>
+<td>Add the entity to the group <code>name</code>. See <a href="../organizing/">organizing</a> for more information.</td>
+</tr>
+<tr>
+<td><code>@@</code></td>
+<td>Escape: replaced with a single <code>@</code>.</td>
+</tr>
+<tr>
+<td><code>@/</code></td>
+<td>Escape: replaced with a single <code>/</code>.</td>
+</tr>
+</tbody>
+</table>
+<div class="tip">
+<p>As a particular use case, comments within documentation comments are possible by escaping the closing sequence <code>*/</code> as <code>*@/</code>. This can be useful when providing example code within a documentation comment.</p>
+</div>
+<h2 id="migration-support">Migration support</h2>
+<p>To assist in the migration of existing code bases to Doxide from other documentation tools, some additional support is provided:</p>
+<ul>
+<li><p>The character <code>\</code> may be used as an alternative to <code>@</code> to denote commands. When <code>\</code> is used, unlike when <code>@</code> is used, no warning is given if the command is not found, and the command is output as-is. This is necessary to support LaTeX macros in mathematics without warning overload.</p></li>
+<li><p>The character <code>%</code> may be used as an escape for a single non-whitespace character (it is used to break automatic linking in Doxygen).</p></li>
+</ul>
+<p>The following behaviors are implemented to assist in the migration of existing code bases. Recommended alternatives are provided for new code bases.</p>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 27%" />
+<col style="width: 36%" />
+</colgroup>
+<thead>
+<tr>
+<th>Command(s)</th>
+<th>Doxide behavior</th>
+<th>Recommended alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@e word</code>, <code>@em word</code>, <code>@a word</code></td>
+<td>Replace with Markdown.</td>
+<td>Use Markdown emphasis: <code>*word*</code></td>
+</tr>
+<tr>
+<td><code>@b word</code></td>
+<td>Replace with Markdown.</td>
+<td>Use Markdown bold: <code>**word**</code></td>
+</tr>
+<tr>
+<td><code>@c word</code>, <code>@p word</code></td>
+<td>Replace with Markdown.</td>
+<td>Use Markdown inline code: <code>`word`</code></td>
+</tr>
+<tr>
+<td><code>@f$ ... @f$</code></td>
+<td>Replace with Markdown.</td>
+<td>Use Markdown inline math: <code>$ ... $</code></td>
+</tr>
+<tr>
+<td><code>@f\[ ... @f]</code></td>
+<td>Replace with Markdown.</td>
+<td>Use Markdown display math: <code>$$ ... $$</code>.</td>
+</tr>
+<tr>
+<td><code>@li</code>, <code>@arg</code></td>
+<td>Replace with Markdown.</td>
+<td>Use Markdown unordered list item: <code>-</code></td>
+</tr>
+<tr>
+<td><code>@code ... @endcode</code>, <code>@verbatim ... @endverbatim</code></td>
+<td>Replace with Markdown.</td>
+<td>Use Markdown display code: <code>``` ... ```</code>.</td>
+</tr>
+<tr>
+<td><code>@attention</code>, <code>@bug</code>, <code>@example</code>, <code>@note</code>, <code>@todo</code>, <code>@warning</code>, <code>@remark</code>, <code>@remarks</code></td>
+<td>Replace with Markdown.</td>
+<td>Use Markdown admonition: <code>!!! type</code>.</td>
+</tr>
+<tr>
+<td><code>@ref name text</code></td>
+<td>Replace with Markdown.</td>
+<td>Use Markdown link: <code>[text](#name)</code></td>
+</tr>
+<tr>
+<td><code>@image format file alt</code></td>
+<td>Ignored.</td>
+<td>Use Markdown image: <code>![alt](file)</code></td>
+</tr>
+<tr>
+<td><code>@returns</code>, <code>@result</code></td>
+<td>As <code>@return</code>.</td>
+<td>Use <code>@return</code>.</td>
+</tr>
+<tr>
+<td><code>@throws</code> , <code>@exception</code></td>
+<td>As <code>@throw</code>.</td>
+<td>Use <code>@throw</code>.</td>
+</tr>
+<tr>
+<td><code>@sa</code></td>
+<td>As <code>@see</code>.</td>
+<td>Use <code>@see</code>.</td>
+</tr>
+<tr>
+<td><code>@brief</code>, <code>@short</code></td>
+<td>Ignored.</td>
+<td>Make the first sentence of the documentation comment usable as a brief description.</td>
+</tr>
+<tr>
+<td><code>@internal</code></td>
+<td>Documentation comment and entity are hidden.</td>
+<td>Use a normal comment, rather than a documentation comment.</td>
+</tr>
+<tr>
+<td><code>@defgroup</code></td>
+<td>Ignored.</td>
+<td>Doxide handles groups differently, see below.</td>
+</tr>
+<tr>
+<td><code>@file</code></td>
+<td>Ignored.</td>
+<td>Doxide does not produce documentation for files. Incorporate into the documentation for another entity, or into a custom page.</td>
+</tr>
+<tr>
+<td><code>@def MACRO</code></td>
+<td>Ignored.</td>
+<td>Doxide does not run the preprocessor. Add a documentation comment immediately before the <code>#define</code>.</td>
+</tr>
+<tr>
+<td><code>@var name</code>, <code>@fn name</code>, <code>@class name</code>, <code>@struct name</code>, <code>@union name</code>, <code>@enum name</code>, <code>@typedef name</code>, <code>@namespace name</code>, <code>@interface name</code>, <code>@protocol name</code>, <code>@property name</code>.</td>
+<td>Ignored.</td>
+<td>Add a documentation comment immediately before the relevant entity.</td>
+</tr>
+</tbody>
+</table>
+    </div>
+  </article>
+
+  <ul class="my-4 px-0" style="clear:both;list-style:none;">
+      <li class="mb-3"><small class="text-secondary text-capitalize">next</small><br><a href="/software/doxide/organizing/" class="fs-5">Organizing Documentation</a></li>
+      <li class="mb-3"><small class="text-secondary text-capitalize">previous</small><br><a href="/software/doxide/running/" class="fs-5">Running Doxide</a></li>
+      </div>
+  </ul>
+</main>
+
+<div class="w-100 pb-4 bg-body-tertiary" style="clear:both;margin-top:96px;">
+<div class="container">
+  <nav class="row g-4">
+        <div class="nav-bottom">
+      <h1><a href="/software/doxide">Doxide</a></h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/software/doxide/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Main
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/demo/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Demo
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/installation/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Get Started
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+          Documentation
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/software/doxide/getting-started/">Initializing Doxide</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/configuring/">Configuring Doxide</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/running/">Running Doxide</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/writing/">Writing Documentation</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/organizing/">Organizing Documentation</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/parsing/">Parsing Considerations</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/coverage/">Enabling Code Coverage</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/coverage-reports/">Understanding Code Coverage Reports</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/command-line/">Command-line reference</a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/contributing/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          How To Help
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/questions-and-answers/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Q &amp; A
+          </a>
+        </li>
+
+      </ul>
+    </div>
+    
+    <div class="nav-bottom">
+            <h1><a href="/">Lawrence Murray</a></h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

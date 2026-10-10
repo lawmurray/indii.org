@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Code Coverage</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Code Coverage">
+    
+    <meta name="twitter:image" content="/assets/doxide.svg">
+
+    <meta property="og:title" content="Code Coverage">
+    
+    <meta property="og:url" content="https://indii.org">
+    <meta property="og:image" content="https://indii.org/assets/doxide.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/doxide_demo.min.css">
+    
+    <link rel="canonical" href="https://indii.org">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+        <script src="/js/echarts.min.js" defer></script>
+        <script src="/js/tablesort.min.js" defer></script>
+        <script src="/js/tablesort.number.min.js" defer></script>
+      </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/software/doxide">
+                <img src="/assets/doxide.svg" alt="Logo" width="24" height="24" class="d-inline-block align-text-top">
+                  Doxide
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                  <a href="/software/doxide/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Main
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/demo/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Demo
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/installation/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Get Started
+                  </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+                  Documentation
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/software/doxide/getting-started/">Initializing Doxide</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/configuring/">Configuring Doxide</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/running/">Running Doxide</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/writing/">Writing Documentation</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/organizing/">Organizing Documentation</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/parsing/">Parsing Considerations</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/coverage/">Enabling Code Coverage</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/coverage-reports/">Understanding Code Coverage Reports</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/command-line/">Command-line reference</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/contributing/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  How To Help
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/questions-and-answers/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Q &amp; A
+                  </a>
+                </li>
+
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <div class="plain">
+            <h1 id="code-coverage">Code Coverage</h1>
+<div id="coverage-sunburst" style="aspect-ratio:1/1;width:100%;max-width:600px;margin:auto;">
+
+</div>
+<script type="text/javascript">
+var data = [
+{name: "demo", path: "demo", value: 13, type: "dir", icon: "○○○○", children: [{name: "parsing.hpp", path: "demo/parsing.hpp", value: 13, type: "file", icon: "○○○○", itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "presentation.hpp", path: "demo/presentation.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}], itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "src", path: "src", value: 1559, type: "dir", icon: "●○○○", children: [{name: "CppParser.cpp", path: "src/CppParser.cpp", value: 253, type: "file", icon: "●●●○", itemStyle: { color: "#a5b72add", borderColor: "#a5b72a"}, label: { textBorderColor: "#a5b72a"}}, {name: "CppParser.hpp", path: "src/CppParser.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "Doc.cpp", path: "src/Doc.cpp", value: 164, type: "file", icon: "●●○○", itemStyle: { color: "#ffc105dd", borderColor: "#ffc105"}, label: { textBorderColor: "#ffc105"}}, {name: "Doc.hpp", path: "src/Doc.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "DocToken.cpp", path: "src/DocToken.cpp", value: 5, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "DocToken.hpp", path: "src/DocToken.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "DocTokenizer.cpp", path: "src/DocTokenizer.cpp", value: 27, type: "file", icon: "○○○○", itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "DocTokenizer.hpp", path: "src/DocTokenizer.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "Driver.cpp", path: "src/Driver.cpp", value: 133, type: "file", icon: "○○○○", itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "Driver.hpp", path: "src/Driver.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "Entity.cpp", path: "src/Entity.cpp", value: 160, type: "file", icon: "○○○○", itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "Entity.hpp", path: "src/Entity.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "GcovCounter.cpp", path: "src/GcovCounter.cpp", value: 26, type: "file", icon: "○○○○", itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "GcovCounter.hpp", path: "src/GcovCounter.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "JSONCounter.cpp", path: "src/JSONCounter.cpp", value: 33, type: "file", icon: "○○○○", itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "JSONCounter.hpp", path: "src/JSONCounter.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "JSONGenerator.cpp", path: "src/JSONGenerator.cpp", value: 32, type: "file", icon: "○○○○", itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "JSONGenerator.hpp", path: "src/JSONGenerator.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "Log.hpp", path: "src/Log.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "MarkdownGenerator.cpp", path: "src/MarkdownGenerator.cpp", value: 507, type: "file", icon: "○○○○", itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "MarkdownGenerator.hpp", path: "src/MarkdownGenerator.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "Regex.hpp", path: "src/Regex.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "SourceWatcher.cpp", path: "src/SourceWatcher.cpp", value: 25, type: "file", icon: "○○○○", itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "SourceWatcher.hpp", path: "src/SourceWatcher.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "TextLineCursor.cpp", path: "src/TextLineCursor.cpp", value: 42, type: "file", icon: "●●●○", itemStyle: { color: "#a5b72add", borderColor: "#a5b72a"}, label: { textBorderColor: "#a5b72a"}}, {name: "TextLineCursor.hpp", path: "src/TextLineCursor.hpp", value: 13, type: "file", icon: "○○○○", itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "YAMLNode.cpp", path: "src/YAMLNode.cpp", value: 16, type: "file", icon: "●●●○", itemStyle: { color: "#a5b72add", borderColor: "#a5b72a"}, label: { textBorderColor: "#a5b72a"}}, {name: "YAMLNode.hpp", path: "src/YAMLNode.hpp", value: 12, type: "file", icon: "○○○○", itemStyle: { color: "#ef5552dd", borderColor: "#ef5552"}, label: { textBorderColor: "#ef5552"}}, {name: "YAMLParser.cpp", path: "src/YAMLParser.cpp", value: 62, type: "file", icon: "●●○○", itemStyle: { color: "#ffc105dd", borderColor: "#ffc105"}, label: { textBorderColor: "#ffc105"}}, {name: "YAMLParser.hpp", path: "src/YAMLParser.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}, {name: "doxide.cpp", path: "src/doxide.cpp", value: 49, type: "file", icon: "●●○○", itemStyle: { color: "#ffc105dd", borderColor: "#ffc105"}, label: { textBorderColor: "#ffc105"}}, {name: "doxide.hpp", path: "src/doxide.hpp", value: 0, type: "file", icon: "●●●●", itemStyle: { color: "#4cae4fdd", borderColor: "#4cae4f"}, label: { textBorderColor: "#4cae4f"}}], itemStyle: { color: "#f78b2bdd", borderColor: "#f78b2b"}, label: { textBorderColor: "#f78b2b"}}]
+
+var coverage_root = "";  // current root of coverage report
+
+function update_coverage_table(params) {
+  if (typeof params.data.name === 'undefined') {
+    // occurs when the central circle is selected to go up one level
+    var path = coverage_root.substring(0, coverage_root.lastIndexOf('/'));
+    var is_dir = true;
+  } else {
+    var path = params.data.path;
+    var is_dir = params.data.type === 'dir';
+  }
+  let rows = document.querySelectorAll('[data-parent]');
+  if (is_dir) {
+    for (let row of rows) {
+      if (row.dataset.parent === path) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    }
+  } else {
+    for (let row of rows) {
+      if (row.id === path) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    }
+  }
+  coverage_root = path;
+}
+
+window.addEventListener("load", () => {
+  var coverage_sunburst = echarts.init(document.getElementById('coverage-sunburst'));
+  var option = {
+    series: {
+      type: 'sunburst',
+      data: data,
+      sort: null,
+      radius: ['5%', '95%'],
+      startAngle: 0,
+      clockwise: false,
+      itemStyle: {
+        borderWidth: 1
+      },
+      label: {
+        color: 'white',
+        fontSize: 10,
+        textBorderWidth: 1,
+        align: 'center',
+        rotate: 'radial',
+        width: 80,
+        minAngle: 4,
+        overflow: 'truncate',
+        formatter: function (params) {
+          if (params.data.icon) {
+            return params.name + '\n' + params.data.icon;
+          } else {
+            return params.name;
+          }
+        }
+      },
+      labelLayout: {
+        hideOverlap: true
+      },
+      levels: [
+        {
+          itemStyle: {
+            opacity: 0.2
+          }
+        }
+      ]
+    }
+  };
+  coverage_sunburst.setOption(option);
+  coverage_sunburst.on('click', update_coverage_table);
+  window.addEventListener("resize", () => {
+    coverage_sunburst.resize();
+  });
+});
+
+
+window.addEventListener("load", () => {
+  var tables = document.querySelectorAll("article table:not([class])");
+  tables.forEach(function(table) {
+    new Tablesort(table);
+  });
+});
+
+</script>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;" data-sort-method="dotsep">
+Name
+</th>
+<th style="text-align:right;" data-sort-method="number">
+Lines
+</th>
+<th style="text-align:right;" data-sort-method="number">
+Covered
+</th>
+<th style="text-align:right;" data-sort-method="number">
+Uncovered
+</th>
+<th style="text-align:right;" data-sort-method="number">
+Coverage
+</th>
+</tr>
+</thead>
+<tbody>
+<tr id="demo" data-parent>
+<td style="text-align:left;" data-sort="a.demo">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M10 4H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8z"/>
+</svg>
+<a href="demo/">demo</a>
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+0.0%
+</td>
+</tr>
+<tr id="demo/parsing.hpp" data-parent="demo" style="display:none;">
+<td style="text-align:left;" data-sort="b.parsing.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="demo/parsing.hpp/">parsing.hpp</a>
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+0.0%
+</td>
+</tr>
+<tr id="demo/presentation.hpp" data-parent="demo" style="display:none;">
+<td style="text-align:left;" data-sort="b.presentation.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="demo/presentation.hpp/">presentation.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src" data-parent>
+<td style="text-align:left;" data-sort="a.src">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M10 4H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8z"/>
+</svg>
+<a href="src/">src</a>
+</td>
+<td style="text-align:right;">
+1559
+</td>
+<td style="text-align:right;">
+944
+</td>
+<td style="text-align:right;">
+615
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #f78b2bdd inset;">
+60.6%
+</td>
+</tr>
+<tr id="src/CppParser.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.CppParser.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/CppParser.cpp/">CppParser.cpp</a>
+</td>
+<td style="text-align:right;">
+253
+</td>
+<td style="text-align:right;">
+224
+</td>
+<td style="text-align:right;">
+29
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #a5b72add inset;">
+88.5%
+</td>
+</tr>
+<tr id="src/CppParser.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.CppParser.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/CppParser.hpp/">CppParser.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/Doc.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.Doc.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/Doc.cpp/">Doc.cpp</a>
+</td>
+<td style="text-align:right;">
+164
+</td>
+<td style="text-align:right;">
+124
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ffc105dd inset;">
+75.6%
+</td>
+</tr>
+<tr id="src/Doc.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.Doc.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/Doc.hpp/">Doc.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/DocToken.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.DocToken.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/DocToken.cpp/">DocToken.cpp</a>
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/DocToken.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.DocToken.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/DocToken.hpp/">DocToken.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/DocTokenizer.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.DocTokenizer.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/DocTokenizer.cpp/">DocTokenizer.cpp</a>
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+55.6%
+</td>
+</tr>
+<tr id="src/DocTokenizer.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.DocTokenizer.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/DocTokenizer.hpp/">DocTokenizer.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/Driver.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.Driver.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/Driver.cpp/">Driver.cpp</a>
+</td>
+<td style="text-align:right;">
+133
+</td>
+<td style="text-align:right;">
+67
+</td>
+<td style="text-align:right;">
+66
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+50.4%
+</td>
+</tr>
+<tr id="src/Driver.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.Driver.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/Driver.hpp/">Driver.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/Entity.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.Entity.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/Entity.cpp/">Entity.cpp</a>
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+93
+</td>
+<td style="text-align:right;">
+67
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+58.1%
+</td>
+</tr>
+<tr id="src/Entity.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.Entity.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/Entity.hpp/">Entity.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/GcovCounter.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.GcovCounter.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/GcovCounter.cpp/">GcovCounter.cpp</a>
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+0.0%
+</td>
+</tr>
+<tr id="src/GcovCounter.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.GcovCounter.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/GcovCounter.hpp/">GcovCounter.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/JSONCounter.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.JSONCounter.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/JSONCounter.cpp/">JSONCounter.cpp</a>
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+0.0%
+</td>
+</tr>
+<tr id="src/JSONCounter.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.JSONCounter.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/JSONCounter.hpp/">JSONCounter.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/JSONGenerator.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.JSONGenerator.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/JSONGenerator.cpp/">JSONGenerator.cpp</a>
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+34.4%
+</td>
+</tr>
+<tr id="src/JSONGenerator.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.JSONGenerator.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/JSONGenerator.hpp/">JSONGenerator.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/Log.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.Log.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/Log.hpp/">Log.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/MarkdownGenerator.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.MarkdownGenerator.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/MarkdownGenerator.cpp/">MarkdownGenerator.cpp</a>
+</td>
+<td style="text-align:right;">
+507
+</td>
+<td style="text-align:right;">
+261
+</td>
+<td style="text-align:right;">
+246
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+51.5%
+</td>
+</tr>
+<tr id="src/MarkdownGenerator.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.MarkdownGenerator.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/MarkdownGenerator.hpp/">MarkdownGenerator.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/Regex.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.Regex.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/Regex.hpp/">Regex.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/SourceWatcher.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.SourceWatcher.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/SourceWatcher.cpp/">SourceWatcher.cpp</a>
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+0.0%
+</td>
+</tr>
+<tr id="src/SourceWatcher.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.SourceWatcher.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/SourceWatcher.hpp/">SourceWatcher.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/TextLineCursor.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.TextLineCursor.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/TextLineCursor.cpp/">TextLineCursor.cpp</a>
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #a5b72add inset;">
+81.0%
+</td>
+</tr>
+<tr id="src/TextLineCursor.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.TextLineCursor.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/TextLineCursor.hpp/">TextLineCursor.hpp</a>
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+53.8%
+</td>
+</tr>
+<tr id="src/YAMLNode.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.YAMLNode.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/YAMLNode.cpp/">YAMLNode.cpp</a>
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #a5b72add inset;">
+87.5%
+</td>
+</tr>
+<tr id="src/YAMLNode.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.YAMLNode.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/YAMLNode.hpp/">YAMLNode.hpp</a>
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+50.0%
+</td>
+</tr>
+<tr id="src/YAMLParser.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.YAMLParser.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/YAMLParser.cpp/">YAMLParser.cpp</a>
+</td>
+<td style="text-align:right;">
+62
+</td>
+<td style="text-align:right;">
+47
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ffc105dd inset;">
+75.8%
+</td>
+</tr>
+<tr id="src/YAMLParser.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.YAMLParser.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/YAMLParser.hpp/">YAMLParser.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+<tr id="src/doxide.cpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.doxide.cpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/doxide.cpp/">doxide.cpp</a>
+</td>
+<td style="text-align:right;">
+49
+</td>
+<td style="text-align:right;">
+36
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #ffc105dd inset;">
+73.5%
+</td>
+</tr>
+<tr id="src/doxide.hpp" data-parent="src" style="display:none;">
+<td style="text-align:left;" data-sort="b.doxide.hpp">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm4 18H6V4h7v5h5z"/>
+</svg>
+<a href="src/doxide.hpp/">doxide.hpp</a>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;box-shadow: -8px 0 0 0 #4cae4fdd inset;">
+100.0%
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr id="summary.demo" data-parent="demo" style="display:none;">
+<td style="text-align:left;font-weight:bold;">
+Summary
+</td>
+<td style="text-align:right;font-weight:bold;">
+13
+</td>
+<td style="text-align:right;font-weight:bold;">
+0
+</td>
+<td style="text-align:right;font-weight:bold;">
+13
+</td>
+<td style="text-align:right;font-weight:bold;box-shadow: -8px 0 0 0 #ef5552dd inset;">
+0.0%
+</td>
+</tr>
+<tr id="summary.src" data-parent="src" style="display:none;">
+<td style="text-align:left;font-weight:bold;">
+Summary
+</td>
+<td style="text-align:right;font-weight:bold;">
+1559
+</td>
+<td style="text-align:right;font-weight:bold;">
+944
+</td>
+<td style="text-align:right;font-weight:bold;">
+615
+</td>
+<td style="text-align:right;font-weight:bold;box-shadow: -8px 0 0 0 #f78b2bdd inset;">
+60.6%
+</td>
+</tr>
+<tr id="summary." data-parent>
+<td style="text-align:left;font-weight:bold;">
+Summary
+</td>
+<td style="text-align:right;font-weight:bold;">
+1572
+</td>
+<td style="text-align:right;font-weight:bold;">
+944
+</td>
+<td style="text-align:right;font-weight:bold;">
+628
+</td>
+<td style="text-align:right;font-weight:bold;box-shadow: -8px 0 0 0 #f78b2bdd inset;">
+60.1%
+</td>
+</tr>
+</tfoot>
+</table>
+    </div>
+  </article>
+
+  </main>
+
+<div class="w-100 pb-4 bg-body-tertiary" style="clear:both;margin-top:96px;">
+<div class="container">
+  <nav class="row g-4">
+        <div class="nav-bottom">
+      <h1><a href="/software/doxide">Doxide</a></h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/software/doxide/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Main
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/demo/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Demo
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/installation/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Get Started
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+          Documentation
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/software/doxide/getting-started/">Initializing Doxide</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/configuring/">Configuring Doxide</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/running/">Running Doxide</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/writing/">Writing Documentation</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/organizing/">Organizing Documentation</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/parsing/">Parsing Considerations</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/coverage/">Enabling Code Coverage</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/coverage-reports/">Understanding Code Coverage Reports</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/command-line/">Command-line reference</a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/contributing/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          How To Help
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/questions-and-answers/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Q &amp; A
+          </a>
+        </li>
+
+      </ul>
+    </div>
+    
+    <div class="nav-bottom">
+            <h1><a href="/">Lawrence Murray</a></h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

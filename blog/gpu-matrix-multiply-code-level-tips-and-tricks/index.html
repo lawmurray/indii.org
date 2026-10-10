@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Matrix Multiplication On GPU: Part 3, Coding for Speed</title>
+    <meta name="description" content="Tips and tricks to help the compiler optimize">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Matrix Multiplication On GPU: Part 3, Coding for Speed">
+    <meta name="twitter:description" content="Tips and tricks to help the compiler optimize">
+    
+
+    <meta property="og:title" content="Matrix Multiplication On GPU: Part 3, Coding for Speed">
+    <meta property="og:description" content="Tips and tricks to help the compiler optimize">
+    <meta property="og:url" content="https://indii.org/blog/gpu-matrix-multiply-code-level-tips-and-tricks/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    
+    <link rel="canonical" href="https://indii.org/blog/gpu-matrix-multiply-code-level-tips-and-tricks/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+      </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container mb-5">
+      <div class="row">
+        <div class="col-12 col-lg-9 mx-auto text-center">
+          
+          <div class="category">dev</div>
+          <h1 class="mt-0">Matrix Multiplication On GPU: Part 3, Coding for Speed</h1>
+          <p class="h5"><strong>Tips and tricks to help the compiler optimize</strong></p>
+          
+
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+              </div>
+      </div>
+    </header>
+            <p class="date">
+      <time pubdate datetime="2024-10-11" title="2024-10-11">2024-10-11</time>
+      
+    </p>
+        
+        <p>Nvidia’s <code>nvcc</code> compiler and <code>ptxas</code> assembler do a good job optimizing CUDA kernels, but we cannot expect magic from them. There are coding patterns that can help produce better results. Ideally, these become habits.</p>
+        <p>This is the third in a series of posts about implementing a CUDA kernel for matrix-matrix multiplication on GPU. It focuses on code-level tips and tricks to get the best performance by facilitating compiler optimizations. Those tips and tricks may translate to other CUDA kernels too. Previous posts in the series provide the <a href="/blog/gpu-matrix-multiply">high-level algorithm, empirical evaluation and code</a> and a <a href="/blog/gpu-matrix-multiply-tiling">breakdown of the tiling structure for optimal cache utilization</a>.</p>
+        <p>The post is structured as a list of tips and tricks that emerged in the course of the kernel development. There are no timing results, as the ideas may or may not improve performance according to surrounding code and context. They are meant as ideas to try in your own code; if they work, great, if they don’t, try something else. Roughly, they are in order of importance, with those earlier in the list more likely to yield improvements, and larger improvements at that.</p>
+        <div class="note">
+        <p>We might imagine that the compiler can do some or all of these optimizations for us. It may. My experience is that it does not, or that it may not, or that it may, according to reasons that are opaque to me but perhaps not to a compiler engineer. Mostly this is about good habits, or good rules of thumb, that tend to work well.</p>
+        </div>
+                <div class="toc">
+    <ul>
+    <li><a href="#organize-nested-loops-around-iteration-dependencies" id="toc-organize-nested-loops-around-iteration-dependencies">Organize nested loops around iteration dependencies</a></li>
+    <li><a href="#keep-static-expressions-together" id="toc-keep-static-expressions-together">Keep static expressions together</a></li>
+    <li><a href="#use-__restrict__-on-pointers" id="toc-use-__restrict__-on-pointers">Use <code>__restrict__</code> on pointers</a></li>
+    <li><a href="#keep-loop-indexing-simple" id="toc-keep-loop-indexing-simple">Keep loop indexing simple</a></li>
+    <li><a href="#try-serial-indexing" id="toc-try-serial-indexing">Try serial indexing</a></li>
+    <li><a href="#futz-wicked-indexing" id="toc-futz-wicked-indexing">Futz wicked indexing</a></li>
+    <li><a href="#add-the---resource-usage-option-when-calling-nvcc" id="toc-add-the---resource-usage-option-when-calling-nvcc">Add the <code>--resource-usage</code> option when calling <code>nvcc</code></a></li>
+    <li><a href="#summary" id="toc-summary">Summary</a></li>
+    </ul>
+    </div>
+        <div class="post">
+<h2 id="organize-nested-loops-around-iteration-dependencies">Organize nested loops around iteration dependencies</h2>
+<p>Nested loops should be arranged to minimize dependencies between iterations of the innermost loops, and so maximize instruction-level parallelism.</p>
+<p>Consider the following tight matrix multiplication, where <code>K</code>, <code>N</code> and <code>M</code> are sizes small enough such that the matrices <code>A</code>, <code>B</code> and <code>C</code> fit into registers.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> M<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> K<span class="op">;</span> <span class="op">++</span>k<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      C<span class="op">(</span>i<span class="op">,</span> j<span class="op">)</span> <span class="op">+=</span> A<span class="op">(</span>i<span class="op">,</span> k<span class="op">)*</span>B<span class="op">(</span>k<span class="op">,</span> j<span class="op">);</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The loops can be nested in any of six different configurations (<code>ijk</code>, <code>ikj</code>, <code>jik</code>, <code>jki</code>, <code>kij</code>, <code>kji</code>), all of which are logically equivalent, but differ in their dependency structure. Iterations of the <code>i</code> and <code>j</code> loops are independent, but the <code>k</code> loop accumulates into <code>C(i, j)</code>, such that each of its iterations depends on the previous. As the innermost loop, that dependency is across just a few clock cycles, and the processor may stall while awaiting the result of the previous iteration to continue the computation (recall that instructions can take multiple cycles to complete, and other instructions can execute while they do). Furthermore, as the innermost loop, it is run <code>M*N</code> times.</p>
+<p>It is much faster to make the <code>k</code> loop the outermost loop:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> K<span class="op">;</span> <span class="op">++</span>k<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> N<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> M<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      C<span class="op">(</span>i<span class="op">,</span> j<span class="op">)</span> <span class="op">+=</span> A<span class="op">(</span>i<span class="op">,</span> k<span class="op">)*</span>B<span class="op">(</span>k<span class="op">,</span> j<span class="op">);</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>There is now plenty of work between the dependencies of the <code>k</code> loop—the whole <code>j</code> and <code>i</code> loops, and as the <code>k</code> loop is now the outermost, it is run only once. The compiler now has much more scope to parallelize at the instruction level and the overall result is faster.</p>
+<h2 id="keep-static-expressions-together">Keep static expressions together</h2>
+<p>If <code>i</code> is a variable with value known at runtime, and <code>K1</code> and <code>K2</code> are <code>constexpr</code> with values known at compile time, do write <code>i*(M2/M1)</code> and not <code>i*M2/M1</code>. The former will compute the <code>M2/M1</code> at compile time and perform just one integer multiplication at runtime. The latter will perform one integer multiplication and one integer division at runtime. This matters in tight code.</p>
+<p>If <code>M1</code> and <code>M2</code> are powers of two, integer multiplications and divisions will convert to cheaper bit shifts, but one instruction is still better than two.</p>
+<div class="note">
+<p>Generally, it is best not to assume that a compiler will make optimizations to integer operations beyond bit shifts for powers of two. The potential for overflow often prevents it from doing so.</p>
+</div>
+<h2 id="use-__restrict__-on-pointers">Use <code>__restrict__</code> on pointers</h2>
+<p>This is a common compiler extension that corresponds to the <a href="https://en.cppreference.com/w/c/language/restrict"><code>restrict</code> type qualifier in C</a>. Its usage is documented elsewhere, but it does seem to make a difference with <code>nvcc</code>.</p>
+<p>Use of the <code>--restrict</code> option to <code>nvcc</code> does not seem to achieve the same as qualifying pointers with <code>__restrict__</code>.</p>
+<h2 id="keep-loop-indexing-simple">Keep loop indexing simple</h2>
+<p>A simple loop, with an index that starts at zero and increments by one each time, seems to yield the best performance.</p>
+<p>Consider the case where we are striding through an array of length <code>N</code> (known at compile time), starting at index <code>s</code> (only known at runtime), with a stride length of <code>S</code> (known at compile time). Logically, this is just fine:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> s<span class="op">;</span> i <span class="op">&lt;</span> N<span class="op">;</span> i <span class="op">+=</span> S<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ...</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>but this may yield better performance:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> N<span class="op">/</span>S<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> s <span class="op">+</span> j<span class="op">*</span>S<span class="op">;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">// ...</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the first case, both the dependency of the loop index <code>i</code> on the starting index <code>s</code>, and the non-unit stride of <code>S</code>, can seemingly harm performance. This is likely because it is more difficult to determine whether the loop can be unrolled.</p>
+<div class="danger">
+<p>Be careful, as these two loops are not quite equivalent! If <code>s &gt;= N</code>, the original loop is never entered, while the revised one is. If there is a possibility for <code>s &gt;= N</code>, the code may need further revision.</p>
+</div>
+<h2 id="try-serial-indexing">Try serial indexing</h2>
+<p>We are getting to the obscure end of our tips and tricks, and this one may help or may hinder.</p>
+<p>Let <code>x</code> be a two-dimensional array with <code>R</code> rows and <code>C</code> columns, stored in column-major order with a stride of <code>L</code> between columns (sometimes called a <em>lead</em>—thus <code>L</code>). The array may have been declared <code>float x[L*C]</code>. To access the element in the <code>i</code>th row and <code>j</code>th column, we could write <code>x[i + j*L]</code>.</p>
+<p>Now, to copy this array <code>x</code> to another array <code>y</code>, where both have the same sizes <code>R</code> and <code>C</code> but different strides <code>LX</code> and <code>LY</code>, we could write:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> C<span class="op">;</span> <span class="op">++</span>j<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> R<span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    y<span class="op">[</span>i <span class="op">+</span> j<span class="op">*</span>LY<span class="op">]</span> <span class="op">=</span> x<span class="op">[</span>i <span class="op">+</span> j<span class="op">*</span>LX<span class="op">];</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the case that <code>R</code> equals <code>LY</code>, the elements of <code>y</code> are stored contiguously. Further to this, if <code>R</code> (<code>== LY</code>) is a power of two known at compile time, an alternative serial indexing pattern that may improve performance is:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> s <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> s <span class="op">&lt;</span> R<span class="op">*</span>C<span class="op">;</span> <span class="op">++</span>s<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> i <span class="op">=</span> s<span class="op">%</span>R<span class="op">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> j <span class="op">=</span> s<span class="op">/</span>R<span class="op">;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  y<span class="op">[</span>s<span class="op">]</span> <span class="op">=</span> x<span class="op">[</span>i <span class="op">+</span> j<span class="op">*</span>LX<span class="op">];</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Of course, if <code>LX</code> also equals <code>R</code> then <code>x</code> is also stored contiguously, and the whole copy can be done serially, as though both <code>y</code> and <code>x</code> are one-dimensional arrays.</p>
+<h2 id="futz-wicked-indexing">Futz wicked indexing</h2>
+<p>Even more obscure is leaning into the SASS assembly <code>IADD3</code> instruction that adds three integers in one hit.</p>
+<p>To introduce this, the matrix-matrix multiplication kernel uses union types to offer a <code>float4</code> view of <code>x</code>, denoted <code>x4</code>, to facilitate 128-bit loads. It looks something like:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="dt">int</span> R<span class="op">,</span> <span class="dt">int</span> C<span class="op">&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">union</span> tile <span class="op">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">float</span> x<span class="op">[</span>R<span class="op">*</span>C<span class="op">];</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  float4 x4<span class="op">[</span>R<span class="op">*</span>C<span class="op">/</span><span class="dv">4</span><span class="op">];</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>When using <code>x4</code> instead of <code>x</code>, two-dimensional indexing becomes <code>x4[(i + j*L)/4)]</code>, i.e. just divide the index by four.</p>
+<p>The hierarchical partitioning of matrices into tiles can lead to some wicked indexing. Prototypical code is something like:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x4<span class="op">[(</span>i0 <span class="op">+</span> i1 <span class="op">+</span> <span class="op">(</span>j0 <span class="op">+</span> j1<span class="op">)*</span>M<span class="op">)/</span><span class="dv">4</span><span class="op">];</span></span></code></pre></div>
+<p>Here, <code>i0</code> and <code>j0</code> are some indices that give the corner of a tile of the original <code>x4</code>, then we’re indexing further into that tile with the <code>i1</code> and <code>j1</code> indices. These are indices for a <code>float</code> array, which are then translated for a <code>float4</code> array with the division by four.</p>
+<p>There are numerous ways of rewriting that indexing formula, and it can be worth futzing around to see what gives the best performance, to squeeze out a few extra percent in performance overall.</p>
+<p>Instruction-level parallelism plays a role again. Currently the code must compute <code>i0 + i1 + (j0 + j1)*M</code> before dividing by 4 (which will compile to a bit shift—we can certainly expect that of the compiler). Perhaps counterintuitively, the following can be faster:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x4<span class="op">[(</span>i0 <span class="op">+</span> i1<span class="op">)/</span><span class="dv">4</span> <span class="op">+</span> <span class="op">(</span>j0 <span class="op">+</span> j1<span class="op">)*(</span>M<span class="op">/</span><span class="dv">4</span><span class="op">)];</span></span></code></pre></div>
+<p>And a further curiosity is that <code>IADD3</code> instruction for adding together three integers in one instruction. So the following may be even faster again, facilitating <code>IADD3</code> for the final addition of three terms:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>x4<span class="op">[</span>i0<span class="op">/</span><span class="dv">4</span> <span class="op">+</span> i1<span class="op">/</span><span class="dv">4</span> <span class="op">+</span> <span class="op">(</span>j0 <span class="op">+</span> j1<span class="op">)*(</span>M<span class="op">/</span><span class="dv">4</span><span class="op">)];</span></span></code></pre></div>
+<p>Success here may depend on instruction mix and pressure on the various units of the processor (e.g. the integer unit and floating point unit).</p>
+<h2 id="add-the---resource-usage-option-when-calling-nvcc">Add the <code>--resource-usage</code> option when calling <code>nvcc</code></h2>
+<p>When running <code>nvcc</code>, adding the <code>--resource-usage</code> option will output the number of registers used by each kernel as it is compiled. Dramatic and surprising slowdowns are often caused by crossing an occupancy boundary (e.g. 64, 96 or 128 registers), or spilling registers into memory. The reasons for can be opaque, but at least <code>--resource-usage</code> makes the diagnosis clear.</p>
+<p>If it is necessary to reduce register use slightly to prevent a spill, try precomputing or recomputing values to reduce the number of live registers required to keep the state of the program.</p>
+<h2 id="summary">Summary</h2>
+<p>This post has presented some code-level tips and tricks to improve the performance of CUDA kernels by revealing optimization opportunities to the compiler that may otherwise not be apparent. Some tricks require fiddly work, but even the fiddly work can yield several percentage points improvement in the overall performance of a kernel.</p>
+    </div>
+  </article>
+
+  <ul class="my-4 px-0" style="clear:both;list-style:none;">
+      <li class="mb-3"><small class="text-secondary text-capitalize">related</small><br><a href="/blog/gpu-matrix-multiply/" class="fs-5">Matrix Multiplication on GPU: Faster than Nvidia, Sometimes</a></li>
+      <li class="mb-3"><small class="text-secondary text-capitalize">related</small><br><a href="/blog/gpu-matrix-multiply-tiling/" class="fs-5">Matrix Multiplication On GPU: Part 2, Tiling</a></li>
+      <li class="mb-3"><small class="text-secondary text-capitalize">related</small><br><a href="/blog/fix-clock-speed-on-nvidia-gpu/" class="fs-5">Limit clock speed and memory speed on an Nvidia GPU</a></li>
+      <li class="mb-3"><small class="text-secondary text-capitalize">related</small><br><a href="/gpu-course/practical-2/" class="fs-5">Foundations of GPU Computing: Practical Exercises #2</a></li>
+      </div>
+  </ul>
+</main>
+
+<div class="w-100 pb-4 bg-body-tertiary" style="clear:both;margin-top:96px;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

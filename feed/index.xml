@@ -1,0 +1,1235 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>Lawrence Murray</title>
+    <link>https://indii.org</link>
+    <description>Personal site of Lawrence Murray, collating blog articles, scientific research, software artifacts, and creative outputs</description>
+    
+    <pubDate>Sun, 11 Oct 2026 00:18:25 +0700</pubDate>
+    <lastBuildDate>Sun, 11 Oct 2026 00:18:25 +0700</lastBuildDate>
+    <item>
+      <title>Serve a website locally and rebuild on changes</title>
+      <link>https://indii.org/blog/serve-a-website-locally-and-rebuild-on-changes/</link>
+      <description>Bash scripting a quality-of-life feature for web development</description>
+      <category>dev</category>
+      <pubDate>2026-10-06</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Mending Wall</title>
+      <link>https://indii.org/software/mendingwall/</link>
+      <description>Try another desktop environment</description>
+      <category>software</category>
+      <pubDate>2025-02-22</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>A static for loop in C++</title>
+      <link>https://indii.org/blog/cplusplus-static-for-loop/</link>
+      <description>You have <code>if constexpr</code>, but you want <code>for constexpr</code></description>
+      <category>dev</category>
+      <pubDate>2024-11-27</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Improving C++ Code Coverage with Gcov, Gcovr and Doxide</title>
+      <link>https://indii.org/blog/cplusplus-code-coverage-with-gcov-gcovr-doxide/</link>
+      <description>Doxide can now produce line data on function templates, even when not instantiated, to mix with execution data for more accurate test coverage reports. This is especially useful when testing header-only libraries.</description>
+      <category>dev</category>
+      <pubDate>2024-11-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Limit clock speed and memory speed on an Nvidia GPU</title>
+      <link>https://indii.org/blog/fix-clock-speed-on-nvidia-gpu/</link>
+      <description>How to limit clock speed and memory speed for more consistent results when benchmarking and profiling CUDA kernels</description>
+      <category>dev</category>
+      <pubDate>2024-10-21</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Matrix Multiplication On GPU: Part 3, Coding for Speed</title>
+      <link>https://indii.org/blog/gpu-matrix-multiply-code-level-tips-and-tricks/</link>
+      <description>Tips and tricks to help the compiler optimize</description>
+      <category>dev</category>
+      <pubDate>2024-10-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Matrix Multiplication On GPU: Part 2, Tiling</title>
+      <link>https://indii.org/blog/gpu-matrix-multiply-tiling/</link>
+      <description>Breaking down large matrix multiplications into tiles</description>
+      <category>dev</category>
+      <pubDate>2024-10-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Matrix Multiplication on GPU: Faster than Nvidia, Sometimes</title>
+      <link>https://indii.org/blog/gpu-matrix-multiply/</link>
+      <description>It works on my laptop</description>
+      <category>dev</category>
+      <pubDate>2024-10-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Enjoying the View</title>
+      <link>https://indii.org/photography/enjoying-the-view/</link>
+      <description>City lights from a rooftop pool, Bangkok, Thailand</description>
+      <category>photography</category>
+      <pubDate>2024-08-17</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Gradients of Softmax and Logsumexp</title>
+      <link>https://indii.org/blog/gradients-of-softmax-and-logsumexp/</link>
+      <description>Essential functions for categorical distributions and attention mechanisms in machine learning</description>
+      <category>dev</category>
+      <pubDate>2024-05-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Pattern Matching Template Types</title>
+      <link>https://indii.org/blog/pattern-matching-template-types/</link>
+      <description>How to check if a template type matches a pattern? Something like <code>is_like_v&lt;T, vector&lt;int,_&gt;&gt;</code></description>
+      <category>dev</category>
+      <pubDate>2024-03-02</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Overloading the Spaceship Operator, A Recipe</title>
+      <link>https://indii.org/blog/overloading-the-spaceship-operator/</link>
+      <description>How to overload the three-way comparison (spaceship) <code>operator&lt;=&gt;</code>, and a reminder to overload <code>operator==</code> as well</description>
+      <category>dev</category>
+      <pubDate>2024-02-09</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Check if a type is an instantiation of a given class template</title>
+      <link>https://indii.org/blog/is-type-instantiation-of-template/</link>
+      <description>How to implement an <code>is_instance_of</code> type trait</description>
+      <category>dev</category>
+      <pubDate>2024-02-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Gum Tree</title>
+      <link>https://indii.org/photography/sydney-botanic-gardens/</link>
+      <description>Gum tree at the Royal Botanic Gardens, Sydney, Australia</description>
+      <category>photography</category>
+      <pubDate>2024-02-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Forwarding references, overload resolution, and taking back control</title>
+      <link>https://indii.org/blog/forwarding-references/</link>
+      <description>Consider merging overloads into one function with forwarding reference parameters</description>
+      <category>dev</category>
+      <pubDate>2024-01-27</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Disable implicit conversion in specific contexts only</title>
+      <link>https://indii.org/blog/cplusplus-disable-implicit-conversion-in-specific-contexts/</link>
+      <description>You get one implicit conversion, so burn it with a wrapper</description>
+      <category>dev</category>
+      <pubDate>2023-11-14</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Vista Perugia</title>
+      <link>https://indii.org/photography/vista-perugia/</link>
+      <description>View over and out of Perugia, Umbria, Italy</description>
+      <category>photography</category>
+      <pubDate>2023-09-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Revisiting combinatorial instantiation of templates with std::variant</title>
+      <link>https://indii.org/blog/revisited-combinatorial-instantiation-of-templates-with-std-variant/</link>
+      <description>Compiler optimizations can break it, function attributes can fix it</description>
+      <category>dev</category>
+      <pubDate>2023-08-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Combinatorial instantiation of templates with std::variant</title>
+      <link>https://indii.org/blog/combinatorial-instantiation-of-templates-with-std-variant/</link>
+      <description>An alternative to explicit instantiations and macros</description>
+      <category>dev</category>
+      <pubDate>2023-06-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Doxide</title>
+      <link>https://indii.org/software/doxide/</link>
+      <description>Documentation and code coverage reports for C++ projects</description>
+      <category>software</category>
+      <pubDate>2023-06-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>C++: Avoiding Argument Dependent Lookup</title>
+      <link>https://indii.org/blog/avoiding-argument-dependent-lookup-in-cpp/</link>
+      <description>A little trick using an extra namespace and cross-import</description>
+      <category>dev</category>
+      <pubDate>2023-04-30</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Tattoo the Sea</title>
+      <link>https://indii.org/creative/tattoo-the-sea/</link>
+      <description>Fat rain poked the terrace. Separate splots—caliper-sizeable, measurable, aged and faded by the sun and vanished back to sky</description>
+      <category>writing</category>
+      <pubDate>2023-04-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Girl with Headphones</title>
+      <link>https://indii.org/creative/girl-with-headphones/</link>
+      <description>Charcoal, chalk and pastel on paper, 2015</description>
+      <category>drawing</category>
+      <pubDate>2023-04-02</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sums of Discrete Random Variables as Banded Matrix Products</title>
+      <link>https://indii.org/blog/sum-of-discrete/</link>
+      <description>Zero-stride catch and a custom CUDA kernel</description>
+      <category>dev</category>
+      <pubDate>2023-03-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Fast Enumeration of Sums of Discrete Random Variables</title>
+      <link>https://indii.org/blog/fast-discrete-enumeration/</link>
+      <description>A CUDA kernel</description>
+      <category>dev</category>
+      <pubDate>2023-02-22</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>GPU Course: Foundations of GPU Computing</title>
+      <link>https://indii.org/gpu-course/</link>
+      <description>A short course with a machine learning flavor, working with a feed-forward neural network implemented in C</description>
+      <category>dev</category>
+      <pubDate>2023-02-12</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Elements of Chiang Mai</title>
+      <link>https://indii.org/photography/elements-of-chiang-mai/</link>
+      <description>Hiking and village stays near Doi Inthanon national park</description>
+      <category>photography</category>
+      <pubDate>2023-02-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Fix Scaling Issues on KDE Plasma</title>
+      <link>https://indii.org/blog/fix-scaling-issues-on-kde-plasma/</link>
+      <description>In case of issues switching between Wayland and X11</description>
+      <category>dev</category>
+      <pubDate>2023-01-22</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Profile in the Cloud with Nsight Systems</title>
+      <link>https://indii.org/blog/profile-in-the-cloud-with-nsight-systems/</link>
+      <description>How to profile CUDA code on cloud GPU instances using Nsight Systems</description>
+      <category>dev</category>
+      <pubDate>2023-01-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Develop in the Cloud with Visual Studio Code</title>
+      <link>https://indii.org/blog/develop-in-the-cloud-with-visual-studio-code/</link>
+      <description>How to develop on remote cloud instances using Visual Studio Code</description>
+      <category>dev</category>
+      <pubDate>2023-01-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Profile in the Cloud with Nsight Systems</title>
+      <link>https://indii.org/blog/profile-in-the-cloud-with-nsight-systems/</link>
+      <description>How to profile CUDA code on cloud GPU instances using Nsight Systems</description>
+      <category>dev</category>
+      <pubDate>2023-01-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Develop in the Cloud with Visual Studio Code</title>
+      <link>https://indii.org/blog/develop-in-the-cloud-with-visual-studio-code/</link>
+      <description>How to develop on remote cloud instances using Visual Studio Code</description>
+      <category>dev</category>
+      <pubDate>2023-01-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Chiang Mai Mood</title>
+      <link>https://indii.org/photography/chiang-mai-mood/</link>
+      <description>Afternoon sun breaks through the mountains near Doi Inthanon National Park, Chiang Mai, Thailand</description>
+      <category>photography</category>
+      <pubDate>2022-12-23</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>GPU Programming in the Cloud</title>
+      <link>https://indii.org/blog/gpu-programming-in-the-cloud/</link>
+      <description>A round-up of cloud service providers, and a how-to guide for each</description>
+      <category>dev</category>
+      <pubDate>2022-11-22</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Open Source Alternatives for Two Factor Authentication (2FA) Across Multiple Devices</title>
+      <link>https://indii.org/blog/open-source-alternatives-for-two-factor-authentication/</link>
+      <description>Gnome Authenticator for Desktop, Aegis Authenticator for Android, import and export between. Some other alternatives below</description>
+      <category>dev</category>
+      <pubDate>2022-11-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Matrix Gradients of Scalar Functions</title>
+      <link>https://indii.org/blog/matrix-gradients-of-scalar-functions/</link>
+      <description>Understanding the building blocks of reverse-mode automatic differentiation</description>
+      <category>dev</category>
+      <pubDate>2022-11-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Jekyll Responsive Magick</title>
+      <link>https://indii.org/software/jekyll-responsive-magick/</link>
+      <description>A Jekyll plugin to automate responsive images with Jekyll 4</description>
+      <category>software</category>
+      <pubDate>2022-11-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Admonitions in Markdown</title>
+      <link>https://indii.org/blog/admonitions-in-markdown/</link>
+      <description>Working or failing gracefully across Apostrophe, Kramdown, and Jekyll. No plugins required</description>
+      <category>dev</category>
+      <pubDate>2022-11-02</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Responsive Images with Jekyll and ImageMagick</title>
+      <link>https://indii.org/blog/responsive-images-with-jekyll-and-imagemagick/</link>
+      <description>Step by step through the HTML, ImageMagick and Ruby. Works with Jekyll 4</description>
+      <category>dev</category>
+      <pubDate>2022-10-30</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Probabilistic programming: a powerful new approach to statistical phylogenetics’</title>
+      <link>https://indii.org/research/probabilistic-programming-statistical-phylogenetics/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2020-06-23</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Canadian Rockies</title>
+      <link>https://indii.org/photography/canadian-rockies/</link>
+      <description>Mountain vistas and the private life of snow</description>
+      <category>photography</category>
+      <pubDate>2020-02-15</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lazy object copy as a platform for population-based probabilistic programming’</title>
+      <link>https://indii.org/research/lazy-object-copy/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2020-02-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Parameter elimination in particle Gibbs sampling’</title>
+      <link>https://indii.org/research/parameter-elimination-in-particle-gibbs-sampling/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2019-11-09</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Probabilistic programming for birth-death models of evolution using an alive particle filter with delayed sampling’</title>
+      <link>https://indii.org/research/probabilistic-programming-for-birth-death-models-of-evolution/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2019-07-14</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Yosemite Falls</title>
+      <link>https://indii.org/photography/yosemite-falls/</link>
+      <description>Illilouette Falls, Yosemite National Park</description>
+      <category>photography</category>
+      <pubDate>2019-06-15</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Gecko</title>
+      <link>https://indii.org/photography/gecko/</link>
+      <description>Slow and fast</description>
+      <category>photography</category>
+      <pubDate>2019-01-27</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>The Wet Comes To Bali</title>
+      <link>https://indii.org/photography/wet-in-bali/</link>
+      <description>Light and dark</description>
+      <category>photography</category>
+      <pubDate>2018-11-26</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>The Kimberley</title>
+      <link>https://indii.org/photography/the-kimberley/</link>
+      <description>Gorges and waterholes in the remote north-west of Australia</description>
+      <category>photography</category>
+      <pubDate>2018-11-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Automated learning with a probabilistic programming language: Birch’</title>
+      <link>https://indii.org/research/automated-learning-with-a-probabilistic-programming-language-birch/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2018-10-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Saltoluokta</title>
+      <link>https://indii.org/photography/saltoluokta/</link>
+      <description>Summer north of the arctic circle.</description>
+      <category>photography</category>
+      <pubDate>2018-10-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Birch: Probabilistic Inference, Programmatic Models</title>
+      <link>https://indii.org/software/birch/</link>
+      <description>An open source probabilistic programming language for machine learning and statistics</description>
+      <category>software</category>
+      <pubDate>2018-03-24</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sahara</title>
+      <link>https://indii.org/photography/sahara/</link>
+      <description>Back to Morocco</description>
+      <category>photography</category>
+      <pubDate>2018-03-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Improving the particle filter for high-dimensional problems using artificial process noise’</title>
+      <link>https://indii.org/research/improving-the-particle-filter-for-high-dimensional-problems/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2018-03-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Under the Dhow Sail</title>
+      <link>https://indii.org/photography/under-the-dhow-sail/</link>
+      <description>Sailing in Zanzibar</description>
+      <category>photography</category>
+      <pubDate>2018-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Delayed Sampling and Automatic Rao-Blackwellization of Probabilistic Programs’</title>
+      <link>https://indii.org/research/delayed-sampling-and-automatic-rao-blackwellization-of-probabilistic-programs/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2017-12-22</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Riddarholmen</title>
+      <link>https://indii.org/photography/riddarholmen/</link>
+      <description>The island of Riddarholmen</description>
+      <category>photography</category>
+      <pubDate>2017-11-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Better together? Statistical learning in models made of modules’</title>
+      <link>https://indii.org/research/better-together-statistical-learning-in-models-made-of-modules/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2017-08-29</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Hötorget Tunnel</title>
+      <link>https://indii.org/photography/hotorget-tunnel/</link>
+      <description>There may be a world at the other end of this</description>
+      <category>photography</category>
+      <pubDate>2017-08-12</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Summer Colours of Stockholm</title>
+      <link>https://indii.org/photography/summer-colours-of-stockholm/</link>
+      <description>Close to midnight in Mariatorget</description>
+      <category>photography</category>
+      <pubDate>2017-08-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Abisko and Torneträsk</title>
+      <link>https://indii.org/photography/abisko-and-tornetrask/</link>
+      <description>Arctic panorama</description>
+      <category>photography</category>
+      <pubDate>2017-06-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Breaking Ice</title>
+      <link>https://indii.org/photography/breaking-ice/</link>
+      <description>Getting acquainted with the Arctic</description>
+      <category>photography</category>
+      <pubDate>2017-06-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Minus Twenty</title>
+      <link>https://indii.org/photography/minus-twenty/</link>
+      <description>Monochromes of a frozen Stockholm</description>
+      <category>photography</category>
+      <pubDate>2017-04-23</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Industrilandskapet</title>
+      <link>https://indii.org/photography/industrilandskapet/</link>
+      <description>Industrilandskapet in Norrköping, Sweden</description>
+      <category>photography</category>
+      <pubDate>2017-03-25</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Gamla Stan Waters</title>
+      <link>https://indii.org/photography/gamla-stan-waters/</link>
+      <description>Choppy waters around the old town</description>
+      <category>photography</category>
+      <pubDate>2017-03-18</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Probabilistic learning of nonlinear dynamical systems using sequential Monte Carlo’</title>
+      <link>https://indii.org/research/probabilistic-learning-of-nonlinear-dynamical-systems-using-sequential-monte-carlo/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2017-03-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Winter Colours of Stockholm</title>
+      <link>https://indii.org/photography/winter-colours-of-stockholm/</link>
+      <description>Contrast on snow</description>
+      <category>photography</category>
+      <pubDate>2017-01-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Uppsala University</title>
+      <link>https://indii.org/photography/uppsala-university/</link>
+      <description></description>
+      <category>photography</category>
+      <pubDate>2017-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Anytime Monte Carlo</title>
+      <link>https://indii.org/research/anytime-monte-carlo/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2016-12-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Comparative Analysis of Dengue and Zika Outbreaks Reveals Differences by Setting and Virus</title>
+      <link>https://indii.org/research/comparative-analysis-of-dengue-and-zika-outbreaks-reveals-differences-by-setting-and-virus/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2016-12-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Beas De Granada</title>
+      <link>https://indii.org/photography/beas-de-granada/</link>
+      <description>Duotone landscapes along the ridge to Granada</description>
+      <category>photography</category>
+      <pubDate>2016-10-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Alhambra Muqarnas</title>
+      <link>https://indii.org/photography/alhambra-muqarnas/</link>
+      <description>A palace for mathematicians</description>
+      <category>photography</category>
+      <pubDate>2016-10-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Elements of Calm</title>
+      <link>https://indii.org/photography/elements-of-calm/</link>
+      <description>Forty-degree heat and the fountains of the Generalife</description>
+      <category>photography</category>
+      <pubDate>2016-09-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Open To Interpretation</title>
+      <link>https://indii.org/photography/open-to-interpretation/</link>
+      <description>Spacious landscapes and still-life scenes</description>
+      <category>photography</category>
+      <pubDate>2016-08-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Storm and Laundry</title>
+      <link>https://indii.org/photography/storm-and-laundry/</link>
+      <description>A camera and a riad rooftop</description>
+      <category>photography</category>
+      <pubDate>2016-06-18</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Minimal Mediterranean</title>
+      <link>https://indii.org/photography/minimal-mediterranean/</link>
+      <description>Abstract and minimal photography from Andalusia and northern Morocco</description>
+      <category>photography</category>
+      <pubDate>2016-06-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Bifurcation</title>
+      <link>https://indii.org/creative/bifurcation/</link>
+      <description>Revealing the intricate behaviour of the Lorenz ’96 chaotic equations</description>
+      <category>graphics</category>
+      <pubDate>2016-04-17</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Winter Tree Textures</title>
+      <link>https://indii.org/photography/winter-tree-textures/</link>
+      <description>Photographic abstractions of branching trees</description>
+      <category>photography</category>
+      <pubDate>2016-04-08</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>The Gulls of Old Mogador</title>
+      <link>https://indii.org/photography/the-gulls-of-old-mogador/</link>
+      <description>Sea gulls, fortress walls and ruins in the seaside medina of Essaouira</description>
+      <category>photography</category>
+      <pubDate>2016-04-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Essaouira Ramparts</title>
+      <link>https://indii.org/photography/essaouira-ramparts/</link>
+      <description>The ramparts of the old wall</description>
+      <category>photography</category>
+      <pubDate>2016-01-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Alaska Earth and Ice</title>
+      <link>https://indii.org/photography/alaska-earth-and-ice/</link>
+      <description>Glacial landscapes of Alaska in black and white</description>
+      <category>photography</category>
+      <pubDate>2015-11-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sunset Wadi Rum</title>
+      <link>https://indii.org/photography/sunset-wadi-rum/</link>
+      <description>Setting camp through Rakabat Canyon from Rum village</description>
+      <category>photography</category>
+      <pubDate>2015-11-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Camping Between the Rocks, Under the Stars</title>
+      <link>https://indii.org/photography/camping-between-the-rocks-under-the-stars/</link>
+      <description>Somewhere in the white desert, sometime after the orange sunset, brewing tea</description>
+      <category>photography</category>
+      <pubDate>2015-11-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sunset Wadi Rum</title>
+      <link>https://indii.org/photography/sunset-wadi-rum/</link>
+      <description>Setting camp through Rakabat Canyon from Rum village</description>
+      <category>photography</category>
+      <pubDate>2015-11-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Camping Between the Rocks, Under the Stars</title>
+      <link>https://indii.org/photography/camping-between-the-rocks-under-the-stars/</link>
+      <description>Somewhere in the white desert, sometime after the orange sunset, brewing tea</description>
+      <category>photography</category>
+      <pubDate>2015-11-10</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Parking in Marrakesh</title>
+      <link>https://indii.org/photography/parking-in-marrakesh/</link>
+      <description>A quiet day in the souk</description>
+      <category>photography</category>
+      <pubDate>2015-11-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Valley of the Moon</title>
+      <link>https://indii.org/photography/valley-of-the-moon/</link>
+      <description>Dana village perched high above the townships of the Arabah</description>
+      <category>photography</category>
+      <pubDate>2015-10-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Wadi Rum Domes</title>
+      <link>https://indii.org/photography/wadi-rum-domes/</link>
+      <description>Ancient rock formations and a patchwork of sun and shadow</description>
+      <category>photography</category>
+      <pubDate>2015-08-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Closing Clouds</title>
+      <link>https://indii.org/photography/closing-clouds/</link>
+      <description>A convoy of clouds in the valley, bringing patchy desert rain</description>
+      <category>photography</category>
+      <pubDate>2015-07-14</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sundown Wadi Rum</title>
+      <link>https://indii.org/photography/sundown-wadi-rum/</link>
+      <description>Panorama over the red desert to the setting sun</description>
+      <category>photography</category>
+      <pubDate>2015-06-13</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>The Temple of Hercules</title>
+      <link>https://indii.org/photography/the-temple-of-hercules/</link>
+      <description>Kites overhead</description>
+      <category>photography</category>
+      <pubDate>2015-04-27</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sequential Monte Carlo with Highly Informative Observations</title>
+      <link>https://indii.org/research/sequential-monte-carlo-with-highly-informative-observations/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2015-03-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Bayesian State-Space Modelling on High-Performance Hardware Using LibBi</title>
+      <link>https://indii.org/research/bayesian-state-space-modelling-on-high-performance-hardware-using-libbi/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2015-02-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Parallel Resampling in the Particle Filter</title>
+      <link>https://indii.org/research/parallel-resampling-in-the-particle-filter/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2015-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lake Atitlan Sunrise</title>
+      <link>https://indii.org/photography/lake-atitlan-sunrise/</link>
+      <description>Morning rays embrace the hilltop, above San Juan La Laguna</description>
+      <category>photography</category>
+      <pubDate>2014-12-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>El Tunco</title>
+      <link>https://indii.org/photography/el-tunco/</link>
+      <description>Lightning out to sea, a party to watch the spectacle</description>
+      <category>photography</category>
+      <pubDate>2014-12-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lake Atitlan Sunrise</title>
+      <link>https://indii.org/photography/lake-atitlan-sunrise/</link>
+      <description>Morning rays embrace the hilltop, above San Juan La Laguna</description>
+      <category>photography</category>
+      <pubDate>2014-12-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>El Tunco</title>
+      <link>https://indii.org/photography/el-tunco/</link>
+      <description>Lightning out to sea, a party to watch the spectacle</description>
+      <category>photography</category>
+      <pubDate>2014-12-20</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Path Storage in the Particle Filter</title>
+      <link>https://indii.org/research/path-storage-in-the-particle-filter/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2014-12-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Stradbroke Island</title>
+      <link>https://indii.org/photography/stradbroke-island/</link>
+      <description>The setting sun reflects off wet sands</description>
+      <category>photography</category>
+      <pubDate>2014-06-05</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>The Three Sisters</title>
+      <link>https://indii.org/photography/the-three-sisters/</link>
+      <description>Star trails from the Echo Point viewpoint</description>
+      <category>photography</category>
+      <pubDate>2014-06-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Aiguille du Midi</title>
+      <link>https://indii.org/photography/aiguille-du-midi/</link>
+      <description>Beneath the peak of Aiguille du Midi</description>
+      <category>photography</category>
+      <pubDate>2014-06-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>The Three Sisters</title>
+      <link>https://indii.org/photography/the-three-sisters/</link>
+      <description>Star trails from the Echo Point viewpoint</description>
+      <category>photography</category>
+      <pubDate>2014-06-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Aiguille du Midi</title>
+      <link>https://indii.org/photography/aiguille-du-midi/</link>
+      <description>Beneath the peak of Aiguille du Midi</description>
+      <category>photography</category>
+      <pubDate>2014-06-04</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Rethinking soil carbon modelling: a stochastic approach to quantify uncertainties</title>
+      <link>https://indii.org/research/rethinking-soil-carbon-modelling/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2014-02-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Bayesian Learning and Predictability in a Stochastic Nonlinear Dynamical Model</title>
+      <link>https://indii.org/research/bayesian-learning-and-predictability-in-a-stochastic-nonlinear-dynamical-model/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2013-12-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>No More Starry Nights</title>
+      <link>https://indii.org/photography/no-more-starry-nights/</link>
+      <description>Searching for star trails through suburban glow and the last of the winter rainmakers</description>
+      <category>photography</category>
+      <pubDate>2013-10-08</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>LibBi</title>
+      <link>https://indii.org/software/libbi/</link>
+      <description>A high-performance probabilistic programming language for state-space models with GPU and distributed computing support</description>
+      <category>software</category>
+      <pubDate>2013-06-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>On Disturbance State-Space Models and the Particle Marginal Metropolis–Hastings Sampler</title>
+      <link>https://indii.org/research/on-disturbance-state-space-models/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2013-03-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Feynman-Kac Particle Integration with Geometric Interacting Jumps</title>
+      <link>https://indii.org/research/feynman-kac-particle-integration-with-geometric-interacting-jumps/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2013-03-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Ta Seng</title>
+      <link>https://indii.org/photography/ta-seng/</link>
+      <description>Watching Muy Thai on television with the locals</description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sambor Prei Kuk Woodlands</title>
+      <link>https://indii.org/photography/sambor-prei-kuk-woodlands/</link>
+      <description>Sun gilds the trees on an afternoon walk through the temples of Sambor Prei Kuk</description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Preah Khan</title>
+      <link>https://indii.org/photography/preah-khan/</link>
+      <description></description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Phnom Bakheng</title>
+      <link>https://indii.org/photography/phnom-bakheng/</link>
+      <description>The popular hill for sunset</description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Ta Seng</title>
+      <link>https://indii.org/photography/ta-seng/</link>
+      <description>Watching Muy Thai on television with the locals</description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Sambor Prei Kuk Woodlands</title>
+      <link>https://indii.org/photography/sambor-prei-kuk-woodlands/</link>
+      <description>Sun gilds the trees on an afternoon walk through the temples of Sambor Prei Kuk</description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Preah Khan</title>
+      <link>https://indii.org/photography/preah-khan/</link>
+      <description></description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Phnom Bakheng</title>
+      <link>https://indii.org/photography/phnom-bakheng/</link>
+      <description>The popular hill for sunset</description>
+      <category>photography</category>
+      <pubDate>2013-02-16</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Fig Tree Tower</title>
+      <link>https://indii.org/photography/fig-tree-tower/</link>
+      <description>Once they tore it apart, now they hold it together</description>
+      <category>photography</category>
+      <pubDate>2013-01-12</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Beng Mealea</title>
+      <link>https://indii.org/photography/beng-mealea/</link>
+      <description></description>
+      <category>photography</category>
+      <pubDate>2013-01-12</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Fig Tree Tower</title>
+      <link>https://indii.org/photography/fig-tree-tower/</link>
+      <description>Once they tore it apart, now they hold it together</description>
+      <category>photography</category>
+      <pubDate>2013-01-12</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Beng Mealea</title>
+      <link>https://indii.org/photography/beng-mealea/</link>
+      <description></description>
+      <category>photography</category>
+      <pubDate>2013-01-12</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lake Pedder Evening</title>
+      <link>https://indii.org/photography/lake-pedder-evening/</link>
+      <description>View of the lake at dusk, from near the Mt Eliza hut</description>
+      <category>photography</category>
+      <pubDate>2012-11-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Alpine Snow Melt</title>
+      <link>https://indii.org/photography/alpine-snow-melt/</link>
+      <description>Patches of snow melt into an alpine pool</description>
+      <category>photography</category>
+      <pubDate>2012-11-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Alpine Plateau</title>
+      <link>https://indii.org/photography/alpine-plateau/</link>
+      <description>Alpine foliage in its crooked forms and ruddy hues</description>
+      <category>photography</category>
+      <pubDate>2012-11-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lake Pedder Evening</title>
+      <link>https://indii.org/photography/lake-pedder-evening/</link>
+      <description>View of the lake at dusk, from near the Mt Eliza hut</description>
+      <category>photography</category>
+      <pubDate>2012-11-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Alpine Snow Melt</title>
+      <link>https://indii.org/photography/alpine-snow-melt/</link>
+      <description>Patches of snow melt into an alpine pool</description>
+      <category>photography</category>
+      <pubDate>2012-11-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Alpine Plateau</title>
+      <link>https://indii.org/photography/alpine-plateau/</link>
+      <description>Alpine foliage in its crooked forms and ruddy hues</description>
+      <category>photography</category>
+      <pubDate>2012-11-11</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>GPU Acceleration of Runge-Kutta Integrators</title>
+      <link>https://indii.org/research/gpu-acceleration-of-runge-kutta-integrators/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2012-09-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Being Different</title>
+      <link>https://indii.org/photography/being-different/</link>
+      <description>Supposedly, the fiercest dolls bring the greatest fortunes</description>
+      <category>photography</category>
+      <pubDate>2012-07-14</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Assimilation of glider and mooring data into a coastal ocean model</title>
+      <link>https://indii.org/research/assimilation-of-glider-and-moorning-data-into-a-coastal-ocean-model/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2012-06-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Fishing Around the Perfume Pagoda</title>
+      <link>https://indii.org/photography/fishing-around-the-perfume-pagoda/</link>
+      <description>Locals fish from the shore along the waterway that links the many pagodas of the region by row boat</description>
+      <category>photography</category>
+      <pubDate>2012-03-25</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Emperors and Poetry</title>
+      <link>https://indii.org/photography/emperors-and-poetry/</link>
+      <description>The summer house at Tu Doc Tomb, where the Nguyen emperor once came to write poetry</description>
+      <category>photography</category>
+      <pubDate>2012-03-25</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Fishing Around the Perfume Pagoda</title>
+      <link>https://indii.org/photography/fishing-around-the-perfume-pagoda/</link>
+      <description>Locals fish from the shore along the waterway that links the many pagodas of the region by row boat</description>
+      <category>photography</category>
+      <pubDate>2012-03-25</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Emperors and Poetry</title>
+      <link>https://indii.org/photography/emperors-and-poetry/</link>
+      <description>The summer house at Tu Doc Tomb, where the Nguyen emperor once came to write poetry</description>
+      <category>photography</category>
+      <pubDate>2012-03-25</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Milford Sound Waterfalls</title>
+      <link>https://indii.org/photography/milford-sound-waterfalls/</link>
+      <description>A moody day on the water after recent rain</description>
+      <category>photography</category>
+      <pubDate>2011-10-06</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Particle smoothing in continuous time: A fast approach via density estimation</title>
+      <link>https://indii.org/research/particle-smoothing-in-continuous-time-a-fast-approach-via-density-estimation/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2011-08-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>High-Performance Pseudo-Random Number Generation on Graphics Processing Units</title>
+      <link>https://indii.org/research/high-performance-pseudo-random-number-generation-on-graphics-processing-units/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2011-04-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>GPU acceleration of the particle filter: The Metropolis resampler</title>
+      <link>https://indii.org/research/gpu-acceleration-of-the-particle-filter-the-metropolis-resampler/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2011-03-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lake Ballard</title>
+      <link>https://indii.org/photography/lake-ballard/</link>
+      <description>Abstract figures on a remote salt lake</description>
+      <category>photography</category>
+      <pubDate>2011-02-07</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Distributed Markov chain Monte Carlo</title>
+      <link>https://indii.org/research/distributed-markov-chain-monte-carlo/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2010-12-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Phanak Island</title>
+      <link>https://indii.org/photography/phanak-island/</link>
+      <description>Photo-fluorescent plankton in sheltered caves, to a buzz-saw cicada symphony</description>
+      <category>photography</category>
+      <pubDate>2010-11-26</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>A Bayesian approach to state and parameter estimation in a Phytoplankton-Zooplankton model</title>
+      <link>https://indii.org/research/a-bayesian-approach-to-state-and-parameter-estimation-in-a-phytoplankton-zooplankton-model/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2010-11-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Lake Magic</title>
+      <link>https://indii.org/photography/lake-magic/</link>
+      <description>Captivating colours of salt lakes</description>
+      <category>photography</category>
+      <pubDate>2010-09-29</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>On the Road to Pugilist Hill</title>
+      <link>https://indii.org/photography/on-the-road-to-pugilist-hill/</link>
+      <description>Long exposure after sunset, looking out to Rawnsley Bluff</description>
+      <category>photography</category>
+      <pubDate>2010-06-29</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Albina Lake</title>
+      <link>https://indii.org/photography/albina-lake/</link>
+      <description>A day of shifting showers</description>
+      <category>photography</category>
+      <pubDate>2010-01-03</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Urban Lightscape</title>
+      <link>https://indii.org/software/urbanlightscape/</link>
+      <description>Exposure correction and local lighting adjustments</description>
+      <category>software</category>
+      <pubDate>2010-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Bayesian Learning of Continuous Time Dynamical Systems with Applications in Functional Magnetic Resonance Imaging</title>
+      <link>https://indii.org/research/bayesian-learning-of-continuous-time-dynamical-systems/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2009-11-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Watarrka Domes</title>
+      <link>https://indii.org/photography/watarrka-domes/</link>
+      <description>Ancient rock forms at the top of the Rim Walk</description>
+      <category>photography</category>
+      <pubDate>2009-10-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Last Night’s Campsite</title>
+      <link>https://indii.org/photography/last-nights-campsite/</link>
+      <description>Ellery Creek Bighole</description>
+      <category>photography</category>
+      <pubDate>2009-09-29</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Goodbye Edinburgh</title>
+      <link>https://indii.org/photography/goodbye-edinburgh/</link>
+      <description>The Balmoral Hotel from Bailie Fyfe’s Close, off the Royal Mile</description>
+      <category>photography</category>
+      <pubDate>2009-02-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Continuous Time Particle Filtering for fMRI</title>
+      <link>https://indii.org/research/continuous-time-particle-filtering-for-fmri/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2008-12-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Learning structural equation models for fMRI</title>
+      <link>https://indii.org/research/learning-structural-equation-models-for-fmri/</link>
+      <description></description>
+      <category>research</category>
+      <pubDate>2007-12-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+    <item>
+      <title>Tintii</title>
+      <link>https://indii.org/software/tintii/</link>
+      <description>Selective colour and saturation control</description>
+      <category>software</category>
+      <pubDate>2007-01-01</pubDate>
+      <author>lawrence@indii.org</author>
+    </item>
+  </channel>
+</rss>

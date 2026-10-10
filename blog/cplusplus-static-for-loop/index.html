@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>A static for loop in C++</title>
+    <meta name="description" content="You have <code>if constexpr</code>, but you want <code>for constexpr</code>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="A static for loop in C++">
+    <meta name="twitter:description" content="You have <code>if constexpr</code>, but you want <code>for constexpr</code>">
+    <meta name="twitter:image" content="/assets/cpp.png">
+
+    <meta property="og:title" content="A static for loop in C++">
+    <meta property="og:description" content="You have <code>if constexpr</code>, but you want <code>for constexpr</code>">
+    <meta property="og:url" content="https://indii.org/blog/cplusplus-static-for-loop/">
+    <meta property="og:image" content="/assets/cpp.png">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    
+    <link rel="canonical" href="https://indii.org/blog/cplusplus-static-for-loop/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+      </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <header class="container mb-5">
+      <div class="row">
+        <div class="col-12 col-lg-9 mx-auto text-center">
+                <img src="/assets/cpp.png" style="width:auto;max-height:128px;" class="img-fluid py-2" width="128" height="128" alt="C++ logo">
+          
+          <div class="category">dev</div>
+          <h1 class="mt-0">A static for loop in C++</h1>
+          <p class="h5"><strong>You have <code>if constexpr</code>, but you want <code>for constexpr</code></strong></p>
+          
+
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+              </div>
+      </div>
+    </header>
+            <p class="date">
+      <time pubdate datetime="2024-11-27" title="2024-11-27">2024-11-27</time>
+      
+    </p>
+        
+        <p>In C++, <code>if constexpr</code> lets you evaluate a condition at compile time, which can make for tidier (or messier) code than following more functional paradigms of template metaprogramming to achieve the same. An example of its use appears in <a href="/blog/forwarding-references/">C++: Forwarding references, overload resolution, and taking back control</a>. Similarly, you may desire a <code>for constexpr</code> to evaluate a loop at compile time, for tidier (or messier) code, although no such construct exists in the language today.</p>
+        <p>This post demonstrates how to achieve something similar to the non-existent <code>for constexpr</code>, as well as considering some alternatives that are made available via the C++ language and standard library already.</p>
+                <div class="toc">
+    <ul>
+    <li><a href="#a-static-for-loop" id="toc-a-static-for-loop">A static for loop</a></li>
+    <li><a href="#example-comparing-tuples" id="toc-example-comparing-tuples">Example: comparing tuples</a></li>
+    <li><a href="#alternatives" id="toc-alternatives">Alternatives</a></li>
+    <li><a href="#summary" id="toc-summary">Summary</a></li>
+    </ul>
+    </div>
+        <div class="post">
+<h2 id="a-static-for-loop">A static for loop</h2>
+<p>We can create a <code>static_for</code> function template:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="dt">int</span> I<span class="op">,</span> <span class="dt">int</span> N<span class="op">,</span> <span class="kw">class</span> F<span class="op">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> <span class="dt">void</span> static_for<span class="op">(</span>F f<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="kw">constexpr</span> <span class="op">(</span>I <span class="op">&lt;</span> N<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    f<span class="op">.</span><span class="kw">template</span> <span class="kw">operator</span><span class="op">()&lt;</span>I<span class="op">&gt;();</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    static_for<span class="op">&lt;</span>I <span class="op">+</span> <span class="dv">1</span><span class="op">,</span>N<span class="op">&gt;(</span>f<span class="op">);</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>and use it:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>static_for<span class="op">&lt;</span><span class="dv">0</span><span class="op">,</span><span class="dv">3</span><span class="op">&gt;([&amp;]&lt;</span><span class="dt">int</span> I<span class="op">&gt;()</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// body of loop, where I is loop index</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">});</span></span></code></pre></div>
+<p>The lambda function acts as the body of the loop, with the static argument <code>I</code> acting as the loop index. What actually happens is that <code>static_for</code> is a recursive function that is inlined at compile time to ultimately just call the lambda function three times, with <code>I</code> set to <code>0</code>, <code>1</code> and <code>2</code>, respectively. The <code>if constexpr</code> ensures termination of the recursion.</p>
+<h2 id="example-comparing-tuples">Example: comparing tuples</h2>
+<p>Consider a set of records stored as <code>std::tuple</code> objects, and comparing them for equality. There is a default comparison <code>operator==</code> that could be used for this purpose, but for illustration we can use <code>static_for</code> to implement our own comparison.</p>
+<div class="note">
+<p>While this is mostly for illustration, it may be useful for edge cases. The motivation for this post emerged from a limitation in Nvidia’s CUDA compiler <code>nvcc</code>, which seems to have a few issues on the host-device dichotomy when it comes to the default <code>operator==</code>. This approach provided a workaround.</p>
+</div>
+<p>Complete code could look something like this:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;tuple&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="dt">int</span> I<span class="op">,</span> <span class="dt">int</span> N<span class="op">,</span> <span class="kw">class</span> F<span class="op">&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> <span class="dt">void</span> static_for<span class="op">(</span>F f<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="kw">constexpr</span> <span class="op">(</span>I <span class="op">&lt;</span> N<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    f<span class="op">.</span><span class="kw">template</span> <span class="kw">operator</span><span class="op">()&lt;</span>I<span class="op">&gt;();</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    static_for<span class="op">&lt;</span>I <span class="op">+</span> <span class="dv">1</span><span class="op">,</span>N<span class="op">&gt;(</span>f<span class="op">);</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> record <span class="op">=</span> <span class="bu">std::</span>tuple<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span><span class="dt">double</span><span class="op">,</span><span class="bu">std::</span>string<span class="op">&gt;;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> equal_static_for<span class="op">(</span><span class="at">const</span> record<span class="op">&amp;</span> x<span class="op">,</span> <span class="at">const</span> record<span class="op">&amp;</span> y<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> equal <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  static_for<span class="op">&lt;</span><span class="dv">0</span><span class="op">,</span><span class="dv">3</span><span class="op">&gt;([&amp;]&lt;</span><span class="dt">int</span> I<span class="op">&gt;()</span> <span class="op">{</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    equal <span class="op">=</span> equal <span class="op">&amp;&amp;</span> <span class="bu">std::</span>get<span class="op">&lt;</span>I<span class="op">&gt;(</span>x<span class="op">)</span> <span class="op">==</span> <span class="bu">std::</span>get<span class="op">&lt;</span>I<span class="op">&gt;(</span>y<span class="op">);</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="op">});</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> equal<span class="op">;</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  record a<span class="op">{</span><span class="dv">14</span><span class="op">,</span> <span class="fl">94.8</span><span class="op">,</span> <span class="st">&quot;aaa&quot;</span><span class="op">};</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  record b<span class="op">{</span><span class="dv">24</span><span class="op">,</span> <span class="fl">83.3</span><span class="op">,</span> <span class="st">&quot;bbb&quot;</span><span class="op">};</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  record c<span class="op">{</span><span class="dv">14</span><span class="op">,</span> <span class="fl">94.8</span><span class="op">,</span> <span class="st">&quot;aaa&quot;</span><span class="op">};</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> equal_static_for<span class="op">(</span>a<span class="op">,</span> b<span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span> <span class="op">&lt;&lt;</span> equal_static_for<span class="op">(</span>a<span class="op">,</span> c<span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>If we put this in a file <code>test.cpp</code>, we can compile with:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">g++</span> <span class="at">-std</span><span class="op">=</span>c++20 <span class="at">-o</span> test test.cpp</span></code></pre></div>
+<p>and run with <code>./test</code> to obtain:</p>
+<pre><code>0 1</code></pre>
+<p>There are limitations to such this approach. It is not, of course, an actual loop, and statements like <a href="https://en.cppreference.com/w/cpp/language/continue">continue</a> and <a href="https://en.cppreference.com/w/cpp/language/break">break</a> cannot be used within the lambda function to skip to the next iteration or exit the loop prematurely. A <code>return</code> statement within the lambda function will return from the lambda function, not the enclosing function—although that offers an interesting prospect, where <code>return</code> in this context acts like <a href="https://en.cppreference.com/w/cpp/language/continue">continue</a> in the context of an actual loop.</p>
+<h2 id="alternatives">Alternatives</h2>
+<p>It is worth looking at some alternative implementations and considerations.</p>
+<p>The first is to understand that simple loops with a static trip count are often unrolled by the compiler anyway, and this may be sufficient in many cases. The following loop, for example, will be unrolled when optimizations are enabled, because the trip count (<code>10</code>) is known at compile time:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">;</span> <span class="op">++</span>i<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">//</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>However, unlike <code>I</code> in the example above, <code>i</code> is not <code>constexpr</code> in this loop; we could pass <code>I</code> as a template argument in e.g. <code>std::get&lt;I&gt;()</code>, but we cannot use <code>i</code> in the same way.</p>
+<p>A second alternative is to use <a href="https://en.cppreference.com/w/cpp/utility/integer_sequence"><code>std::integer_sequence</code></a> from the STL. One way to use it for an equality comparison is as follows:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> equal_sequence<span class="op">(</span><span class="at">const</span> record<span class="op">&amp;</span> x<span class="op">,</span> <span class="at">const</span> record<span class="op">&amp;</span> y<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">[&amp;]&lt;</span><span class="dt">int</span><span class="op">...</span> Is<span class="op">&gt;(</span><span class="bu">std::</span>integer_sequence<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span>Is<span class="op">...&gt;)</span> <span class="op">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">((</span><span class="bu">std::</span>get<span class="op">&lt;</span>Is<span class="op">&gt;(</span>x<span class="op">)</span> <span class="op">==</span> <span class="bu">std::</span>get<span class="op">&lt;</span>Is<span class="op">&gt;(</span>y<span class="op">))</span> <span class="op">&amp;&amp;</span> <span class="op">...);</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>      <span class="op">}(</span><span class="bu">std::</span>make_integer_sequence<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span><span class="dv">3</span><span class="op">&gt;());</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>This uses a <a href="https://en.cppreference.com/w/cpp/language/fold">fold expression</a> for the <code>&amp;&amp;</code> conjunction.</p>
+<div class="note">
+<p>Personally, I find the <code>std::integer_sequence</code> approach less readable that the <code>static_for</code> approach above, but perhaps there are better ways to use it.</p>
+</div>
+<p>A third alternative is that <code>std::tuple</code> has a default <code>operator==</code> anyway, at least when its element types do, as in our example. This permits the usual <code>operator==</code> to work:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> equal_default<span class="op">(</span><span class="at">const</span> record<span class="op">&amp;</span> x<span class="op">,</span> <span class="at">const</span> record<span class="op">&amp;</span> y<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> x <span class="op">==</span> y<span class="op">;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Of course, we may be interested in more elaborate computations than equality comparison, this was just an illustrative example.</p>
+<h2 id="summary">Summary</h2>
+<p>While the C++ language does not provide a <code>for constexpr</code> statement for a static for loop, we can construct something similar, as demonstrated by <code>static_for</code> here.</p>
+<p>Complete code for further play:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;tuple&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> record <span class="op">=</span> <span class="bu">std::</span>tuple<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span><span class="dt">double</span><span class="op">,</span><span class="bu">std::</span>string<span class="op">&gt;;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="dt">int</span> I<span class="op">,</span> <span class="dt">int</span> N<span class="op">,</span> <span class="kw">class</span> F<span class="op">&gt;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="kw">constexpr</span> <span class="dt">void</span> static_for<span class="op">(</span>F f<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="kw">constexpr</span> <span class="op">(</span>I <span class="op">&lt;</span> N<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    f<span class="op">.</span><span class="kw">template</span> <span class="kw">operator</span><span class="op">()&lt;</span>I<span class="op">&gt;();</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    static_for<span class="op">&lt;</span>I <span class="op">+</span> <span class="dv">1</span><span class="op">,</span>N<span class="op">&gt;(</span>f<span class="op">);</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> equal_static_for<span class="op">(</span><span class="at">const</span> record<span class="op">&amp;</span> x<span class="op">,</span> <span class="at">const</span> record<span class="op">&amp;</span> y<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> equal <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  static_for<span class="op">&lt;</span><span class="dv">0</span><span class="op">,</span><span class="dv">3</span><span class="op">&gt;([&amp;]&lt;</span><span class="dt">int</span> I<span class="op">&gt;()</span> <span class="op">{</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    equal <span class="op">=</span> equal <span class="op">&amp;&amp;</span> <span class="bu">std::</span>get<span class="op">&lt;</span>I<span class="op">&gt;(</span>x<span class="op">)</span> <span class="op">==</span> <span class="bu">std::</span>get<span class="op">&lt;</span>I<span class="op">&gt;(</span>y<span class="op">);</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="op">});</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> equal<span class="op">;</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> equal_sequence<span class="op">(</span><span class="at">const</span> record<span class="op">&amp;</span> x<span class="op">,</span> <span class="at">const</span> record<span class="op">&amp;</span> y<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">[&amp;]&lt;</span><span class="dt">int</span><span class="op">...</span> Is<span class="op">&gt;(</span><span class="bu">std::</span>integer_sequence<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span>Is<span class="op">...&gt;)</span> <span class="op">{</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">((</span><span class="bu">std::</span>get<span class="op">&lt;</span>Is<span class="op">&gt;(</span>x<span class="op">)</span> <span class="op">==</span> <span class="bu">std::</span>get<span class="op">&lt;</span>Is<span class="op">&gt;(</span>y<span class="op">))</span> <span class="op">&amp;&amp;</span> <span class="op">...);</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>      <span class="op">}(</span><span class="bu">std::</span>make_integer_sequence<span class="op">&lt;</span><span class="dt">int</span><span class="op">,</span><span class="dv">3</span><span class="op">&gt;());</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> equal_default<span class="op">(</span><span class="at">const</span> record<span class="op">&amp;</span> x<span class="op">,</span> <span class="at">const</span> record<span class="op">&amp;</span> y<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> x <span class="op">==</span> y<span class="op">;</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>  record a<span class="op">{</span><span class="dv">14</span><span class="op">,</span> <span class="fl">94.8</span><span class="op">,</span> <span class="st">&quot;aaa&quot;</span><span class="op">};</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>  record b<span class="op">{</span><span class="dv">24</span><span class="op">,</span> <span class="fl">83.3</span><span class="op">,</span> <span class="st">&quot;bbb&quot;</span><span class="op">};</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>  record c<span class="op">{</span><span class="dv">14</span><span class="op">,</span> <span class="fl">94.8</span><span class="op">,</span> <span class="st">&quot;aaa&quot;</span><span class="op">};</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> equal_static_for<span class="op">(</span>a<span class="op">,</span> b<span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span> <span class="op">&lt;&lt;</span> equal_static_for<span class="op">(</span>a<span class="op">,</span> c<span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> equal_sequence<span class="op">(</span>a<span class="op">,</span> b<span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span> <span class="op">&lt;&lt;</span> equal_sequence<span class="op">(</span>a<span class="op">,</span> c<span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>  <span class="bu">std::</span>cerr <span class="op">&lt;&lt;</span> equal_default<span class="op">(</span>a<span class="op">,</span> b<span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39; &#39;</span> <span class="op">&lt;&lt;</span> equal_default<span class="op">(</span>a<span class="op">,</span> c<span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="bu">std::</span>endl<span class="op">;</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+    </div>
+  </article>
+
+  <ul class="my-4 px-0" style="clear:both;list-style:none;">
+      <li class="mb-3"><small class="text-secondary text-capitalize">related</small><br><a href="/blog/combinatorial-instantiation-of-templates-with-std-variant/" class="fs-5">C++: Combinatorial instantiation of templates with std::variant</a></li>
+      <li class="mb-3"><small class="text-secondary text-capitalize">related</small><br><a href="/blog/pattern-matching-template-types/" class="fs-5">C++: Pattern Matching Template Types</a></li>
+      <li class="mb-3"><small class="text-secondary text-capitalize">related</small><br><a href="/blog/is-type-instantiation-of-template/" class="fs-5">C++: Check if a type is an instantiation of a given class template</a></li>
+      </div>
+  </ul>
+</main>
+
+<div class="w-100 pb-4 bg-body-tertiary" style="clear:both;margin-top:96px;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

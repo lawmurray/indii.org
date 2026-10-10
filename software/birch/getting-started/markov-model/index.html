@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Markov Model</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Markov Model">
+    
+    
+
+    <meta property="og:title" content="Markov Model">
+    
+    <meta property="og:url" content="https://indii.org/software/birch/getting-started/markov-model/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    
+    <link rel="canonical" href="https://indii.org/software/birch/getting-started/markov-model/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+      </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/software/birch/">
+                      Birch
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                  <a href="/software/birch/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Main
+                  </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+                  Getting Started
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/software/birch/getting-started/">Getting Started</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/getting-started/hello-world/">Hello, World!</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/getting-started/linear-regression/">Bayesian Linear Regression</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/getting-started/markov-model/">Markov Model</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/getting-started/next-steps/">Next Steps</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+                  Concepts
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/software/birch/concepts/">Introduction</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/distributions/">Distributions</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/randoms/">Randoms</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/expressions/">Expressions</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/models/">Models</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/graphical-models/">Graphical models</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/programmatic-models/">Programmatic models</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/automatic-differentiation/">Automatic differentiation</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/automatic-marginalization/">Automatic marginalization</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/automatic-conditioning/">Automatic conditioning</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/delayed-sampling/">Delayed sampling</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/probabilistic-inference/">Probabilistic inference</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/concepts/summary/">Summary</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+                  Language
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/software/birch/language/">Comments</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/variables/">Variables</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/types/">Types</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/assignments/">Assignments</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/control_flow/">Control Flow</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/assertions/">Assertions</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/arrays/">Arrays</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/optionals/">Optionals</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/tuples/">Tuples</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/functions/">Functions</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/lambdas/">Lambdas</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/programs/">Programs</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/operators/">Operators</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/classes/">Classes</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/aliases/">Aliases</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/casts/">Casts</a></li>
+                    <li><a class="dropdown-item" href="/software/birch/language/probability/">Probability</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/birch/docs/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Docs
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/birch/about/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  About
+                  </a>
+                </li>
+
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <div class="plain">
+            <h1 id="markov-model">Markov Model</h1>
+<p>We will now implement a simple SIR (susceptible-infectious-recovered) compartmental model of an epidemic, using a classic data set of an outbreak of influenza at a boarding school.</p>
+<h2 id="model">Model</h2>
+<p>The model is described in three parts: a <em>parameter</em> model, an <em>initial</em> model, and a <em>transition</em> model. Time is indexed by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>, in days. The state consists of variables <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>t</mi></msub><annotation encoding="application/x-tex">s_t</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>i</mi><mi>t</mi></msub><annotation encoding="application/x-tex">i_t</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>t</mi></msub><annotation encoding="application/x-tex">r_t</annotation></semantics></math>, giving counts of the number of susceptible, infectious, and recovered individuals, respectively.</p>
+<p>The parameter model is:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>λ</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>10</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>δ</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>∼</mo><mrow><mi mathvariant="normal">B</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>γ</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>∼</mo><mrow><mi mathvariant="normal">B</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">a</mi></mrow><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+\lambda &amp;= 10 \\\\
+\delta &amp;\sim \mathrm{Beta}(2,2) \\\\
+\gamma &amp;\sim \mathrm{Beta}(2,2),
+\end{align}</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics></math> is a rate of interaction in the population, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>δ</mi><annotation encoding="application/x-tex">\delta</annotation></semantics></math> the probability of infection when a susceptible individual interacts with an infectious individual, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>γ</mi><annotation encoding="application/x-tex">\gamma</annotation></semantics></math> the daily recovery probability.</p>
+<p>The initial model for time <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">t = 0</annotation></semantics></math> depends on the data set. For the data set introduced below, it is as follows:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>s</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>760</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>i</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>3</mn></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>r</mi><mn>0</mn></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>0</mn><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+s_0 &amp;= 760 \\\\
+i_0 &amp;= 3 \\\\
+r_0 &amp;= 0.
+\end{align}</annotation></semantics></math></p>
+<p>The transition model for time <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> is:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>τ</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>i</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>r</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>λ</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>∼</mo><mrow><mi mathvariant="normal">B</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>,</mo><mn>1</mn><mo>−</mo><mi mathvariant="normal">exp</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>−</mi><mi>λ</mi><msub><mi>i</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><mrow><msub><mi>s</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>i</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>r</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi mathvariant="normal">Δ</mi><msub><mi>i</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>τ</mi><mi>t</mi></msub><mo>,</mo><mi>δ</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>∼</mo><mrow><mi mathvariant="normal">B</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>τ</mi><mi>t</mi></msub><mo>,</mo><mi>δ</mi><mo stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi mathvariant="normal">Δ</mi><msub><mi>r</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>i</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>γ</mi></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>∼</mo><mrow><mi mathvariant="normal">B</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>i</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>γ</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+\tau_t \mid s_{t-1}, i_{t-1}, r_{t-1}, \lambda &amp;\sim \mathrm{Binomial}\left(s_{t-1}, 1 - \exp\left(\frac{-\lambda i_{t-1} }{s_{t-1} + i_{t-1} + r_{t-1}}\right) \right) \\\\
+\Delta i_t \mid \tau_t, \delta &amp;\sim \mathrm{Binomial}(\tau_t, \delta) \\\\
+\Delta r_t \mid i_{t-1}, \gamma &amp;\sim \mathrm{Binomial}(i_{t-1}, \gamma),
+\end{align}</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>τ</mi><mi>t</mi></msub><annotation encoding="application/x-tex">\tau_t</annotation></semantics></math> is the number of interactions between infectious and susceptible individuals, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><msub><mi>i</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">\Delta i_t</annotation></semantics></math> the number of newly infectious individuals, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><msub><mi>r</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">\Delta r_t</annotation></semantics></math> the number of newly recovered individuals. Population counts are then updated:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>s</mi><mi>t</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>−</mo><mi mathvariant="normal">Δ</mi><msub><mi>i</mi><mi>t</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>i</mi><mi>t</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>i</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><mi mathvariant="normal">Δ</mi><msub><mi>i</mi><mi>t</mi></msub><mo>−</mo><mi mathvariant="normal">Δ</mi><msub><mi>r</mi><mi>t</mi></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msub><mi>r</mi><mi>t</mi></msub></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>r</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><mi mathvariant="normal">Δ</mi><msub><mi>r</mi><mi>t</mi></msub><mi>.</mi></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+s_t &amp;= s_{t-1} - \Delta i_t \\\\
+i_t &amp;= i_{t-1} + \Delta i_t - \Delta r_t \\\\
+r_t &amp;= r_{t-1} + \Delta r_t.
+\end{align}</annotation></semantics></math></p>
+<h2 id="implementation">Implementation</h2>
+<p>We again create a class that inherits from <code>Model</code>, but this time use some additional features. In the <a href="/software/birch/getting-started/linear-regression">previous example</a> we overrode the member functions <code>simulate()</code>, <code>read(buffer:Buffer)</code> and <code>write(buffer:Buffer)</code>. In this example, we will also override the <code>simulate(t:Integer)</code>, <code>read(t:Integer, buffer:Buffer)</code> and <code>write(t:Integer, buffer:Buffer)</code> functions. These allow sequential execution of the model in steps, indexed by the integer <code>t</code>. Often <code>t</code> indexes time (as will be the case here), but it need not: in general it can index any dimension along which a model can be expressed sequentially. For example, <code>t</code> may simply index observations. Structuring the implementation this way allows Sequential Monte Carlo (SMC) to be used for inference, with resampling performed between steps.</p>
+<div class="tip">
+<p>When overriding a member function, the types of the parameters must stay the same, but their names may change. This means that you can rename <code>t</code> to something else if you prefer, but it must have type <code>Integer</code>.</p>
+</div>
+<p>We will use the <code>simulate()</code> function to implement the parameter model, and the <code>simulate(t:Integer)</code> function to implement the initial and transition models.</p>
+<p>Create a file <code>src/SIRMode.birch</code> with the following:</p>
+<pre class="birch"><code>/**
+ * SIR (susceptible-infectious-recovered) model.
+ */
+class SIRModel &lt; Model {
+  /**
+   * Interaction rate.
+   */
+  λ:Random&lt;Real&gt;;
+
+  /**
+   * Infection probability.
+   */
+  δ:Random&lt;Real&gt;;
+
+  /**
+   * Recovery probability.
+   */
+  γ:Random&lt;Real&gt;;
+
+  /**
+   * Susceptible population at each time.
+   */
+  s:Tape&lt;Random&lt;Integer&gt;&gt;;
+
+  /**
+   * Infectious population at each time.
+   */
+  i:Tape&lt;Random&lt;Integer&gt;&gt;;
+
+  /**
+   * Recovered population at each time.
+   */
+  r:Tape&lt;Random&lt;Integer&gt;&gt;;
+
+  override function simulate() {
+    λ ~ Gamma(2.0, 5.0);
+    δ ~ Beta(2.0, 2.0);
+    γ ~ Beta(2.0, 2.0);
+  }
+
+  override function simulate(t:Integer) {
+    if t == 1 {
+      // the initial state is set in the input file
+    } else {
+      let n &lt;- s[t - 1] + i[t - 1] + r[t - 1];  // total population
+      let τ ~ Binomial(s[t - 1], 1.0 - exp(-λ*i[t - 1]/n));
+      let Δi ~ Binomial(τ, δ);
+      let Δr ~ Binomial(i[t - 1], γ);
+
+      i[t] ~ Delta(i[t - 1] + Δi - Δr);
+      s[t] ~ Delta(s[t - 1] - Δi);
+      r[t] ~ Delta(r[t - 1] + Δr);
+    }
+  }
+
+  override function read(buffer:Buffer) {
+    λ &lt;-? buffer.get&lt;Real&gt;(&quot;λ&quot;);
+    δ &lt;-? buffer.get&lt;Real&gt;(&quot;δ&quot;);
+    γ &lt;-? buffer.get&lt;Real&gt;(&quot;γ&quot;);
+  }
+
+  override function read(t:Integer, buffer:Buffer) {
+    s[t] &lt;-? buffer.get&lt;Integer&gt;(&quot;s&quot;);
+    i[t] &lt;-? buffer.get&lt;Integer&gt;(&quot;i&quot;);
+    r[t] &lt;-? buffer.get&lt;Integer&gt;(&quot;r&quot;);
+  }
+
+  override function write(buffer:Buffer) {
+    buffer.set(&quot;λ&quot;, λ);
+    buffer.set(&quot;δ&quot;, δ);
+    buffer.set(&quot;γ&quot;, γ);
+  }
+
+  override function write(t:Integer, buffer:Buffer) {
+    buffer.set(&quot;s&quot;, s[t]);
+    buffer.set(&quot;i&quot;, i[t]);
+    buffer.set(&quot;r&quot;, r[t]);
+  }
+}</code></pre>
+<p>This code introduces a few new features:</p>
+<ul>
+<li>The state histories <code>s</code>, <code>i</code> and <code>r</code> are stored in a container called <a href="/software/birch/docs/libraries/Standard/classes/Tape/">Tape</a>. This is a recursive data structure that works much like a list. It is commonly used for storing state histories as it works nicely with Birch’s dynamic memory management, allowing objects to be shared between multiple instances of a model so as to significantly reduce memory use<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</li>
+<li>The variables <code>n</code>, <code>τ</code>, <code>Δi</code> and <code>Δr</code> are declared as local variables in the <code>simulate(t:Integer)</code> function rather than as member variables of the <code>SIRModel</code> class. This choice is made because we do not intend to read them from a file, or write them to a file, so only need to keep them temporarily.</li>
+</ul>
+<p>The transition model associates <code>s</code>, <code>i</code> and <code>r</code> with <a href="/software/birch/docs/libraries/Standard/classes/DeltaDistribution/">delta</a> distributions rather than simply assigning to them. The delta distribution is just a degenerate distribution on a single integer value. We might instead want to write:</p>
+<pre class="birch"><code>i[t] &lt;- i[t - 1] + Δi - Δr;
+s[t] &lt;- s[t - 1] - Δi;
+r[t] &lt;- r[t - 1] + Δr;</code></pre>
+<p>However, the use of the delta distribution allows Birch to enumerate sums and differences of discrete-valued random variables and perform automatic marginalization and conditioning. In particular, we will observe <code>i[t]</code> here, and Birch will be able to enumerate the conditional distribution of <code>Δi</code> and <code>Δr</code> given <code>i[t]</code> and <code>i[t - 1]</code>—this is why we place it first. This is a nice analytical optimization for this particular model.</p>
+<h2 id="data">Data</h2>
+<p>We will use a classic data set of the outbreak of influenza at a boarding school in northern England<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. <a href="/software/birch/getting-started/influenza.json">Download the data set</a> to the <code>input/</code> directory.</p>
+<p>Have a look at the contents of the file (<code>cat input/influenza.json</code>). At the root level it contains an array. The first element of that array provides an entry with key <code>λ</code> and value <code>10</code>. This first element is read by the <code>read(buffer:Buffer)</code> member function of our model. The remaining elements provide an entry <code>i</code> with various values. These elements are read by the <code>read(t:Integer, buffer:Buffer)</code> member function prior to the the <code>t</code>th time step being executed by <code>simulate(t:Integer)</code>. In particular the second entry, corresponding to <code>t == 1</code>, sets the initial value of all state variables.</p>
+<div class="tip">
+<p>If we wanted, we could also specify values for <code>s</code> and/or <code>r</code> in the input file for other times. We have set up <code>read(t:Integer, buffer:Buffer)</code> to support this. Recall that the <code>&lt;-?</code> operator will only assign a value to the left if the key is found in the file. So if we provide these values, the model acts as though they are observed, if we do not provide them, the model acts as though they are latent.</p>
+</div>
+<h2 id="inference">Inference</h2>
+<p>Birch’s inference engine is based on SMC with several variants and configurable components, as well as automatic marginalization, automatic conjugacy, and automatic differentiation. For this model, the delayed sampling<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> mechanism will find some analytical optimizations and apply them. These include marginalizing out the parameters <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>δ</mi><annotation encoding="application/x-tex">\delta</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>γ</mi><annotation encoding="application/x-tex">\gamma</annotation></semantics></math>, as they form conjugate beta-binomial relationships with state variables, as well as enumerating sums and differences of discrete variables.</p>
+<p>The previous linear regression example was simple enough that no configuration was required. Here we need to change a few options. A configuration file is used for this purpose.</p>
+<p>Create a file <code>config/sir.json</code> and enter the following contents:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;model&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;class&quot;</span><span class="fu">:</span> <span class="st">&quot;SIRModel&quot;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;sampler&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;class&quot;</span><span class="fu">:</span> <span class="st">&quot;ParticleSampler&quot;</span><span class="fu">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;nsamples&quot;</span><span class="fu">:</span> <span class="dv">10</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;filter&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;class&quot;</span><span class="fu">:</span> <span class="st">&quot;ParticleFilter&quot;</span><span class="fu">,</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;nparticles&quot;</span><span class="fu">:</span> <span class="dv">128</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;input&quot;</span><span class="fu">:</span> <span class="st">&quot;input/influenza.json&quot;</span><span class="fu">,</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;output&quot;</span><span class="fu">:</span> <span class="st">&quot;output/sir.json&quot;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>This sets the number of posterior samples to draw (<code>sampler.nsamples</code>) and the number of particles used by SMC when drawing each (<code>filter.nparticles</code>). It also sets the model class (<code>model.class</code>), input file (<code>input</code>), and output file (<code>output</code>), which we provided on the command line instead in the linear regression example (it is preferable to provide these in the configuration file instead, for reproducibility).</p>
+<div class="tip">
+<p>Any of these JSON files can be written in <a href="https://yaml.org/">YAML</a> if you prefer.</p>
+</div>
+<p>Build the package:</p>
+<pre><code>birch build</code></pre>
+<p>then sample from the posterior distribution with:</p>
+<pre><code>birch sample --config config/sir.json</code></pre>
+<p>As before, you can inspect the results of the inference in <code>output/sir.json</code>, in a text editor, web browser, or on the command line (<code>less output/sir.json</code>). The output here is an importance sample: each sample is assigned a weight, the logarithm of which is given by the associated <code>lweight</code> element.</p>
+<div class="tip">
+<p>A future tutorial will outline how to configure the inference method, but as a starting point, you can set various options in the <code>sampler</code> and/or <code>filter</code> sections of the <code>config/sir.json</code> file.</p>
+</div>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>L.M. Murray (2020). <a href="https://arxiv.org/abs/2001.05293">Lazy object copy as a platform for population-based probabilistic programming</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Anonymous (1978). Influenza in a boarding school. <em>British Medical Journal</em>. <strong>1</strong>:587.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>L.M. Murray, D. Lundén, J. Kudlicka, D. Broman and T.B. Schön (2018). <a href="https://arxiv.org/abs/1708.07787">Delayed Sampling and Automatic Rao–Blackwellization of Probabilistic Programs</a>. In <em>Proceedings of the 21st International Conference on Artificial Intelligence and Statistics (AISTATS) 2018</em>, Lanzarote, Spain.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    </div>
+  </article>
+
+  <ul class="my-4 px-0" style="clear:both;list-style:none;">
+      <li class="mb-3"><small class="text-secondary text-capitalize">next</small><br><a href="/software/birch/getting-started/next-steps/" class="fs-5">Next Steps</a></li>
+      <li class="mb-3"><small class="text-secondary text-capitalize">previous</small><br><a href="/software/birch/getting-started/linear-regression/" class="fs-5">Bayesian Linear Regression</a></li>
+      </div>
+  </ul>
+</main>
+
+<div class="w-100 pb-4 bg-body-tertiary" style="clear:both;margin-top:96px;">
+<div class="container">
+  <nav class="row g-4">
+        <div class="nav-bottom">
+      <h1><a href="/software/birch/">Birch</a></h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/software/birch/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Main
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+          Getting Started
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/software/birch/getting-started/">Getting Started</a></li>
+            <li><a class="dropdown-item" href="/software/birch/getting-started/hello-world/">Hello, World!</a></li>
+            <li><a class="dropdown-item" href="/software/birch/getting-started/linear-regression/">Bayesian Linear Regression</a></li>
+            <li><a class="dropdown-item" href="/software/birch/getting-started/markov-model/">Markov Model</a></li>
+            <li><a class="dropdown-item" href="/software/birch/getting-started/next-steps/">Next Steps</a></li>
+            </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+          Concepts
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/software/birch/concepts/">Introduction</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/distributions/">Distributions</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/randoms/">Randoms</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/expressions/">Expressions</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/models/">Models</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/graphical-models/">Graphical models</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/programmatic-models/">Programmatic models</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/automatic-differentiation/">Automatic differentiation</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/automatic-marginalization/">Automatic marginalization</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/automatic-conditioning/">Automatic conditioning</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/delayed-sampling/">Delayed sampling</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/probabilistic-inference/">Probabilistic inference</a></li>
+            <li><a class="dropdown-item" href="/software/birch/concepts/summary/">Summary</a></li>
+            </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+          Language
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/software/birch/language/">Comments</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/variables/">Variables</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/types/">Types</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/assignments/">Assignments</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/control_flow/">Control Flow</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/assertions/">Assertions</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/arrays/">Arrays</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/optionals/">Optionals</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/tuples/">Tuples</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/functions/">Functions</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/lambdas/">Lambdas</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/programs/">Programs</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/operators/">Operators</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/classes/">Classes</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/aliases/">Aliases</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/casts/">Casts</a></li>
+            <li><a class="dropdown-item" href="/software/birch/language/probability/">Probability</a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+          <a href="/software/birch/docs/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Docs
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/birch/about/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          About
+          </a>
+        </li>
+
+      </ul>
+    </div>
+    
+    <div class="nav-bottom">
+            <h1><a href="/">Lawrence Murray</a></h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

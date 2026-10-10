@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Entity</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Entity">
+    
+    <meta name="twitter:image" content="/assets/doxide.svg">
+
+    <meta property="og:title" content="Entity">
+    
+    <meta property="og:url" content="https://indii.org">
+    <meta property="og:image" content="https://indii.org/assets/doxide.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/doxide_demo.min.css">
+    
+    <link rel="canonical" href="https://indii.org">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+        <script src="/js/echarts.min.js" defer></script>
+        <script src="/js/tablesort.min.js" defer></script>
+        <script src="/js/tablesort.number.min.js" defer></script>
+      </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/software/doxide">
+                <img src="/assets/doxide.svg" alt="Logo" width="24" height="24" class="d-inline-block align-text-top">
+                  Doxide
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                  <a href="/software/doxide/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Main
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/demo/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Demo
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/installation/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Get Started
+                  </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+                  Documentation
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/software/doxide/getting-started/">Initializing Doxide</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/configuring/">Configuring Doxide</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/running/">Running Doxide</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/writing/">Writing Documentation</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/organizing/">Organizing Documentation</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/parsing/">Parsing Considerations</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/coverage/">Enabling Code Coverage</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/coverage-reports/">Understanding Code Coverage Reports</a></li>
+                    <li><a class="dropdown-item" href="/software/doxide/command-line/">Command-line reference</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/contributing/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  How To Help
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/software/doxide/questions-and-answers/" class="nav-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+                  Q &amp; A
+                  </a>
+                </li>
+
+              </ul>
+    </div>
+  </nav>
+</div>
+</div>
+<main class="container">
+  <article>
+    <div class="plain">
+            <h1 id="entity">Entity</h1>
+<p><strong>struct Entity</strong></p>
+<p>Entity in a C++ source file, e.g. variable, function, class, etc.</p>
+<h2 id="type-aliases">Type Aliases</h2>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#list_type">list_type</a></td>
+<td>Child entities are stored in a list, rather than map by name, to preserve declaration order.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="variables">Variables</h2>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#namespaces">namespaces</a></td>
+<td>Child namespaces.</td>
+</tr>
+<tr>
+<td><a href="#groups">groups</a></td>
+<td>Child groups.</td>
+</tr>
+<tr>
+<td><a href="#types">types</a></td>
+<td>Child types.</td>
+</tr>
+<tr>
+<td><a href="#typedefs">typedefs</a></td>
+<td>Child typedefs and type aliases.</td>
+</tr>
+<tr>
+<td><a href="#concepts">concepts</a></td>
+<td>Child concepts.</td>
+</tr>
+<tr>
+<td><a href="#variables">variables</a></td>
+<td>Child variables.</td>
+</tr>
+<tr>
+<td><a href="#functions">functions</a></td>
+<td>Child functions.</td>
+</tr>
+<tr>
+<td><a href="#operators">operators</a></td>
+<td>Child operators.</td>
+</tr>
+<tr>
+<td><a href="#enums">enums</a></td>
+<td>Child enumerators.</td>
+</tr>
+<tr>
+<td><a href="#macros">macros</a></td>
+<td>Child macros.</td>
+</tr>
+<tr>
+<td><a href="#dirs">dirs</a></td>
+<td>Child directories.</td>
+</tr>
+<tr>
+<td><a href="#files">files</a></td>
+<td>Child files.</td>
+</tr>
+<tr>
+<td><a href="#name">name</a></td>
+<td>Entity name (e.g. name of variable, function, class). For a file or directory this is the full path.</td>
+</tr>
+<tr>
+<td><a href="#decl">decl</a></td>
+<td>Entity declaration (e.g. function signature). For a file this is its full contents.</td>
+</tr>
+<tr>
+<td><a href="#docs">docs</a></td>
+<td>Entity documentation.</td>
+</tr>
+<tr>
+<td><a href="#title">title</a></td>
+<td>Entity title.</td>
+</tr>
+<tr>
+<td><a href="#brief">brief</a></td>
+<td>Alternative brief description.</td>
+</tr>
+<tr>
+<td><a href="#ingroup">ingroup</a></td>
+<td>Group to which this belongs.</td>
+</tr>
+<tr>
+<td><a href="#path">path</a></td>
+<td>Path of source file.</td>
+</tr>
+<tr>
+<td><a href="#start_line">start_line</a></td>
+<td>Starting line in the source file.</td>
+</tr>
+<tr>
+<td><a href="#end_line">end_line</a></td>
+<td>Ending line in the source file.</td>
+</tr>
+<tr>
+<td><a href="#line_counts">line_counts</a></td>
+<td>For a file only, execution counts for lines.</td>
+</tr>
+<tr>
+<td><a href="#lines_included">lines_included</a></td>
+<td>Number of lines included in coverage counts.</td>
+</tr>
+<tr>
+<td><a href="#lines_covered">lines_covered</a></td>
+<td>Number of lines covered in coverage counts.</td>
+</tr>
+<tr>
+<td><a href="#type">type</a></td>
+<td>Entity type.</td>
+</tr>
+<tr>
+<td><a href="#visible">visible</a></td>
+<td>Is this node visible?</td>
+</tr>
+<tr>
+<td><a href="#hide">hide</a></td>
+<td>Hide this node?</td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions">Functions</h2>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#Entity">Entity</a></td>
+<td>Constructor.</td>
+</tr>
+<tr>
+<td><a href="#add">add</a></td>
+<td>Add child entity.</td>
+</tr>
+<tr>
+<td><a href="#merge">merge</a></td>
+<td>Merge the children of another entity into this one.</td>
+</tr>
+<tr>
+<td><a href="#exists">exists</a></td>
+<td>Does a file exist of the given name?</td>
+</tr>
+<tr>
+<td><a href="#get">get</a></td>
+<td>Get a file of the given name.</td>
+</tr>
+<tr>
+<td><a href="#clear">clear</a></td>
+<td>Clear the entity.</td>
+</tr>
+<tr>
+<td><a href="#delete_by_predicate">delete_by_predicate</a></td>
+<td>Recursively delete all child entities that satisfy the predicate.</td>
+</tr>
+<tr>
+<td><a href="#addToGroup">addToGroup</a></td>
+<td>Add child entity to a group.</td>
+</tr>
+<tr>
+<td><a href="#addToThis">addToThis</a></td>
+<td>Add child entity.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="type-alias-details">Type Alias Details</h2>
+<h3 id="list_type">list_type<a name="list_type"></a></h3>
+<div class="typedef">
+<p><strong>using list_type = std::list&lt;Entity&gt;</strong></p>
+<p>Child entities are stored in a list, rather than map by name, to preserve declaration order. They may be sorted by name on output.</p>
+</div>
+<h2 id="variable-details">Variable Details</h2>
+<h3 id="brief">brief<a name="brief"></a></h3>
+<div class="variable">
+<p><strong>std::string brief</strong></p>
+<p>Alternative brief description.</p>
+</div>
+<h3 id="concepts">concepts<a name="concepts"></a></h3>
+<div class="variable">
+<p><strong>list_type concepts</strong></p>
+<p>Child concepts.</p>
+</div>
+<h3 id="decl">decl<a name="decl"></a></h3>
+<div class="variable">
+<p><strong>std::string decl</strong></p>
+<p>Entity declaration (e.g. function signature). For a file this is its full contents.</p>
+</div>
+<h3 id="dirs">dirs<a name="dirs"></a></h3>
+<div class="variable">
+<p><strong>list_type dirs</strong></p>
+<p>Child directories.</p>
+</div>
+<h3 id="docs">docs<a name="docs"></a></h3>
+<div class="variable">
+<p><strong>std::string docs</strong></p>
+<p>Entity documentation.</p>
+</div>
+<h3 id="end_line">end_line<a name="end_line"></a></h3>
+<div class="variable">
+<p><strong>uint32_t end_line</strong></p>
+<p>Ending line in the source file.</p>
+</div>
+<h3 id="enums">enums<a name="enums"></a></h3>
+<div class="variable">
+<p><strong>list_type enums</strong></p>
+<p>Child enumerators.</p>
+</div>
+<h3 id="files">files<a name="files"></a></h3>
+<div class="variable">
+<p><strong>list_type files</strong></p>
+<p>Child files.</p>
+</div>
+<h3 id="functions-1">functions<a name="functions"></a></h3>
+<div class="variable">
+<p><strong>list_type functions</strong></p>
+<p>Child functions.</p>
+</div>
+<h3 id="groups">groups<a name="groups"></a></h3>
+<div class="variable">
+<p><strong>list_type groups</strong></p>
+<p>Child groups.</p>
+</div>
+<h3 id="hide">hide<a name="hide"></a></h3>
+<div class="variable">
+<p><strong>bool hide</strong></p>
+<p>Hide this node?</p>
+</div>
+<h3 id="ingroup">ingroup<a name="ingroup"></a></h3>
+<div class="variable">
+<p><strong>TextLineCursor ingroup</strong></p>
+<p>Group to which this belongs.</p>
+</div>
+<h3 id="line_counts">line_counts<a name="line_counts"></a></h3>
+<div class="variable">
+<p><strong>std::vector&lt;int&gt; line_counts</strong></p>
+<p>For a file only, execution counts for lines. -1 for a line indicates that it is excluded.</p>
+</div>
+<h3 id="lines_covered">lines_covered<a name="lines_covered"></a></h3>
+<div class="variable">
+<p><strong>int lines_covered</strong></p>
+<p>Number of lines covered in coverage counts.</p>
+</div>
+<h3 id="lines_included">lines_included<a name="lines_included"></a></h3>
+<div class="variable">
+<p><strong>int lines_included</strong></p>
+<p>Number of lines included in coverage counts.</p>
+</div>
+<h3 id="macros">macros<a name="macros"></a></h3>
+<div class="variable">
+<p><strong>list_type macros</strong></p>
+<p>Child macros.</p>
+</div>
+<h3 id="name">name<a name="name"></a></h3>
+<div class="variable">
+<p><strong>std::string name</strong></p>
+<p>Entity name (e.g. name of variable, function, class). For a file or directory this is the full path.</p>
+</div>
+<h3 id="namespaces">namespaces<a name="namespaces"></a></h3>
+<div class="variable">
+<p><strong>list_type namespaces</strong></p>
+<p>Child namespaces.</p>
+</div>
+<h3 id="operators">operators<a name="operators"></a></h3>
+<div class="variable">
+<p><strong>list_type operators</strong></p>
+<p>Child operators.</p>
+</div>
+<h3 id="path">path<a name="path"></a></h3>
+<div class="variable">
+<p><strong>std::filesystem::path path</strong></p>
+<p>Path of source file.</p>
+</div>
+<h3 id="start_line">start_line<a name="start_line"></a></h3>
+<div class="variable">
+<p><strong>uint32_t start_line</strong></p>
+<p>Starting line in the source file.</p>
+</div>
+<h3 id="title">title<a name="title"></a></h3>
+<div class="variable">
+<p><strong>std::string title</strong></p>
+<p>Entity title. This is used for the title of the page.</p>
+</div>
+<h3 id="type">type<a name="type"></a></h3>
+<div class="variable">
+<p><strong>EntityType type</strong></p>
+<p>Entity type.</p>
+</div>
+<h3 id="typedefs">typedefs<a name="typedefs"></a></h3>
+<div class="variable">
+<p><strong>list_type typedefs</strong></p>
+<p>Child typedefs and type aliases.</p>
+</div>
+<h3 id="types">types<a name="types"></a></h3>
+<div class="variable">
+<p><strong>list_type types</strong></p>
+<p>Child types.</p>
+</div>
+<h3 id="variables-1">variables<a name="variables"></a></h3>
+<div class="variable">
+<p><strong>list_type variables</strong></p>
+<p>Child variables.</p>
+</div>
+<h3 id="visible">visible<a name="visible"></a></h3>
+<div class="variable">
+<p><strong>bool visible</strong></p>
+<p>Is this node visible? This is a computed quantity, that may be overridden explicitly with <code>hide.</code></p>
+</div>
+<h2 id="function-details">Function Details</h2>
+<h3 id="entity-1">Entity<a name="Entity"></a></h3>
+<div class="function">
+<p><strong>Entity()</strong></p>
+<p>Constructor.</p>
+</div>
+<h3 id="add">add<a name="add"></a></h3>
+<div class="function">
+<p><strong>void add(Entity&amp;&amp; o)</strong></p>
+<p>Add child entity.</p>
+<dl>
+<dt><code>o</code></dt>
+<dd>
+Child entity.
+</dd>
+</dl>
+<p>If the child has <code>ingroup</code> set, then will search for and add to that group instead.</p>
+</div>
+<h3 id="addtogroup">addToGroup<a name="addToGroup"></a></h3>
+<div class="function">
+<p><strong>bool addToGroup(Entity&amp;&amp; o)</strong></p>
+<p>Add child entity to a group.</p>
+<dl>
+<dt><code>o</code></dt>
+<dd>
+Child entity with <code>ingroup</code> set.
+</dd>
+<dt><strong>Return</strong></dt>
+<dd>
+True if a group of the given name was found, in which case <code>o</code> will have been added to it, false otherwise.
+</dd>
+</dl>
+</div>
+<h3 id="addtothis">addToThis<a name="addToThis"></a></h3>
+<div class="function">
+<p><strong>void addToThis(Entity&amp;&amp; o)</strong></p>
+<p>Add child entity.</p>
+<dl>
+<dt><code>o</code></dt>
+<dd>
+Child entity.
+</dd>
+</dl>
+<p>If the child has <code>ingroup</code> set, it is ignored.</p>
+</div>
+<h3 id="clear">clear<a name="clear"></a></h3>
+<div class="function">
+<p><strong>void clear()</strong></p>
+<p>Clear the entity.</p>
+</div>
+<h3 id="delete_by_predicate">delete_by_predicate<a name="delete_by_predicate"></a></h3>
+<div class="function">
+<p><strong>void delete_by_predicate(std::function&lt;bool(const Entity&amp;)&gt; p)</strong></p>
+<p>Recursively delete all child entities that satisfy the predicate.</p>
+<dl>
+<dt><code>p</code></dt>
+<dd>
+Predicate.
+</dd>
+</dl>
+</div>
+<h3 id="exists">exists<a name="exists"></a></h3>
+<div class="function">
+<p><strong>bool exists(std::filesystem::path&amp; path) const</strong></p>
+<p>Does a file exist of the given name?</p>
+<dl>
+<dt><code>path</code></dt>
+<dd>
+File path.
+</dd>
+</dl>
+</div>
+<h3 id="get">get<a name="get"></a></h3>
+<div class="function">
+<p><strong>std::list&lt;Entity*&gt; get(std::filesystem::path&amp; path)</strong></p>
+<p>Get a file of the given name. The file must exist (use <code>exists()</code>).</p>
+<dl>
+<dt><code>path</code></dt>
+<dd>
+File path.
+</dd>
+<dt><strong>Return</strong></dt>
+<dd>
+List of entities giving the full path to the file. The last entity represents the file itself, the preceding entities its subdirectories.
+</dd>
+</dl>
+</div>
+<h3 id="merge">merge<a name="merge"></a></h3>
+<div class="function">
+<p><strong>void merge(Entity&amp;&amp; o)</strong></p>
+<p>Merge the children of another entity into this one.</p>
+<dl>
+<dt><code>o</code></dt>
+<dd>
+Other entity.
+</dd>
+</dl>
+</div>
+    </div>
+  </article>
+
+  </main>
+
+<div class="w-100 pb-4 bg-body-tertiary" style="clear:both;margin-top:96px;">
+<div class="container">
+  <nav class="row g-4">
+        <div class="nav-bottom">
+      <h1><a href="/software/doxide">Doxide</a></h1>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/software/doxide/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Main
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/demo/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Demo
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/installation/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Get Started
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 4V22H20V24H4C2.9 24 2 23.1 2 22V4H4M15 7H20.5L15 1.5V7M8 0H16L22 6V18C22 19.11 21.11 20 20 20H8C6.89 20 6 19.1 6 18V2C6 .89 6.89 0 8 0M17 16V14H8V16H17M20 12V10H8V12H20Z" /></svg>
+          Documentation
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/software/doxide/getting-started/">Initializing Doxide</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/configuring/">Configuring Doxide</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/running/">Running Doxide</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/writing/">Writing Documentation</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/organizing/">Organizing Documentation</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/parsing/">Parsing Considerations</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/coverage/">Enabling Code Coverage</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/coverage-reports/">Understanding Code Coverage Reports</a></li>
+            <li><a class="dropdown-item" href="/software/doxide/command-line/">Command-line reference</a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/contributing/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          How To Help
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/software/doxide/questions-and-answers/" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" /></svg>
+          Q &amp; A
+          </a>
+        </li>
+
+      </ul>
+    </div>
+    
+    <div class="nav-bottom">
+            <h1><a href="/">Lawrence Murray</a></h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>

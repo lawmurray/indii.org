@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Foundations of GPU Computing: Opening Lecture</title>
+    <meta name="description" content="Opening lecture slides, introducing GPU hardware and key concepts: kernels, streams, memory">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Foundations of GPU Computing: Opening Lecture">
+    <meta name="twitter:description" content="Opening lecture slides, introducing GPU hardware and key concepts: kernels, streams, memory">
+    <meta name="twitter:image" content="/assets/gpu.svg">
+
+    <meta property="og:title" content="Foundations of GPU Computing: Opening Lecture">
+    <meta property="og:description" content="Opening lecture slides, introducing GPU hardware and key concepts: kernels, streams, memory">
+    <meta property="og:url" content="https://indii.org/gpu-course/opening/">
+    <meta property="og:image" content="/assets/gpu.svg">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    
+    <link rel="canonical" href="https://indii.org/gpu-course/opening/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+      </head>
+  <body>
+<div class="container">
+<div class="slides">
+<h1 id="foundations-of-gpu-computing">Foundations of GPU Computing</h1>
+<h6 id="lawrence-murray">Lawrence Murray</h6>
+<hr />
+<h2 id="course-outline">Course outline</h2>
+<div class="note">
+<p>Course materials are at <a href="https://indii.org/gpu-course/">https://indii.org/gpu-course/</a></p>
+</div>
+<ol type="1">
+<li><dl>
+<dt><a href="/gpu-course/opening">Introductory Lecture</a></dt>
+<dd>
+No code here, just concepts to start. GPU hardware, memory hierarchies, kernel configurations, streaming computation, floating point precision and performance.
+</dd>
+</dl></li>
+<li><dl>
+<dt><a href="/gpu-course/practical-1">Practical Exercises 1</a></dt>
+<dd>
+Hands-on with example code. Building and running CUDA programs, single versus double precision performance, vector and matrix kernels, memory management.
+</dd>
+</dl></li>
+<li><dl>
+<dt><a href="/gpu-course/practical-2">Practical Exercises 2</a></dt>
+<dd>
+Profiling code, identifying issues, assessing headroom, improving concurrency.
+</dd>
+</dl></li>
+<li><dl>
+<dt><a href="/gpu-course/closing">Closing Lecture</a></dt>
+<dd>
+More streaming computation, and advanced kernel programming.
+</dd>
+</dl></li>
+</ol>
+<hr />
+<h1 id="foundations-of-gpu-computing-introductory-lecture">Foundations of GPU Computing: Introductory Lecture</h1>
+<h6 id="lawrence-murray-1">Lawrence Murray</h6>
+<hr />
+<h2 id="outline">Outline</h2>
+<ol type="1">
+<li>Introduction to GPU hardware.</li>
+<li>How a CPU and GPU work together.</li>
+<li>Key concepts of GPU programming: kernels, streams, memory.</li>
+<li>Floating point precision and performance.</li>
+</ol>
+<div class="note">
+<p>No code here, just concepts.</p>
+</div>
+<hr />
+<h2 id="what-is-a-gpu">What is a GPU?</h2>
+<dl>
+<dt>CPU (Central Processing Unit)</dt>
+<dd>
+A processor for general compute loads: desktops, servers, databases, scientific computing.
+</dd>
+<dt>GPU (Graphics Processing Unit)</dt>
+<dd>
+A processor for specific compute loads: initially graphics, eventually scientific computing too, recently deep learning especially.
+</dd>
+</dl>
+<hr />
+<h2 id="what-is-a-gpu-1">What is a GPU?</h2>
+<div class="note">
+<p>CPUs and GPUs represent different design tradeoffs for these different use cases.</p>
+</div>
+<p><img src="1.svg" /></p>
+<hr />
+<h2 id="what-is-a-gpu-2">What is a GPU?</h2>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 31%" />
+<col style="width: 26%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">CPU: Intel Core i9-13900K</th>
+<th style="text-align: right;">GPU: GeForce RTX 4090</th>
+<th style="text-align: right;">GPU: H100</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cores or SM count</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;"><strong>128</strong></td>
+<td style="text-align: right;"><strong>114</strong></td>
+</tr>
+<tr>
+<td>Clock rate (GHz)</td>
+<td style="text-align: right;"><strong>5.5</strong></td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">1.7</td>
+</tr>
+<tr>
+<td>L1 Cache (KB per core)</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">256</td>
+</tr>
+<tr>
+<td>L2 Cache (MB total)</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr>
+<td>L3 Cache (MB total)</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Single precision (TFlops)</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">82.58</td>
+<td style="text-align: right;">51.22</td>
+</tr>
+<tr>
+<td>Double precision (TFlops)</td>
+<td style="text-align: right;">?</td>
+<td style="text-align: right;">1.29</td>
+<td style="text-align: right;"><strong>25.61</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="what-is-a-gpu-3">What is a GPU?</h2>
+<ul>
+<li>The CPU:
+<ul>
+<li>has a faster clock speed,</li>
+<li>tries to hide memory latency by using <em>cache</em> on the principle of <em>spatiotemporal locality</em> (once a memory address is accessed, it is likely that the same or nearby addresses will be accessed again soon).</li>
+</ul></li>
+<li>The GPU:
+<ul>
+<li>has a slower clock speed,</li>
+<li>uses cache too, but mostly tries to hide memory latency by using <em>oversubscription</em> with a large number of threads: while one group of threads is waiting on memory operations, another can be executing.</li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="when-might-we-consider-using-a-gpu">When might we consider using a GPU?</h2>
+<div class="note">
+<p>Where our computation has critical components that have large scale data parallelism.</p>
+</div>
+<ul>
+<li>On modern GPUs, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>16</mn></msup><mo>=</mo><mn>65536</mn></mrow><annotation encoding="application/x-tex">2^{16} = 65536</annotation></semantics></math> way data parallelism is ideal, in that it can occupy the whole device, e.g. multiplying two matrices of size at least <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>256</mn><mo>×</mo><mn>256</mn></mrow><annotation encoding="application/x-tex">256 \times 256</annotation></semantics></math>.</li>
+<li>Failing that, we may be able to run multiple tasks concurrently that in aggregate have enough data parallelism to occupy the device.</li>
+</ul>
+<p><img src="2.svg" /></p>
+<hr />
+<h2 id="example-use-cases">Example use cases</h2>
+<ul>
+<li>Core computations:
+<ol type="1">
+<li>Large matrix multiplication</li>
+<li>Large matrix factorization</li>
+<li>Large differential equation solvers</li>
+<li>Convolutions</li>
+<li>Large transformations and reductions</li>
+</ol></li>
+<li>Applications:
+<ul>
+<li>Image processing (4)</li>
+<li>Numerical weather prediction and other physical simulation (3)</li>
+<li>Deep learning (1, &amp; 4 for CNNs)</li>
+<li>Gaussian processes (2, Cholesky factorization in particular)</li>
+<li>Sequential Monte Carlo (5)</li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="misconceptions-or-more-nuance-required">Misconceptions (or: more nuance required)</h2>
+<dl>
+<dt><del>CPUs do serial computation, GPUs do parallel computation</del></dt>
+<dd>
+Modern CPUs and GPUs are both highly parallel devices. It is true, however, that for straight serial computation a CPU is faster (recall: it has a faster clock rate).
+</dd>
+<dt><del>CPUs do task parallelism, GPUs do data parallelism</del></dt>
+<dd>
+Both do both, although there needs to be at least <em>some</em> data parallelism for the use of a GPU to be worthwhile. Arguably, programming task parallelism is easier on CPU than GPU (e.g. OpenMP, C++ standard library, pthreads and other libraries are easier to use than concurrent kernel execution), and programming data parallelism is easier on GPU than CPU (e.g. scalar programming within kernels is easier than vector programming with masking).
+</dd>
+<dt><del>GPUs are 100x faster than CPUs</del></dt>
+<dd>
+For the right computation, expect a 5-20x speedup. Anything more suggests that the CPU baseline needs work.
+</dd>
+</dl>
+<hr />
+<h2 id="how-do-the-cpu-and-gpu-work-together">How do the CPU and GPU work together?</h2>
+<ul>
+<li>By way of nomenclature, we often refer to the CPU as the <em>host</em> and the GPU as the <em>device</em>.</li>
+<li>The main program runs on the CPU (host) but it offloads particular tasks to the GPU (device).</li>
+</ul>
+<hr />
+<h2 id="streaming">Streaming</h2>
+<ul>
+<li>The CPU executes the main program, which enqueues <em>kernels</em> into a <em>stream</em>.</li>
+<li>The GPU executes the kernels in the stream in the order enqueued.</li>
+<li>The CPU must synchronize with the stream (wait until the GPU has finished execution) to obtain the results.</li>
+</ul>
+<p><img src="3.svg" /></p>
+<hr />
+<h2 id="kernels">Kernels</h2>
+<div class="note">
+<p>When the GPU executes a kernel, it does so with many <em>threads</em>.</p>
+</div>
+<p>Threads are organized into a two-level hierarchy by an <em>execution configuration</em>:</p>
+<ul>
+<li>First into equal-sized <em>blocks</em>, each of which is an array of threads.</li>
+<li>Second into a <em>grid</em>, which is an array of thread blocks.</li>
+</ul>
+<p>These arrays can be one, two, or three dimensional.</p>
+<hr />
+<h2 id="vector-kernels">Vector kernels</h2>
+<p>For example, a one-dimensional execution configuration, which might be used to distribute work over the elements of a vector:</p>
+<p><img src="4.svg" /></p>
+<hr />
+<h2 id="matrix-kernels">Matrix kernels</h2>
+<p>A two-dimensional execution configuration, which might be used to distribute work over the elements of a matrix:</p>
+<p><img src="5.svg" /></p>
+<div class="warning">
+<p>For good performance, the total block size should be at least 256, and has a hard maximum of 1024.</p>
+</div>
+<hr />
+<h2 id="memory">Memory</h2>
+<div class="note">
+<p>The CPU and GPU are physically separate and connect via the PCIe bus. The CPU uses main memory (also called <em>host</em> memory), the GPU uses its own <em>device</em> memory.</p>
+</div>
+<p><img src="6.svg" /></p>
+<hr />
+<h2 id="memory-1">Memory</h2>
+<div class="note">
+<p>More recent architectures unify the separate memory via virtual memory. Pages swap on-demand between main and device memory via the virtual memory system.</p>
+</div>
+<p><img src="7.svg" /></p>
+<hr />
+<h2 id="memory-2">Memory</h2>
+<dl>
+<dt>Virtual memory to physical memory</dt>
+<dd>
+Operates on <em>pages</em>. The page size varies between platforms from 4 KB to several MB depending. Whole pages are <em>swapped</em> between physical memory and disk, even if only partly used.
+</dd>
+<dt>Physical memory to cache</dt>
+<dd>
+Operates on <em>cache lines</em>. The cache line size varies between architectures, but is typically 64 bytes on CPU and 128 bytes on GPU. Whole cache lines are read or written, even if only partly used.
+</dd>
+</dl>
+<div class="note">
+<p>Being aware of this will help you write more efficient code. We can minimize the number of cache line reads by ensuring that all threads in the same block read from the same cache lines.</p>
+</div>
+<div class="warning">
+<p>Some (older?) materials refer to <em>coalesced</em> memory access for high performance on GPU. This is a stricter condition where adjacent threads should access adjacent addresses in memory, not just the same cache line. It is no longer necessary, except when accessing pinned host memory from the GPU, which is not cached.</p>
+</div>
+<hr />
+<h2 id="floating-point-precision">Floating point precision</h2>
+<p>Extended precision (80 bits, alternatively called <em>long double</em>)</p>
+<p><img src="8.svg" /></p>
+<p>Double precision (64 bits)</p>
+<p><img src="9.svg" /></p>
+<p>Single precision (32 bits)</p>
+<p><img src="10.svg" /></p>
+<p>Half precision (16 bits)</p>
+<p><img src="11.svg" /></p>
+<hr />
+<h2 id="floating-point-precision-1">Floating point precision</h2>
+<ul>
+<li>For scalar operations:
+<ul>
+<li>CPUs use extended precision for intermediate results held in registers, and these are rounded to double, single, or half precision when written to memory.</li>
+<li>GPUs use only double, single, or half precision throughout.</li>
+</ul></li>
+<li>For vector operations:
+<ul>
+<li>CPUs use only double, single, or half precision throughout.</li>
+<li>GPUs use only double, single, or half precision throughout.</li>
+</ul></li>
+</ul>
+<div class="danger">
+<p>GPUs do not use extended precision at all!</p>
+</div>
+<hr />
+<h2 id="floating-point-performance">Floating point performance</h2>
+<div class="note">
+<p>GPUs have much faster performance in half (16 bit) and single (32 bit) than double (64 bit) precision.</p>
+</div>
+<p>The gains come from two sources: 1. The hardware has greater throughput in half and single precision than double precision, ranging from a ratio of 2:1 for data center products such as the H100, to 64:1 for consumer products such as the GeForce RTX 4090. The gap has widened over the years. 2. Lower precision requires less memory overall, meaning smaller transfers between host and device, memory and cache, and that cache stretches further on a per-element basis.</p>
+<hr />
+<h2 id="how-do-we-program-a-gpu">How do we program a GPU?</h2>
+<dl>
+<dt><a href="https://developer.nvidia.com/cuda-zone">CUDA</a></dt>
+<dd>
+For Nvidia GPUs. Also provides libraries such as CUBLAS, CUSOLVER, CURAND, CUDNN.
+</dd>
+<dt><a href="https://www.amd.com/en/graphics/servers-solutions-rocm">ROCm</a></dt>
+<dd>
+For AMD GPUs, and within it <a href="https://developer.amd.com/resources/rocm-learning-center/fundamentals-of-hip-programming/">HIP</a> that targets both Nvidia and AMD GPUs.
+</dd>
+<dt><a href="https://www.khronos.org/sycl/">SYCL</a></dt>
+<dd>
+Open standard portable across Nvidia, AMD, and Intel GPUs, although may require components of the above for Nvidia and AMD hardware. Implementations include Intel’s <a href="https://www.oneapi.io/">oneAPI</a>, which includes the Intel Math Kernel Library for linear algebra and the Data Parallel C++ library for standard transformation and reduction primitives. Builds on <a href="https://www.khronos.org/opencl/">OpenCL</a>, and probably favored for programmability nowadays.
+</dd>
+<dt><a href="https://openmp.org">OpenMP</a></dt>
+<dd>
+Has support for offloading to GPU since version 4.0, allowing parallelization on GPU using similar directives as for CPU. However, library support may still require one of the above.
+</dd>
+</dl>
+<hr />
+<h2 id="cuda-stack">CUDA Stack</h2>
+<div class="note">
+<p>We use CUDA for the practical exercises in this course.</p>
+</div>
+<ul>
+<li>On the upside, CUDA is the most established option for general-purpose GPU computing, with the most extensive libraries available.</li>
+<li>On the downside, it is not open source and not portable across hardware vendors.</li>
+</ul>
+<p><img src="12.svg" /></p>
+<hr />
+<h2 id="summary">Summary</h2>
+<div class="note">
+<p>CPUs and GPUs represent different tradeoffs in hardware design for different use cases.</p>
+</div>
+<dl>
+<dt>Memory</dt>
+<dd>
+The CPU and GPU have separate memory and cache hierarchies. Virtual memory unifies the separate memory.
+</dd>
+<dt>Streams</dt>
+<dd>
+The CPU enqueues kernels into a stream, the GPU executes them asynchronously.
+</dd>
+<dt>Kernels</dt>
+<dd>
+Kernels are launched onto the GPU with a one, two, or three-dimensional execution configuration, defining a grid of blocks of threads.
+</dd>
+</dl>
+</div>
+</div>
+
+</body>
+</html>

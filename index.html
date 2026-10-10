@@ -1,0 +1,2854 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Lawrence Murray</title>
+    <meta name="description" content="Research scientist and software engineer, blogging about C++ programming, open source software, and machine learning. Plus research papers, photography, writing, creative things and more">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@lawmurray">
+    <meta name="twitter:creator" content="@lawmurray">
+    <meta name="twitter:title" content="Lawrence Murray">
+    <meta name="twitter:description" content="Research scientist and software engineer, blogging about C++ programming, open source software, and machine learning. Plus research papers, photography, writing, creative things and more">
+    
+
+    <meta property="og:title" content="Lawrence Murray">
+    <meta property="og:description" content="Research scientist and software engineer, blogging about C++ programming, open source software, and machine learning. Plus research papers, photography, writing, creative things and more">
+    <meta property="og:url" content="https://indii.org/">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="indii.org">
+
+    <script>
+    function getPreferredTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-bs-theme', theme)
+    }
+
+    setTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      theme = getPreferredTheme();
+      setTheme(theme)
+    })
+    </script>
+
+    <link rel="stylesheet" href="/css/styles.min.css">
+    
+    <link rel="canonical" href="https://indii.org/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/assets/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+
+    <style>
+    :root {
+      --display-dev:block;
+      --display-software:block;
+      --display-research:block;
+      --display-photography:block;
+      --display-graphics:block;
+      --display-drawing:block;
+      --display-writing:block;
+      
+    }
+
+    .display-dev {
+      display:var(--display-dev);
+    }
+    .display-software {
+      display:var(--display-software);
+    }
+    .display-research {
+      display:var(--display-research);
+    }
+    .display-photography {
+      display:var(--display-photography);
+    }
+    .display-graphics {
+      display:var(--display-graphics);
+    }
+    .display-drawing {
+      display:var(--display-drawing);
+    }
+    .display-writing {
+      display:var(--display-writing);
+    }
+    
+    </style>
+    <script src="/js/bootstrap.bundle.min.js" async></script>
+      </head>
+  <body><div class="w-100">
+<div class="container">
+  <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand m-0" href="/">
+                      Lawrence Murray
+              </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <span class="flex-fill"></span>
+
+      <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+              </ul>
+    </div>
+  </nav>
+</div>
+</div><div class="w-100">
+<div class="container">
+  <script>
+  let categories = ['dev', 'software', 'research', 'photography', 'graphics', 'drawing', 'writing']
+
+  function get_category(category) {
+    return document.getElementById('display-' + category).checked
+  }
+
+  function set_category(category, checked) {
+    document.getElementById('display-' + category).checked = checked
+    document.documentElement.style.setProperty('--display-' + category,
+        checked ? 'block' : 'none')
+  }
+
+  function all_categories(checked) {
+    for (const category of categories) {
+      if (get_category(category) != checked) {
+        return false
+      }
+    }
+    return true
+  }
+
+  function set_all_categories(checked) {
+    for (const category of categories) {
+      set_category(category, checked)
+    }
+  }
+
+  function only_category(category, checked) {
+    if (get_category(category) != checked) {
+      return false;
+    }
+    for (const c of categories) {
+      if (c != category && get_category(c) != !checked) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function set_only_category(category, checked) {
+    set_category(category, checked)
+    for (const c of categories) {
+      if (c != category) {
+        set_category(c, !checked)
+      }
+    }
+    return true;
+  }
+
+  function reset_categories() {
+    set_all_categories(true)
+  }
+
+  function reset_search() {
+    document.getElementById('search').value = ''
+    const posts = document.querySelectorAll('.postcard')
+    for (let i = 0; i < posts.length; ++i) {
+        posts[i].style.display = null
+    }
+    return false
+  }
+
+  function handle_category_change(category) {
+    // state of toggled category already updated at this point
+    if (all_categories(false)) {
+      set_all_categories(true)
+    } else if (only_category(category, false)) {
+      set_only_category(category, true)
+    } else {
+      set_category(category, get_category(category))
+    }
+    return false
+  }
+
+  function handle_search_input(text) {
+    const term = text.trim().toLowerCase()
+    const posts = document.querySelectorAll('.postcard')
+    for (let i = 0; i < posts.length; ++i) {
+        const text = posts[i].textContent.toLowerCase()
+        posts[i].style.display = text.indexOf(term) != -1 ? null : 'none'
+    }
+    return false
+  }
+
+  function handle_clear_click() {
+    reset_categories()
+    reset_search()
+    return false
+  }
+</script>
+    
+  <div class="row g-3">
+        <div class="col-auto flex-fill">
+      <input type="checkbox" class="btn-check" id="display-dev" value="dev" onchange="return handle_category_change(this.value)" autocomplete="off" checked>
+      <label class="btn category w-100" for="display-dev" title="Show/hide dev category">dev</label>
+    </div>
+        <div class="col-auto flex-fill">
+      <input type="checkbox" class="btn-check" id="display-software" value="software" onchange="return handle_category_change(this.value)" autocomplete="off" checked>
+      <label class="btn category w-100" for="display-software" title="Show/hide software category">software</label>
+    </div>
+        <div class="col-auto flex-fill">
+      <input type="checkbox" class="btn-check" id="display-research" value="research" onchange="return handle_category_change(this.value)" autocomplete="off" checked>
+      <label class="btn category w-100" for="display-research" title="Show/hide research category">research</label>
+    </div>
+        <div class="col-auto flex-fill">
+      <input type="checkbox" class="btn-check" id="display-photography" value="photography" onchange="return handle_category_change(this.value)" autocomplete="off" checked>
+      <label class="btn category w-100" for="display-photography" title="Show/hide photography category">photography</label>
+    </div>
+        <div class="col-auto flex-fill">
+      <input type="checkbox" class="btn-check" id="display-graphics" value="graphics" onchange="return handle_category_change(this.value)" autocomplete="off" checked>
+      <label class="btn category w-100" for="display-graphics" title="Show/hide graphics category">graphics</label>
+    </div>
+        <div class="col-auto flex-fill">
+      <input type="checkbox" class="btn-check" id="display-drawing" value="drawing" onchange="return handle_category_change(this.value)" autocomplete="off" checked>
+      <label class="btn category w-100" for="display-drawing" title="Show/hide drawing category">drawing</label>
+    </div>
+        <div class="col-auto flex-fill">
+      <input type="checkbox" class="btn-check" id="display-writing" value="writing" onchange="return handle_category_change(this.value)" autocomplete="off" checked>
+      <label class="btn category w-100" for="display-writing" title="Show/hide writing category">writing</label>
+    </div>
+        <div class="col-auto flex-fill">
+      <input type="text" class="form-control" placeholder="Search" id="search" name="q" oninput="return handle_search_input(this.value)" autocomplete="off">
+    </div>
+    <div class="col-auto">
+      <button type="button" title="Clear filters" class="btn btn-outline-secondary" onclick="return handle_clear_click()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M2.39 1.73L1.11 3L9 10.89V15.87C8.96 16.16 9.06 16.47 9.29 16.7L13.3 20.71C13.69 21.1 14.32 21.1 14.71 20.71C14.94 20.5 15.04 20.18 15 19.88V16.89L20.84 22.73L22.11 21.46L15 14.35V14.34L13 12.35L11 10.34L4.15 3.5L2.39 1.73M6.21 3L8.2 5H16.96L13.11 9.91L15 11.8V10.75L19.79 4.62C20.13 4.19 20.05 3.56 19.62 3.22C19.43 3.08 19.22 3 19 3H6.21M11 12.89L13 14.89V17.58L11 15.58V12.89Z" /></svg>
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="container">
+  <svg xmlns="http://www.w3.org/2000/svg" hidden>
+    <defs>
+      <symbol id="image">
+        <title>image</title>
+        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+        <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+      </symbol>
+      <symbol id="images">
+        <title>images</title>
+        <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+        <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2zM14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1zM2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10z"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <main class="row">
+  <div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/serve-a-website-locally-and-rebuild-on-changes/">Serve a website locally and rebuild on changes</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Bash scripting a quality-of-life feature for web development</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2026-10-06</p></div>
+        <p hidden>linux web html css javascript http server shell bash python</p>
+      </div>
+    </div>
+  </div><div class="postcard display-software">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">software</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/software/mendingwall/">Mending Wall</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Try another desktop environment</p></div>
+              <div class="card-body h-100"><a href="/software/mendingwall/"><img src="/software/mendingwall/logo.svg" loading="lazy" width="256" height="256" alt="Mending Wall application icon, a wall of green and grey bricks"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2025-02-22</p></div>
+        <p hidden>linux desktop application app gnome kde plasma cinnamon xfce free desktop open source software free software FOSS FLOSS</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/cplusplus-static-for-loop/">A static for loop in C++</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">You have <code>if constexpr</code>, but you want <code>for constexpr</code></p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2024-11-27</p></div>
+        <p hidden>cpp cplusplus template template metaprogramming</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/cplusplus-code-coverage-with-gcov-gcovr-doxide/">Improving C++ Code Coverage with Gcov, Gcovr and Doxide</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Doxide can now produce line data on function templates, even when not instantiated, to mix with execution data for more accurate test coverage reports. This is especially useful when testing header-only libraries.</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2024-11-13</p></div>
+        <p hidden>cpp cplusplus c++ doxide testing coverage</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/fix-clock-speed-on-nvidia-gpu/">Limit clock speed and memory speed on an Nvidia GPU</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">How to limit clock speed and memory speed for more consistent results when benchmarking and profiling CUDA kernels</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2024-10-21</p></div>
+        <p hidden>gpu cuda benchmark benchmarking profile profiling</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/gpu-matrix-multiply-code-level-tips-and-tricks/">Matrix Multiplication On GPU: Part 3, Coding for Speed</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Tips and tricks to help the compiler optimize</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2024-10-11</p></div>
+        <p hidden>gpu cuda matrix machine learning deep learning neural networks numerical computing</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/gpu-matrix-multiply-tiling/">Matrix Multiplication On GPU: Part 2, Tiling</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Breaking down large matrix multiplications into tiles</p></div>
+              <div class="card-body h-100"><a href="/blog/gpu-matrix-multiply-tiling/"><img src="/blog/gpu-matrix-multiply-tiling/gemm-tile-cover.png" loading="lazy" width="512" height="512" alt="Artistic image depicting the thread tiling strategy." srcset="/blog/gpu-matrix-multiply-tiling/gemm-tile-cover.png 512w, /blog/gpu-matrix-multiply-tiling/gemm-tile-cover-128w.png 128w, /blog/gpu-matrix-multiply-tiling/gemm-tile-cover-256w.png 256w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2024-10-04</p></div>
+        <p hidden>gpu cuda matrix machine learning deep learning neural networks numerical computing</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/gpu-matrix-multiply/">Matrix Multiplication on GPU: Faster than Nvidia, Sometimes</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">It works on my laptop</p></div>
+              <div class="card-body h-100"><a href="/blog/gpu-matrix-multiply/"><img src="/blog/gpu-matrix-multiply/hilbert_small.svg" loading="lazy" width="528" height="538" alt="Simple line drawing of a two-dimensional Hilbert curve used for scheduling tiles in the matrix multiplication kernel."></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2024-10-01</p></div>
+        <p hidden>gpu cuda matrix algorithm kernel synchronization machine learning deep learning neural networks numerical computing gpu computing cpp cplusplus c++</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/enjoying-the-view/">Enjoying the View</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">City lights from a rooftop pool, Bangkok, Thailand</p></div>
+              <div class="card-body h-100"><a href="/photography/enjoying-the-view/"><img src="/photography/enjoying-the-view/1.jpg" loading="lazy" width="4096" height="2736" alt="Cover image: Enjoying the View" srcset="/photography/enjoying-the-view/1.jpg 4096w, /photography/enjoying-the-view/1-128w.jpg 128w, /photography/enjoying-the-view/1-256w.jpg 256w, /photography/enjoying-the-view/1-512w.jpg 512w, /photography/enjoying-the-view/1-768w.jpg 768w, /photography/enjoying-the-view/1-1024w.jpg 1024w, /photography/enjoying-the-view/1-1536w.jpg 1536w, /photography/enjoying-the-view/1-2048w.jpg 2048w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2024-08-17</p></div>
+        <p hidden>abstract city cityscape rooftop pool Bangkok Thailand</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/gradients-of-softmax-and-logsumexp/">Gradients of Softmax and Logsumexp</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Essential functions for categorical distributions and attention mechanisms in machine learning</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2024-05-04</p></div>
+        <p hidden>machine learning automatic differentiation softmax logsumexp probability deep learning neural networks</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/pattern-matching-template-types/">C++: Pattern Matching Template Types</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">How to check if a template type matches a pattern? Something like <code>is_like_v&lt;T, vector&lt;int,_&gt;&gt;</code></p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2024-03-02</p></div>
+        <p hidden>c++ cpp cplusplus modern c++ c++20 c++17 type trait template class template instantiation</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/overloading-the-spaceship-operator/">C++: Overloading the Spaceship Operator, A Recipe</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">How to overload the three-way comparison (spaceship) <code>operator&lt;=&gt;</code>, and a reminder to overload <code>operator==</code> as well</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2024-02-09</p></div>
+        <p hidden>c++ cpp cplusplus modern c++ c++20 c++17 spaceship three-way comparison operator operator overloading</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/is-type-instantiation-of-template/">C++: Check if a type is an instantiation of a given class template</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">How to implement an <code>is_instance_of</code> type trait</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2024-02-05</p></div>
+        <p hidden>c++ cpp cplusplus modern c++ c++20 c++17 type trait template class template instantiation</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/sydney-botanic-gardens/">Gum Tree</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Gum tree at the Royal Botanic Gardens, Sydney, Australia</p></div>
+              <div class="card-body h-100"><a href="/photography/sydney-botanic-gardens/"><img src="/photography/sydney-botanic-gardens/1.jpg" loading="lazy" width="2048" height="2731" alt="Cover image: Gum Tree" srcset="/photography/sydney-botanic-gardens/1.jpg 2048w, /photography/sydney-botanic-gardens/1-128w.jpg 128w, /photography/sydney-botanic-gardens/1-256w.jpg 256w, /photography/sydney-botanic-gardens/1-512w.jpg 512w, /photography/sydney-botanic-gardens/1-768w.jpg 768w, /photography/sydney-botanic-gardens/1-1024w.jpg 1024w, /photography/sydney-botanic-gardens/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2024-02-03</p></div>
+        <p hidden>eucalyptus gum tree botanic gardens botanical gardens harbour Sydney New South Wales NSW Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/forwarding-references/">C++: Forwarding references, overload resolution, and taking back control</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Consider merging overloads into one function with forwarding reference parameters</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2024-01-27</p></div>
+        <p hidden>c++ cpp cplusplus modern c++ c++20 c++17 overload overload resolution forwarding reference lvalue rvalue const</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/cplusplus-disable-implicit-conversion-in-specific-contexts/">C++: Disable implicit conversion in specific contexts only</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">You get one implicit conversion, so burn it with a wrapper</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-11-14</p></div>
+        <p hidden>c++ cpp cplusplus modern c++ c++20 c++17 explicit constructor implicit conversion copy conversion cast operator user-defined conversion copy constructor</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/vista-perugia/">Vista Perugia</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">View over and out of Perugia, Umbria, Italy</p></div>
+              <div class="card-body h-100"><a href="/photography/vista-perugia/"><img src="/photography/vista-perugia/1.jpg" loading="lazy" width="2048" height="1536" alt="Cover image: Vista Perugia" srcset="/photography/vista-perugia/1.jpg 2048w, /photography/vista-perugia/1-128w.jpg 128w, /photography/vista-perugia/1-256w.jpg 256w, /photography/vista-perugia/1-512w.jpg 512w, /photography/vista-perugia/1-768w.jpg 768w, /photography/vista-perugia/1-1024w.jpg 1024w, /photography/vista-perugia/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2023-09-03</p></div>
+        <p hidden>Perugia Umbria Italy landscape view</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/revisited-combinatorial-instantiation-of-templates-with-std-variant/">C++: Revisiting combinatorial instantiation of templates with std::variant</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Compiler optimizations can break it, function attributes can fix it</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-08-16</p></div>
+        <p hidden>c++ cpp cplusplus modern c++ c++20 c++17 function template explicit instantiation implicit instantiation</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/combinatorial-instantiation-of-templates-with-std-variant/">C++: Combinatorial instantiation of templates with std::variant</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">An alternative to explicit instantiations and macros</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-06-11</p></div>
+        <p hidden>c++ cpp cplusplus modern c++ c++20 c++17 function template explicit instantiation implicit instantiation</p>
+      </div>
+    </div>
+  </div><div class="postcard display-software">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">software</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/software/doxide/">Doxide</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Documentation and code coverage reports for C++ projects</p></div>
+              <div class="card-body h-100"><a href="/software/doxide/"><img src="/assets/doxide.svg" loading="lazy" width="128" height="128" alt="Doxide application icon, a red oxygen atom from a chemistry kit"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-06-03</p></div>
+        <p hidden>c++ cpp cplusplus modern c++ c++20 c++17 documentation code coverage open source software free software FOSS FLOSS</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/avoiding-argument-dependent-lookup-in-cpp/">C++: Avoiding Argument Dependent Lookup</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A little trick using an extra namespace and cross-import</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-04-30</p></div>
+        <p hidden>c++ cpp cplusplus modern c++ c++20 c++17 compilation function overload ADL Koenig lookup</p>
+      </div>
+    </div>
+  </div><div class="postcard display-writing">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">short fiction</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/creative/tattoo-the-sea/">Tattoo the Sea</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Fat rain poked the terrace. Separate splots—caliper-sizeable, measurable, aged and faded by the sun and vanished back to sky</p></div>
+              <div class="card-body h-100"><a href="/creative/tattoo-the-sea/"><img src="/photography/the-gulls-of-old-mogador/2.jpg" loading="lazy" width="1657" height="1657" alt="Cover image: Tattoo the Sea" srcset="/photography/the-gulls-of-old-mogador/2.jpg 1657w, /photography/the-gulls-of-old-mogador/2-128w.jpg 128w, /photography/the-gulls-of-old-mogador/2-256w.jpg 256w, /photography/the-gulls-of-old-mogador/2-512w.jpg 512w, /photography/the-gulls-of-old-mogador/2-768w.jpg 768w, /photography/the-gulls-of-old-mogador/2-1024w.jpg 1024w, /photography/the-gulls-of-old-mogador/2-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-04-07</p></div>
+        <p hidden>fiction short story morocco essaouira gulls</p>
+      </div>
+    </div>
+  </div><div class="postcard display-drawing">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">drawing</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/creative/girl-with-headphones/">Girl with Headphones</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Charcoal, chalk and pastel on paper, 2015</p></div>
+              <div class="card-body h-100"><a href="/creative/girl-with-headphones/"><img src="/creative/girl-with-headphones/1.jpg" loading="lazy" width="1645" height="2048" alt="Cover image: Girl with Headphones" srcset="/creative/girl-with-headphones/1.jpg 1645w, /creative/girl-with-headphones/1-128w.jpg 128w, /creative/girl-with-headphones/1-256w.jpg 256w, /creative/girl-with-headphones/1-512w.jpg 512w, /creative/girl-with-headphones/1-768w.jpg 768w, /creative/girl-with-headphones/1-1024w.jpg 1024w, /creative/girl-with-headphones/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2023-04-02</p></div>
+        <p hidden>drawing art charcoal chalk pastel</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/sum-of-discrete/">Sums of Discrete Random Variables as Banded Matrix Products</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Zero-stride catch and a custom CUDA kernel</p></div>
+              <div class="card-body h-100"><a href="/blog/sum-of-discrete/"><img src="/blog/sum-of-discrete/sum-of-discrete.svg" loading="lazy" width="144" height="250" alt="Simple line drawing of a GPU"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-03-16</p></div>
+        <p hidden>convolution enumeration</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/fast-discrete-enumeration/">Fast Enumeration of Sums of Discrete Random Variables</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A CUDA kernel</p></div>
+              <div class="card-body h-100"><a href="/blog/fast-discrete-enumeration/"><img src="/blog/fast-discrete-enumeration/fast-discrete-enumeration.svg" loading="lazy" width="144" height="298" alt="Simple line drawing of a GPU"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-02-22</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">course</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/gpu-course/">GPU Course: Foundations of GPU Computing</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A short course with a machine learning flavor, working with a feed-forward neural network implemented in C</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-02-12</p></div>
+        <p hidden>c cuda gpu nvidia course teaching programming</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/elements-of-chiang-mai/">Elements of Chiang Mai</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Hiking and village stays near Doi Inthanon national park</p></div>
+              <div class="card-body h-100"><a href="/photography/elements-of-chiang-mai/"><img src="/photography/elements-of-chiang-mai/5.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Elements of Chiang Mai" srcset="/photography/elements-of-chiang-mai/5.jpg 2048w, /photography/elements-of-chiang-mai/5-128w.jpg 128w, /photography/elements-of-chiang-mai/5-256w.jpg 256w, /photography/elements-of-chiang-mai/5-512w.jpg 512w, /photography/elements-of-chiang-mai/5-768w.jpg 768w, /photography/elements-of-chiang-mai/5-1024w.jpg 1024w, /photography/elements-of-chiang-mai/5-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 9</div>
+              <div class="float-end"><p class="card-text">2023-02-01</p></div>
+        <p hidden>landscape black and white monochrome Chiang Mai Thailand Doi Inthanon National Park Karen rural tropical</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/fix-scaling-issues-on-kde-plasma/">Fix Scaling Issues on KDE Plasma</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">In case of issues switching between Wayland and X11</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-01-22</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/profile-in-the-cloud-with-nsight-systems/">Profile in the Cloud with Nsight Systems</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">How to profile CUDA code on cloud GPU instances using Nsight Systems</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-01-13</p></div>
+        <p hidden>cuda gpu nvidia programming cloud cloud computing</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/develop-in-the-cloud-with-visual-studio-code/">Develop in the Cloud with Visual Studio Code</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">How to develop on remote cloud instances using Visual Studio Code</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-01-13</p></div>
+        <p hidden>programming cloud cloud computing</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/profile-in-the-cloud-with-nsight-systems/">Profile in the Cloud with Nsight Systems</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">How to profile CUDA code on cloud GPU instances using Nsight Systems</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-01-13</p></div>
+        <p hidden>cuda gpu nvidia programming cloud cloud computing</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/develop-in-the-cloud-with-visual-studio-code/">Develop in the Cloud with Visual Studio Code</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">How to develop on remote cloud instances using Visual Studio Code</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2023-01-13</p></div>
+        <p hidden>programming cloud cloud computing</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/chiang-mai-mood/">Chiang Mai Mood</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Afternoon sun breaks through the mountains near Doi Inthanon National Park, Chiang Mai, Thailand</p></div>
+              <div class="card-body h-100"><a href="/photography/chiang-mai-mood/"><img src="/photography/chiang-mai-mood/1.jpg" loading="lazy" width="4100" height="2739" alt="Cover image: Chiang Mai Mood" srcset="/photography/chiang-mai-mood/1.jpg 4100w, /photography/chiang-mai-mood/1-128w.jpg 128w, /photography/chiang-mai-mood/1-256w.jpg 256w, /photography/chiang-mai-mood/1-512w.jpg 512w, /photography/chiang-mai-mood/1-768w.jpg 768w, /photography/chiang-mai-mood/1-1024w.jpg 1024w, /photography/chiang-mai-mood/1-1536w.jpg 1536w, /photography/chiang-mai-mood/1-2048w.jpg 2048w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2022-12-23</p></div>
+        <p hidden>landscape rural jungle mountains Chiang Mai Thailand</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/gpu-programming-in-the-cloud/">GPU Programming in the Cloud</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A round-up of cloud service providers, and a how-to guide for each</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2022-11-22</p></div>
+        <p hidden>cuda gpu nvidia programming cloud cloud computing cloud provider cloud service provider cheap cloud provider cheap gpu</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/open-source-alternatives-for-two-factor-authentication/">Open Source Alternatives for Two Factor Authentication (2FA) Across Multiple Devices</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Gnome Authenticator for Desktop, Aegis Authenticator for Android, import and export between. Some other alternatives below</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2022-11-10</p></div>
+        <p hidden>2FA security authentication android ios open source</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/matrix-gradients-of-scalar-functions/">Matrix Gradients of Scalar Functions</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Understanding the building blocks of reverse-mode automatic differentiation</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2022-11-07</p></div>
+        <p hidden>machine learning statistics calculus chain rule</p>
+      </div>
+    </div>
+  </div><div class="postcard display-software">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">software</span>
+        <span class="badge rounded-pill text-bg-warning">Archive</span>
+        
+        <h1 class="card-title fs-5"><a href="/software/jekyll-responsive-magick/">Jekyll Responsive Magick</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A Jekyll plugin to automate responsive images with Jekyll 4</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2022-11-05</p></div>
+        <p hidden>responsive images srcset jekyll plugin imagemagick</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/admonitions-in-markdown/">Admonitions in Markdown</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Working or failing gracefully across Apostrophe, Kramdown, and Jekyll. No plugins required</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2022-11-02</p></div>
+        <p hidden>markdown jekyll kramdown apostrophe web html</p>
+      </div>
+    </div>
+  </div><div class="postcard display-dev">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">dev</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/blog/responsive-images-with-jekyll-and-imagemagick/">Responsive Images with Jekyll and ImageMagick</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Step by step through the HTML, ImageMagick and Ruby. Works with Jekyll 4</p></div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2022-10-30</p></div>
+        <p hidden>srcset html ruby jekyll plugin imagemagick web html</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/probabilistic-programming-statistical-phylogenetics/">Probabilistic programming: a powerful new approach to statistical phylogenetics’</a></h1>
+        <p class="card-text date">F. Ronquist, J. Kudlicka, V. Senderov, J. Borgström, N. Lartillot, D. Lundén, L.M. Murray, T.B. Schön, D. Broman</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2020-06-23</p></div>
+        <p hidden>phylogenetics probabilistic programming Birch</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/canadian-rockies/">Canadian Rockies</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Mountain vistas and the private life of snow</p></div>
+              <div class="card-body h-100"><a href="/photography/canadian-rockies/"><img src="/photography/canadian-rockies/1.jpg" loading="lazy" width="2048" height="1368" alt="Cover image: Canadian Rockies" srcset="/photography/canadian-rockies/1.jpg 2048w, /photography/canadian-rockies/1-128w.jpg 128w, /photography/canadian-rockies/1-256w.jpg 256w, /photography/canadian-rockies/1-512w.jpg 512w, /photography/canadian-rockies/1-768w.jpg 768w, /photography/canadian-rockies/1-1024w.jpg 1024w, /photography/canadian-rockies/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 3</div>
+              <div class="float-end"><p class="card-text">2020-02-15</p></div>
+        <p hidden>geometry abstract minimal landscape black and white monochrome Lake Louise Rocky Mountains Canada Banff</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/lazy-object-copy/">Lazy object copy as a platform for population-based probabilistic programming’</a></h1>
+        <p class="card-text date">L.M. Murray</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2020-02-01</p></div>
+        <p hidden>memory management probabilistic programming Birch</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/parameter-elimination-in-particle-gibbs-sampling/">Parameter elimination in particle Gibbs sampling’</a></h1>
+        <p class="card-text date">A. Wigren, R.S. Risuleo, L.M. Murray and F. Lindsten</p>
+      </div>
+              <div class="card-body h-100"><a href="/research/parameter-elimination-in-particle-gibbs-sampling/"><img src="/research/parameter-elimination-in-particle-gibbs-sampling/parameter-elimination-in-particle-gibbs-sampling.svg" loading="lazy" width="1365" height="512" alt="Cover image: Parameter elimination in particle Gibbs sampling’"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2019-11-09</p></div>
+        <p hidden>particle Gibbs delayed sampling probabilistic programming Birch</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/probabilistic-programming-for-birth-death-models-of-evolution/">Probabilistic programming for birth-death models of evolution using an alive particle filter with delayed sampling’</a></h1>
+        <p class="card-text date">J. Kudlicka, L.M. Murray, F. Ronquist and T.B. Schön</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2019-07-14</p></div>
+        <p hidden>probabilistic programming particle filter delayed sampling phylogenetics Birch</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/yosemite-falls/">Yosemite Falls</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Illilouette Falls, Yosemite National Park</p></div>
+              <div class="card-body h-100"><a href="/photography/yosemite-falls/"><img src="/photography/yosemite-falls/1.jpg" loading="lazy" width="2048" height="1024" alt="Cover image: Yosemite Falls" srcset="/photography/yosemite-falls/1.jpg 2048w, /photography/yosemite-falls/1-128w.jpg 128w, /photography/yosemite-falls/1-256w.jpg 256w, /photography/yosemite-falls/1-512w.jpg 512w, /photography/yosemite-falls/1-768w.jpg 768w, /photography/yosemite-falls/1-1024w.jpg 1024w, /photography/yosemite-falls/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2019-06-15</p></div>
+        <p hidden>black and white monochrome landscape Illilouette Falls Yosemite National Park California United States</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/gecko/">Gecko</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Slow and fast</p></div>
+              <div class="card-body h-100"><a href="/photography/gecko/"><img src="/photography/gecko/1.jpg" loading="lazy" width="1966" height="1966" alt="Cover image: Gecko" srcset="/photography/gecko/1.jpg 1966w, /photography/gecko/1-128w.jpg 128w, /photography/gecko/1-256w.jpg 256w, /photography/gecko/1-512w.jpg 512w, /photography/gecko/1-768w.jpg 768w, /photography/gecko/1-1024w.jpg 1024w, /photography/gecko/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 2</div>
+              <div class="float-end"><p class="card-text">2019-01-27</p></div>
+        <p hidden>minimal fast exposure Ubud Bali Indonesia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/wet-in-bali/">The Wet Comes To Bali</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Light and dark</p></div>
+              <div class="card-body h-100"><a href="/photography/wet-in-bali/"><img src="/photography/wet-in-bali/2.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: The Wet Comes To Bali" srcset="/photography/wet-in-bali/2.jpg 2048w, /photography/wet-in-bali/2-128w.jpg 128w, /photography/wet-in-bali/2-256w.jpg 256w, /photography/wet-in-bali/2-512w.jpg 512w, /photography/wet-in-bali/2-768w.jpg 768w, /photography/wet-in-bali/2-1024w.jpg 1024w, /photography/wet-in-bali/2-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 2</div>
+              <div class="float-end"><p class="card-text">2018-11-26</p></div>
+        <p hidden>monochrome black and white minimal abstract Ubud Bali Indonesia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/the-kimberley/">The Kimberley</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Gorges and waterholes in the remote north-west of Australia</p></div>
+              <div class="card-body h-100"><a href="/photography/the-kimberley/"><img src="/photography/the-kimberley/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: The Kimberley" srcset="/photography/the-kimberley/1.jpg 2048w, /photography/the-kimberley/1-128w.jpg 128w, /photography/the-kimberley/1-256w.jpg 256w, /photography/the-kimberley/1-512w.jpg 512w, /photography/the-kimberley/1-768w.jpg 768w, /photography/the-kimberley/1-1024w.jpg 1024w, /photography/the-kimberley/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2018-11-20</p></div>
+        <p hidden>landscape sunset Gibb River Road The Kimberley Western Australia Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/automated-learning-with-a-probabilistic-programming-language-birch/">Automated learning with a probabilistic programming language: Birch’</a></h1>
+        <p class="card-text date">L.M. Murray and T.B. Schön</p>
+      </div>
+              <div class="card-body h-100"><a href="/research/automated-learning-with-a-probabilistic-programming-language-birch/"><img src="/research/automated-learning-with-a-probabilistic-programming-language-birch/automated-learning-with-a-probabilistic-programming-language-birch.svg" loading="lazy" width="1280" height="1280" alt="Cover image: Automated learning with a probabilistic programming language: Birch’"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2018-10-13</p></div>
+        <p hidden>Birch probabilistic programming sequential Monte Carlo delayed sampling</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/saltoluokta/">Saltoluokta</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Summer north of the arctic circle.</p></div>
+              <div class="card-body h-100"><a href="/photography/saltoluokta/"><img src="/photography/saltoluokta/1.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Saltoluokta" srcset="/photography/saltoluokta/1.jpg 2048w, /photography/saltoluokta/1-128w.jpg 128w, /photography/saltoluokta/1-256w.jpg 256w, /photography/saltoluokta/1-512w.jpg 512w, /photography/saltoluokta/1-768w.jpg 768w, /photography/saltoluokta/1-1024w.jpg 1024w, /photography/saltoluokta/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 8</div>
+              <div class="float-end"><p class="card-text">2018-10-13</p></div>
+        <p hidden>kungsleden landscape black and white monochrome Saltoluokta Sweden</p>
+      </div>
+    </div>
+  </div><div class="postcard display-software">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">software</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/software/birch/">Birch: Probabilistic Inference, Programmatic Models</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">An open source probabilistic programming language for machine learning and statistics</p></div>
+              <div class="card-body h-100"><a href="/software/birch/"><img src="/software/birch/birch.jpg" loading="lazy" width="2047" height="500" alt="Cover image: Birch: Probabilistic Inference, Programmatic Models" srcset="/software/birch/birch.jpg 2047w, /software/birch/birch-128w.jpg 128w, /software/birch/birch-256w.jpg 256w, /software/birch/birch-512w.jpg 512w, /software/birch/birch-768w.jpg 768w, /software/birch/birch-1024w.jpg 1024w, /software/birch/birch-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2018-03-24</p></div>
+        <p hidden>bayesian bayes statistics inference machine learning training probabilistic programming probabilistic programming language ppl sequential monte carlo smc markov chain monte carlo mcmc particle filter gpu c++ cpp cplusplus modern c++ c++20 c++17</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/sahara/">Sahara</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Back to Morocco</p></div>
+              <div class="card-body h-100"><a href="/photography/sahara/"><img src="/photography/sahara/1_narrow.jpg" loading="lazy" width="2048" height="1228" alt="Cover image: Sahara" srcset="/photography/sahara/1_narrow.jpg 2048w, /photography/sahara/1_narrow-128w.jpg 128w, /photography/sahara/1_narrow-256w.jpg 256w, /photography/sahara/1_narrow-512w.jpg 512w, /photography/sahara/1_narrow-768w.jpg 768w, /photography/sahara/1_narrow-1024w.jpg 1024w, /photography/sahara/1_narrow-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2018-03-11</p></div>
+        <p hidden>desert sand dune minimal Morocco Africa</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/improving-the-particle-filter-for-high-dimensional-problems/">Improving the particle filter for high-dimensional problems using artificial process noise’</a></h1>
+        <p class="card-text date">A. Wigren, L.M. Murray, F. Lindsten</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2018-03-01</p></div>
+        <p hidden>high dimensional sequential Monte Carlo</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/under-the-dhow-sail/">Under the Dhow Sail</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Sailing in Zanzibar</p></div>
+              <div class="card-body h-100"><a href="/photography/under-the-dhow-sail/"><img src="/photography/under-the-dhow-sail/1.jpg" loading="lazy" width="1534" height="2048" alt="Cover image: Under the Dhow Sail" srcset="/photography/under-the-dhow-sail/1.jpg 1534w, /photography/under-the-dhow-sail/1-128w.jpg 128w, /photography/under-the-dhow-sail/1-256w.jpg 256w, /photography/under-the-dhow-sail/1-512w.jpg 512w, /photography/under-the-dhow-sail/1-768w.jpg 768w, /photography/under-the-dhow-sail/1-1024w.jpg 1024w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2018-01-01</p></div>
+        <p hidden>black and white monochrome abstract minimal Zanzibar Tanzania</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/delayed-sampling-and-automatic-rao-blackwellization-of-probabilistic-programs/">Delayed Sampling and Automatic Rao-Blackwellization of Probabilistic Programs’</a></h1>
+        <p class="card-text date">L.M. Murray, D. Lundén, J. Kudlicka, D. Broman, T.B. Schön</p>
+      </div>
+              <div class="card-body h-100"><a href="/research/delayed-sampling-and-automatic-rao-blackwellization-of-probabilistic-programs/"><img src="/research/delayed-sampling-and-automatic-rao-blackwellization-of-probabilistic-programs/delayed-sampling.svg" loading="lazy" width="474" height="158" alt="Cover image: Delayed Sampling and Automatic Rao-Blackwellization of Probabilistic Programs’"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2017-12-22</p></div>
+        <p hidden>probabilistic programming sequential Monte Carlo delayed sampling</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/riddarholmen/">Riddarholmen</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">The island of Riddarholmen</p></div>
+              <div class="card-body h-100"><a href="/photography/riddarholmen/"><img src="/photography/riddarholmen/1.jpg" loading="lazy" width="4095" height="2048" alt="Cover image: Riddarholmen" srcset="/photography/riddarholmen/1.jpg 4095w, /photography/riddarholmen/1-128w.jpg 128w, /photography/riddarholmen/1-256w.jpg 256w, /photography/riddarholmen/1-512w.jpg 512w, /photography/riddarholmen/1-768w.jpg 768w, /photography/riddarholmen/1-1024w.jpg 1024w, /photography/riddarholmen/1-1536w.jpg 1536w, /photography/riddarholmen/1-2048w.jpg 2048w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2017-11-01</p></div>
+        <p hidden>Riddarholmen Stockholm Sweden black and white monochrome</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/better-together-statistical-learning-in-models-made-of-modules/">Better together? Statistical learning in models made of modules’</a></h1>
+        <p class="card-text date">P.E. Jacob, L.M. Murray, C.C. Holmes, C.P. Robert</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2017-08-29</p></div>
+        <p hidden>Bayesian statistics modules</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/hotorget-tunnel/">Hötorget Tunnel</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">There may be a world at the other end of this</p></div>
+              <div class="card-body h-100"><a href="/photography/hotorget-tunnel/"><img src="/photography/hotorget-tunnel/1.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Hötorget Tunnel" srcset="/photography/hotorget-tunnel/1.jpg 2048w, /photography/hotorget-tunnel/1-128w.jpg 128w, /photography/hotorget-tunnel/1-256w.jpg 256w, /photography/hotorget-tunnel/1-512w.jpg 512w, /photography/hotorget-tunnel/1-768w.jpg 768w, /photography/hotorget-tunnel/1-1024w.jpg 1024w, /photography/hotorget-tunnel/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 6</div>
+              <div class="float-end"><p class="card-text">2017-08-12</p></div>
+        <p hidden>Stockholm Sweden Hötorget tunnel urban pedestrian street photography black and white photography monochrome photography</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/summer-colours-of-stockholm/">Summer Colours of Stockholm</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Close to midnight in Mariatorget</p></div>
+              <div class="card-body h-100"><a href="/photography/summer-colours-of-stockholm/"><img src="/photography/summer-colours-of-stockholm/1.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Summer Colours of Stockholm" srcset="/photography/summer-colours-of-stockholm/1.jpg 2048w, /photography/summer-colours-of-stockholm/1-128w.jpg 128w, /photography/summer-colours-of-stockholm/1-256w.jpg 256w, /photography/summer-colours-of-stockholm/1-512w.jpg 512w, /photography/summer-colours-of-stockholm/1-768w.jpg 768w, /photography/summer-colours-of-stockholm/1-1024w.jpg 1024w, /photography/summer-colours-of-stockholm/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2017-08-11</p></div>
+        <p hidden>summer midnight stockholm sweden</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/abisko-and-tornetrask/">Abisko and Torneträsk</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Arctic panorama</p></div>
+              <div class="card-body h-100"><a href="/photography/abisko-and-tornetrask/"><img src="/photography/abisko-and-tornetrask/1.jpg" loading="lazy" width="3071" height="1024" alt="Cover image: Abisko and Torneträsk" srcset="/photography/abisko-and-tornetrask/1.jpg 3071w, /photography/abisko-and-tornetrask/1-128w.jpg 128w, /photography/abisko-and-tornetrask/1-256w.jpg 256w, /photography/abisko-and-tornetrask/1-512w.jpg 512w, /photography/abisko-and-tornetrask/1-768w.jpg 768w, /photography/abisko-and-tornetrask/1-1024w.jpg 1024w, /photography/abisko-and-tornetrask/1-1536w.jpg 1536w, /photography/abisko-and-tornetrask/1-2048w.jpg 2048w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2017-06-04</p></div>
+        <p hidden>Abisko Lake Torneträsk Sweden light cloud arctic winter</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/breaking-ice/">Breaking Ice</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Getting acquainted with the Arctic</p></div>
+              <div class="card-body h-100"><a href="/photography/breaking-ice/"><img src="/photography/breaking-ice/5.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Breaking Ice" srcset="/photography/breaking-ice/5.jpg 2048w, /photography/breaking-ice/5-128w.jpg 128w, /photography/breaking-ice/5-256w.jpg 256w, /photography/breaking-ice/5-512w.jpg 512w, /photography/breaking-ice/5-768w.jpg 768w, /photography/breaking-ice/5-1024w.jpg 1024w, /photography/breaking-ice/5-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 6</div>
+              <div class="float-end"><p class="card-text">2017-06-03</p></div>
+        <p hidden>Abisko Sweden arctic landscape black and white monochrome</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/minus-twenty/">Minus Twenty</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Monochromes of a frozen Stockholm</p></div>
+              <div class="card-body h-100"><a href="/photography/minus-twenty/"><img src="/photography/minus-twenty/4.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Minus Twenty" srcset="/photography/minus-twenty/4.jpg 2048w, /photography/minus-twenty/4-128w.jpg 128w, /photography/minus-twenty/4-256w.jpg 256w, /photography/minus-twenty/4-512w.jpg 512w, /photography/minus-twenty/4-768w.jpg 768w, /photography/minus-twenty/4-1024w.jpg 1024w, /photography/minus-twenty/4-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 4</div>
+              <div class="float-end"><p class="card-text">2017-04-23</p></div>
+        <p hidden>Västerbron Lake Mälaren Kungsholmen Stockholm Sweden winter black and white monochrome</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/industrilandskapet/">Industrilandskapet</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Industrilandskapet in Norrköping, Sweden</p></div>
+              <div class="card-body h-100"><a href="/photography/industrilandskapet/"><img src="/photography/industrilandskapet/1.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Industrilandskapet" srcset="/photography/industrilandskapet/1.jpg 2048w, /photography/industrilandskapet/1-128w.jpg 128w, /photography/industrilandskapet/1-256w.jpg 256w, /photography/industrilandskapet/1-512w.jpg 512w, /photography/industrilandskapet/1-768w.jpg 768w, /photography/industrilandskapet/1-1024w.jpg 1024w, /photography/industrilandskapet/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2017-03-25</p></div>
+        <p hidden>Norrköping Sweden black and white monochrome</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/gamla-stan-waters/">Gamla Stan Waters</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Choppy waters around the old town</p></div>
+              <div class="card-body h-100"><a href="/photography/gamla-stan-waters/"><img src="/photography/gamla-stan-waters/1.jpg" loading="lazy" width="2047" height="1365" alt="Cover image: Gamla Stan Waters" srcset="/photography/gamla-stan-waters/1.jpg 2047w, /photography/gamla-stan-waters/1-128w.jpg 128w, /photography/gamla-stan-waters/1-256w.jpg 256w, /photography/gamla-stan-waters/1-512w.jpg 512w, /photography/gamla-stan-waters/1-768w.jpg 768w, /photography/gamla-stan-waters/1-1024w.jpg 1024w, /photography/gamla-stan-waters/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 2</div>
+              <div class="float-end"><p class="card-text">2017-03-18</p></div>
+        <p hidden>Stockholm Sweden minimal black and white monochrome</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/probabilistic-learning-of-nonlinear-dynamical-systems-using-sequential-monte-carlo/">Probabilistic learning of nonlinear dynamical systems using sequential Monte Carlo’</a></h1>
+        <p class="card-text date">T.B. Schön, A. Svensson, L.M. Murray, and F. Lindsten</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2017-03-07</p></div>
+        <p hidden>tutorial particle filter sequential Monte Carlo</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/winter-colours-of-stockholm/">Winter Colours of Stockholm</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Contrast on snow</p></div>
+              <div class="card-body h-100"><a href="/photography/winter-colours-of-stockholm/"><img src="/photography/winter-colours-of-stockholm/1.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Winter Colours of Stockholm" srcset="/photography/winter-colours-of-stockholm/1.jpg 2048w, /photography/winter-colours-of-stockholm/1-128w.jpg 128w, /photography/winter-colours-of-stockholm/1-256w.jpg 256w, /photography/winter-colours-of-stockholm/1-512w.jpg 512w, /photography/winter-colours-of-stockholm/1-768w.jpg 768w, /photography/winter-colours-of-stockholm/1-1024w.jpg 1024w, /photography/winter-colours-of-stockholm/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2017-01-07</p></div>
+        <p hidden>winter contrast Sweden Kungsholmen Karlbergs Slott Stockholm</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/uppsala-university/">Uppsala University</a></h1>
+        
+      </div>
+              <div class="card-body h-100"><a href="/photography/uppsala-university/"><img src="/photography/uppsala-university/1.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Uppsala University" srcset="/photography/uppsala-university/1.jpg 2048w, /photography/uppsala-university/1-128w.jpg 128w, /photography/uppsala-university/1-256w.jpg 256w, /photography/uppsala-university/1-512w.jpg 512w, /photography/uppsala-university/1-768w.jpg 768w, /photography/uppsala-university/1-1024w.jpg 1024w, /photography/uppsala-university/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2017-01-01</p></div>
+        <p hidden>Sweden Uppsala university</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/anytime-monte-carlo/">Anytime Monte Carlo</a></h1>
+        <p class="card-text date">L.M. Murray, S. Singh, and A. Lee</p>
+      </div>
+              <div class="card-body h-100"><a href="/research/anytime-monte-carlo/"><img src="/research/anytime-monte-carlo/anytime-monte-carlo.png" loading="lazy" width="2048" height="512" alt="Cover image: Anytime Monte Carlo" srcset="/research/anytime-monte-carlo/anytime-monte-carlo.png 2048w, /research/anytime-monte-carlo/anytime-monte-carlo-128w.png 128w, /research/anytime-monte-carlo/anytime-monte-carlo-256w.png 256w, /research/anytime-monte-carlo/anytime-monte-carlo-512w.png 512w, /research/anytime-monte-carlo/anytime-monte-carlo-768w.png 768w, /research/anytime-monte-carlo/anytime-monte-carlo-1024w.png 1024w, /research/anytime-monte-carlo/anytime-monte-carlo-1536w.png 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2016-12-10</p></div>
+        <p hidden>parallel distributed gpu cloud computing particle filter Bayesian statistics</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/comparative-analysis-of-dengue-and-zika-outbreaks-reveals-differences-by-setting-and-virus/">Comparative Analysis of Dengue and Zika Outbreaks Reveals Differences by Setting and Virus</a></h1>
+        <p class="card-text date">S. Funk, A.J. Kucharski, A. Camacho, R.M. Eggo, L. Yakob, L.M. Murray, and W.J. Edmunds</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2016-12-07</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/beas-de-granada/">Beas De Granada</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Duotone landscapes along the ridge to Granada</p></div>
+              <div class="card-body h-100"><a href="/photography/beas-de-granada/"><img src="/photography/beas-de-granada/5.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Beas De Granada" srcset="/photography/beas-de-granada/5.jpg 2048w, /photography/beas-de-granada/5-128w.jpg 128w, /photography/beas-de-granada/5-256w.jpg 256w, /photography/beas-de-granada/5-512w.jpg 512w, /photography/beas-de-granada/5-768w.jpg 768w, /photography/beas-de-granada/5-1024w.jpg 1024w, /photography/beas-de-granada/5-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 7</div>
+              <div class="float-end"><p class="card-text">2016-10-10</p></div>
+        <p hidden>monochrome duotone landscape Alhambra Granada Andalusia Spain</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/alhambra-muqarnas/">Alhambra Muqarnas</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A palace for mathematicians</p></div>
+              <div class="card-body h-100"><a href="/photography/alhambra-muqarnas/"><img src="/photography/alhambra-muqarnas/1.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Alhambra Muqarnas" srcset="/photography/alhambra-muqarnas/1.jpg 2048w, /photography/alhambra-muqarnas/1-128w.jpg 128w, /photography/alhambra-muqarnas/1-256w.jpg 256w, /photography/alhambra-muqarnas/1-512w.jpg 512w, /photography/alhambra-muqarnas/1-768w.jpg 768w, /photography/alhambra-muqarnas/1-1024w.jpg 1024w, /photography/alhambra-muqarnas/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2016-10-05</p></div>
+        <p hidden>Alhambra Granada Andalusia Spain muqarnas</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/elements-of-calm/">Elements of Calm</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Forty-degree heat and the fountains of the Generalife</p></div>
+              <div class="card-body h-100"><a href="/photography/elements-of-calm/"><img src="/photography/elements-of-calm/1.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Elements of Calm" srcset="/photography/elements-of-calm/1.jpg 2048w, /photography/elements-of-calm/1-128w.jpg 128w, /photography/elements-of-calm/1-256w.jpg 256w, /photography/elements-of-calm/1-512w.jpg 512w, /photography/elements-of-calm/1-768w.jpg 768w, /photography/elements-of-calm/1-1024w.jpg 1024w, /photography/elements-of-calm/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 3</div>
+              <div class="float-end"><p class="card-text">2016-09-20</p></div>
+        <p hidden>fountain minimal monochrome duotone Alhambra Generalife Granada Andalusia Spain</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/open-to-interpretation/">Open To Interpretation</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Spacious landscapes and still-life scenes</p></div>
+              <div class="card-body h-100"><a href="/photography/open-to-interpretation/"><img src="/photography/open-to-interpretation/5.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Open To Interpretation" srcset="/photography/open-to-interpretation/5.jpg 2048w, /photography/open-to-interpretation/5-128w.jpg 128w, /photography/open-to-interpretation/5-256w.jpg 256w, /photography/open-to-interpretation/5-512w.jpg 512w, /photography/open-to-interpretation/5-768w.jpg 768w, /photography/open-to-interpretation/5-1024w.jpg 1024w, /photography/open-to-interpretation/5-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 9</div>
+              <div class="float-end"><p class="card-text">2016-08-10</p></div>
+        <p hidden>still life landscape minimal black and white monochrome Isternia Tinos Cyclades Greece</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/storm-and-laundry/">Storm and Laundry</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A camera and a riad rooftop</p></div>
+              <div class="card-body h-100"><a href="/photography/storm-and-laundry/"><img src="/photography/storm-and-laundry/2.jpg" loading="lazy" width="2048" height="2049" alt="Cover image: Storm and Laundry" srcset="/photography/storm-and-laundry/2.jpg 2048w, /photography/storm-and-laundry/2-128w.jpg 128w, /photography/storm-and-laundry/2-256w.jpg 256w, /photography/storm-and-laundry/2-512w.jpg 512w, /photography/storm-and-laundry/2-768w.jpg 768w, /photography/storm-and-laundry/2-1024w.jpg 1024w, /photography/storm-and-laundry/2-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 2</div>
+              <div class="float-end"><p class="card-text">2016-06-18</p></div>
+        <p hidden>Tetouan Morocco riad laundry washing motion black and white monochrome</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/minimal-mediterranean/">Minimal Mediterranean</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Abstract and minimal photography from Andalusia and northern Morocco</p></div>
+              <div class="card-body h-100"><a href="/photography/minimal-mediterranean/"><img src="/photography/minimal-mediterranean/1.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Minimal Mediterranean" srcset="/photography/minimal-mediterranean/1.jpg 2048w, /photography/minimal-mediterranean/1-128w.jpg 128w, /photography/minimal-mediterranean/1-256w.jpg 256w, /photography/minimal-mediterranean/1-512w.jpg 512w, /photography/minimal-mediterranean/1-768w.jpg 768w, /photography/minimal-mediterranean/1-1024w.jpg 1024w, /photography/minimal-mediterranean/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 6</div>
+              <div class="float-end"><p class="card-text">2016-06-05</p></div>
+        <p hidden>Cadiz Jerez Seville Melilla Tetouan Spain Andalusia Morocco riad fountain vines minimal</p>
+      </div>
+    </div>
+  </div><div class="postcard display-graphics">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">graphics</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/creative/bifurcation/">Bifurcation</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Revealing the intricate behaviour of the Lorenz ’96 chaotic equations</p></div>
+              <div class="card-body h-100"><a href="/creative/bifurcation/"><img src="/creative/bifurcation/3.jpg" loading="lazy" width="1024" height="1025" alt="Cover image: Bifurcation" srcset="/creative/bifurcation/3.jpg 1024w, /creative/bifurcation/3-128w.jpg 128w, /creative/bifurcation/3-256w.jpg 256w, /creative/bifurcation/3-512w.jpg 512w, /creative/bifurcation/3-768w.jpg 768w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 3</div>
+              <div class="float-end"><p class="card-text">2016-04-17</p></div>
+        <p hidden>Lorenz 96 bifurcation differential equations chaos periodicity density butterfly effect strange attractor maths mathematics</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/winter-tree-textures/">Winter Tree Textures</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Photographic abstractions of branching trees</p></div>
+              <div class="card-body h-100"><a href="/photography/winter-tree-textures/"><img src="/photography/winter-tree-textures/6.jpg" loading="lazy" width="1734" height="1734" alt="Cover image: Winter Tree Textures" srcset="/photography/winter-tree-textures/6.jpg 1734w, /photography/winter-tree-textures/6-128w.jpg 128w, /photography/winter-tree-textures/6-256w.jpg 256w, /photography/winter-tree-textures/6-512w.jpg 512w, /photography/winter-tree-textures/6-768w.jpg 768w, /photography/winter-tree-textures/6-1024w.jpg 1024w, /photography/winter-tree-textures/6-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 6</div>
+              <div class="float-end"><p class="card-text">2016-04-08</p></div>
+        <p hidden>tree branch abstract minimal monochrome black and white contrast Oxford United Kingdom</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/the-gulls-of-old-mogador/">The Gulls of Old Mogador</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Sea gulls, fortress walls and ruins in the seaside medina of Essaouira</p></div>
+              <div class="card-body h-100"><a href="/photography/the-gulls-of-old-mogador/"><img src="/photography/the-gulls-of-old-mogador/1.jpg" loading="lazy" width="1441" height="1441" alt="Cover image: The Gulls of Old Mogador" srcset="/photography/the-gulls-of-old-mogador/1.jpg 1441w, /photography/the-gulls-of-old-mogador/1-128w.jpg 128w, /photography/the-gulls-of-old-mogador/1-256w.jpg 256w, /photography/the-gulls-of-old-mogador/1-512w.jpg 512w, /photography/the-gulls-of-old-mogador/1-768w.jpg 768w, /photography/the-gulls-of-old-mogador/1-1024w.jpg 1024w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 8</div>
+              <div class="float-end"><p class="card-text">2016-04-07</p></div>
+        <p hidden>Essaouira Morocco medina sea gull donkey black and white monochrome</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/essaouira-ramparts/">Essaouira Ramparts</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">The ramparts of the old wall</p></div>
+              <div class="card-body h-100"><a href="/photography/essaouira-ramparts/"><img src="/photography/essaouira-ramparts/1.jpg" loading="lazy" width="2048" height="1278" alt="Cover image: Essaouira Ramparts" srcset="/photography/essaouira-ramparts/1.jpg 2048w, /photography/essaouira-ramparts/1-128w.jpg 128w, /photography/essaouira-ramparts/1-256w.jpg 256w, /photography/essaouira-ramparts/1-512w.jpg 512w, /photography/essaouira-ramparts/1-768w.jpg 768w, /photography/essaouira-ramparts/1-1024w.jpg 1024w, /photography/essaouira-ramparts/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2016-01-20</p></div>
+        <p hidden>medina Essaouira Morocco</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/alaska-earth-and-ice/">Alaska Earth and Ice</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Glacial landscapes of Alaska in black and white</p></div>
+              <div class="card-body h-100"><a href="/photography/alaska-earth-and-ice/"><img src="/photography/alaska-earth-and-ice/3.jpg" loading="lazy" width="1307" height="819" alt="Cover image: Alaska Earth and Ice" srcset="/photography/alaska-earth-and-ice/3.jpg 1307w, /photography/alaska-earth-and-ice/3-128w.jpg 128w, /photography/alaska-earth-and-ice/3-256w.jpg 256w, /photography/alaska-earth-and-ice/3-512w.jpg 512w, /photography/alaska-earth-and-ice/3-768w.jpg 768w, /photography/alaska-earth-and-ice/3-1024w.jpg 1024w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#images"></use></svg> 3</div>
+              <div class="float-end"><p class="card-text">2015-11-16</p></div>
+        <p hidden>glacier landscape monochrome long exposure black and white Exit Glacier Blackstone Bay Whittier Seward Alaska United States</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/sunset-wadi-rum/">Sunset Wadi Rum</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Setting camp through Rakabat Canyon from Rum village</p></div>
+              <div class="card-body h-100"><a href="/photography/sunset-wadi-rum/"><img src="/photography/sunset-wadi-rum/1.jpg" loading="lazy" width="2048" height="1024" alt="Cover image: Sunset Wadi Rum" srcset="/photography/sunset-wadi-rum/1.jpg 2048w, /photography/sunset-wadi-rum/1-128w.jpg 128w, /photography/sunset-wadi-rum/1-256w.jpg 256w, /photography/sunset-wadi-rum/1-512w.jpg 512w, /photography/sunset-wadi-rum/1-768w.jpg 768w, /photography/sunset-wadi-rum/1-1024w.jpg 1024w, /photography/sunset-wadi-rum/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2015-11-10</p></div>
+        <p hidden>camping sunset desert landscape Wadi Rum Jordan</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/camping-between-the-rocks-under-the-stars/">Camping Between the Rocks, Under the Stars</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Somewhere in the white desert, sometime after the orange sunset, brewing tea</p></div>
+              <div class="card-body h-100"><a href="/photography/camping-between-the-rocks-under-the-stars/"><img src="/photography/camping-between-the-rocks-under-the-stars/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Camping Between the Rocks, Under the Stars" srcset="/photography/camping-between-the-rocks-under-the-stars/1.jpg 2048w, /photography/camping-between-the-rocks-under-the-stars/1-128w.jpg 128w, /photography/camping-between-the-rocks-under-the-stars/1-256w.jpg 256w, /photography/camping-between-the-rocks-under-the-stars/1-512w.jpg 512w, /photography/camping-between-the-rocks-under-the-stars/1-768w.jpg 768w, /photography/camping-between-the-rocks-under-the-stars/1-1024w.jpg 1024w, /photography/camping-between-the-rocks-under-the-stars/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2015-11-10</p></div>
+        <p hidden>camping campfire desert landscape long exposure twilight Wadi Rum Jordan</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/sunset-wadi-rum/">Sunset Wadi Rum</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Setting camp through Rakabat Canyon from Rum village</p></div>
+              <div class="card-body h-100"><a href="/photography/sunset-wadi-rum/"><img src="/photography/sunset-wadi-rum/1.jpg" loading="lazy" width="2048" height="1024" alt="Cover image: Sunset Wadi Rum" srcset="/photography/sunset-wadi-rum/1.jpg 2048w, /photography/sunset-wadi-rum/1-128w.jpg 128w, /photography/sunset-wadi-rum/1-256w.jpg 256w, /photography/sunset-wadi-rum/1-512w.jpg 512w, /photography/sunset-wadi-rum/1-768w.jpg 768w, /photography/sunset-wadi-rum/1-1024w.jpg 1024w, /photography/sunset-wadi-rum/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2015-11-10</p></div>
+        <p hidden>camping sunset desert landscape Wadi Rum Jordan</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/camping-between-the-rocks-under-the-stars/">Camping Between the Rocks, Under the Stars</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Somewhere in the white desert, sometime after the orange sunset, brewing tea</p></div>
+              <div class="card-body h-100"><a href="/photography/camping-between-the-rocks-under-the-stars/"><img src="/photography/camping-between-the-rocks-under-the-stars/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Camping Between the Rocks, Under the Stars" srcset="/photography/camping-between-the-rocks-under-the-stars/1.jpg 2048w, /photography/camping-between-the-rocks-under-the-stars/1-128w.jpg 128w, /photography/camping-between-the-rocks-under-the-stars/1-256w.jpg 256w, /photography/camping-between-the-rocks-under-the-stars/1-512w.jpg 512w, /photography/camping-between-the-rocks-under-the-stars/1-768w.jpg 768w, /photography/camping-between-the-rocks-under-the-stars/1-1024w.jpg 1024w, /photography/camping-between-the-rocks-under-the-stars/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2015-11-10</p></div>
+        <p hidden>camping campfire desert landscape long exposure twilight Wadi Rum Jordan</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/parking-in-marrakesh/">Parking in Marrakesh</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A quiet day in the souk</p></div>
+              <div class="card-body h-100"><a href="/photography/parking-in-marrakesh/"><img src="/photography/parking-in-marrakesh/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Parking in Marrakesh" srcset="/photography/parking-in-marrakesh/1.jpg 2048w, /photography/parking-in-marrakesh/1-128w.jpg 128w, /photography/parking-in-marrakesh/1-256w.jpg 256w, /photography/parking-in-marrakesh/1-512w.jpg 512w, /photography/parking-in-marrakesh/1-768w.jpg 768w, /photography/parking-in-marrakesh/1-1024w.jpg 1024w, /photography/parking-in-marrakesh/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2015-11-03</p></div>
+        <p hidden>medina souq vintage Morocco Marrakesh</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/valley-of-the-moon/">Valley of the Moon</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Dana village perched high above the townships of the Arabah</p></div>
+              <div class="card-body h-100"><a href="/photography/valley-of-the-moon/"><img src="/photography/valley-of-the-moon/1.jpg" loading="lazy" width="2048" height="1024" alt="Cover image: Valley of the Moon" srcset="/photography/valley-of-the-moon/1.jpg 2048w, /photography/valley-of-the-moon/1-128w.jpg 128w, /photography/valley-of-the-moon/1-256w.jpg 256w, /photography/valley-of-the-moon/1-512w.jpg 512w, /photography/valley-of-the-moon/1-768w.jpg 768w, /photography/valley-of-the-moon/1-1024w.jpg 1024w, /photography/valley-of-the-moon/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2015-10-04</p></div>
+        <p hidden>desert twilight long exposure landscape mountain valley Kings Highway Dana Jordan</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/wadi-rum-domes/">Wadi Rum Domes</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Ancient rock formations and a patchwork of sun and shadow</p></div>
+              <div class="card-body h-100"><a href="/photography/wadi-rum-domes/"><img src="/photography/wadi-rum-domes/1.jpg" loading="lazy" width="2048" height="1024" alt="Cover image: Wadi Rum Domes" srcset="/photography/wadi-rum-domes/1.jpg 2048w, /photography/wadi-rum-domes/1-128w.jpg 128w, /photography/wadi-rum-domes/1-256w.jpg 256w, /photography/wadi-rum-domes/1-512w.jpg 512w, /photography/wadi-rum-domes/1-768w.jpg 768w, /photography/wadi-rum-domes/1-1024w.jpg 1024w, /photography/wadi-rum-domes/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2015-08-05</p></div>
+        <p hidden>desert clouds landscape Wadi Rum Jordan</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/closing-clouds/">Closing Clouds</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A convoy of clouds in the valley, bringing patchy desert rain</p></div>
+              <div class="card-body h-100"><a href="/photography/closing-clouds/"><img src="/photography/closing-clouds/1.jpg" loading="lazy" width="2048" height="1024" alt="Cover image: Closing Clouds" srcset="/photography/closing-clouds/1.jpg 2048w, /photography/closing-clouds/1-128w.jpg 128w, /photography/closing-clouds/1-256w.jpg 256w, /photography/closing-clouds/1-512w.jpg 512w, /photography/closing-clouds/1-768w.jpg 768w, /photography/closing-clouds/1-1024w.jpg 1024w, /photography/closing-clouds/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2015-07-14</p></div>
+        <p hidden>desert cloud landscape Wadi Rum Jordan</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/sundown-wadi-rum/">Sundown Wadi Rum</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Panorama over the red desert to the setting sun</p></div>
+              <div class="card-body h-100"><a href="/photography/sundown-wadi-rum/"><img src="/photography/sundown-wadi-rum/1.jpg" loading="lazy" width="2048" height="826" alt="Cover image: Sundown Wadi Rum" srcset="/photography/sundown-wadi-rum/1.jpg 2048w, /photography/sundown-wadi-rum/1-128w.jpg 128w, /photography/sundown-wadi-rum/1-256w.jpg 256w, /photography/sundown-wadi-rum/1-512w.jpg 512w, /photography/sundown-wadi-rum/1-768w.jpg 768w, /photography/sundown-wadi-rum/1-1024w.jpg 1024w, /photography/sundown-wadi-rum/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2015-06-13</p></div>
+        <p hidden>desert sunset landscape Jordan Wadi Rum</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/the-temple-of-hercules/">The Temple of Hercules</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Kites overhead</p></div>
+              <div class="card-body h-100"><a href="/photography/the-temple-of-hercules/"><img src="/photography/the-temple-of-hercules/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: The Temple of Hercules" srcset="/photography/the-temple-of-hercules/1.jpg 2048w, /photography/the-temple-of-hercules/1-128w.jpg 128w, /photography/the-temple-of-hercules/1-256w.jpg 256w, /photography/the-temple-of-hercules/1-512w.jpg 512w, /photography/the-temple-of-hercules/1-768w.jpg 768w, /photography/the-temple-of-hercules/1-1024w.jpg 1024w, /photography/the-temple-of-hercules/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2015-04-27</p></div>
+        <p hidden>temple citadel cityscape Amman Jordan</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/sequential-monte-carlo-with-highly-informative-observations/">Sequential Monte Carlo with Highly Informative Observations</a></h1>
+        <p class="card-text date">P. Del Moral and L.M. Murray</p>
+      </div>
+              <div class="card-body h-100"><a href="/research/sequential-monte-carlo-with-highly-informative-observations/"><img src="/research/sequential-monte-carlo-with-highly-informative-observations/sequential-monte-carlo-with-highly-informative-observations.svg" loading="lazy" width="189" height="94" alt="Cover image: Sequential Monte Carlo with Highly Informative Observations"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2015-03-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/bayesian-state-space-modelling-on-high-performance-hardware-using-libbi/">Bayesian State-Space Modelling on High-Performance Hardware Using LibBi</a></h1>
+        <p class="card-text date">L.M. Murray</p>
+      </div>
+              <div class="card-body h-100"><a href="/research/bayesian-state-space-modelling-on-high-performance-hardware-using-libbi/"><img src="/research/bayesian-state-space-modelling-on-high-performance-hardware-using-libbi/bayesian-state-space-modelling-on-high-performance-hardware-using-libbi.svg" loading="lazy" width="203" height="95" alt="Cover image: Bayesian State-Space Modelling on High-Performance Hardware Using LibBi"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2015-02-01</p></div>
+        <p hidden>parallel distributed gpu Monte Carlo</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/parallel-resampling-in-the-particle-filter/">Parallel Resampling in the Particle Filter</a></h1>
+        <p class="card-text date">L.M. Murray, A. Lee and P.E. Jacob</p>
+      </div>
+              <div class="card-body h-100"><a href="/research/parallel-resampling-in-the-particle-filter/"><img src="/research/parallel-resampling-in-the-particle-filter/parallel-resampling-in-the-particle-filter-cover.svg" loading="lazy" width="130" height="130" alt="Cover image: Parallel Resampling in the Particle Filter"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2015-01-01</p></div>
+        <p hidden>Monte Carlo parallel distributed gpu</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/lake-atitlan-sunrise/">Lake Atitlan Sunrise</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Morning rays embrace the hilltop, above San Juan La Laguna</p></div>
+              <div class="card-body h-100"><a href="/photography/lake-atitlan-sunrise/"><img src="/photography/lake-atitlan-sunrise/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Lake Atitlan Sunrise" srcset="/photography/lake-atitlan-sunrise/1.jpg 2048w, /photography/lake-atitlan-sunrise/1-128w.jpg 128w, /photography/lake-atitlan-sunrise/1-256w.jpg 256w, /photography/lake-atitlan-sunrise/1-512w.jpg 512w, /photography/lake-atitlan-sunrise/1-768w.jpg 768w, /photography/lake-atitlan-sunrise/1-1024w.jpg 1024w, /photography/lake-atitlan-sunrise/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2014-12-20</p></div>
+        <p hidden>sunrise lake landscape Lake Atitlan Guatemala</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/el-tunco/">El Tunco</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Lightning out to sea, a party to watch the spectacle</p></div>
+              <div class="card-body h-100"><a href="/photography/el-tunco/"><img src="/photography/el-tunco/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: El Tunco" srcset="/photography/el-tunco/1.jpg 2048w, /photography/el-tunco/1-128w.jpg 128w, /photography/el-tunco/1-256w.jpg 256w, /photography/el-tunco/1-512w.jpg 512w, /photography/el-tunco/1-768w.jpg 768w, /photography/el-tunco/1-1024w.jpg 1024w, /photography/el-tunco/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2014-12-20</p></div>
+        <p hidden>beach party storm lightning landscape long exposure El Tunco La Libertad El Salvador</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/lake-atitlan-sunrise/">Lake Atitlan Sunrise</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Morning rays embrace the hilltop, above San Juan La Laguna</p></div>
+              <div class="card-body h-100"><a href="/photography/lake-atitlan-sunrise/"><img src="/photography/lake-atitlan-sunrise/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Lake Atitlan Sunrise" srcset="/photography/lake-atitlan-sunrise/1.jpg 2048w, /photography/lake-atitlan-sunrise/1-128w.jpg 128w, /photography/lake-atitlan-sunrise/1-256w.jpg 256w, /photography/lake-atitlan-sunrise/1-512w.jpg 512w, /photography/lake-atitlan-sunrise/1-768w.jpg 768w, /photography/lake-atitlan-sunrise/1-1024w.jpg 1024w, /photography/lake-atitlan-sunrise/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2014-12-20</p></div>
+        <p hidden>sunrise lake landscape Lake Atitlan Guatemala</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/el-tunco/">El Tunco</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Lightning out to sea, a party to watch the spectacle</p></div>
+              <div class="card-body h-100"><a href="/photography/el-tunco/"><img src="/photography/el-tunco/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: El Tunco" srcset="/photography/el-tunco/1.jpg 2048w, /photography/el-tunco/1-128w.jpg 128w, /photography/el-tunco/1-256w.jpg 256w, /photography/el-tunco/1-512w.jpg 512w, /photography/el-tunco/1-768w.jpg 768w, /photography/el-tunco/1-1024w.jpg 1024w, /photography/el-tunco/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2014-12-20</p></div>
+        <p hidden>beach party storm lightning landscape long exposure El Tunco La Libertad El Salvador</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/path-storage-in-the-particle-filter/">Path Storage in the Particle Filter</a></h1>
+        <p class="card-text date">P.E. Jacob, L.M. Murray and S. Rubenthaler</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2014-12-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/stradbroke-island/">Stradbroke Island</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">The setting sun reflects off wet sands</p></div>
+              <div class="card-body h-100"><a href="/photography/stradbroke-island/"><img src="/photography/stradbroke-island/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Stradbroke Island" srcset="/photography/stradbroke-island/1.jpg 2048w, /photography/stradbroke-island/1-128w.jpg 128w, /photography/stradbroke-island/1-256w.jpg 256w, /photography/stradbroke-island/1-512w.jpg 512w, /photography/stradbroke-island/1-768w.jpg 768w, /photography/stradbroke-island/1-1024w.jpg 1024w, /photography/stradbroke-island/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2014-06-05</p></div>
+        <p hidden>island beach sunset landscape Stradbroke Island Moreton Bay Brisbane Queensland Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/the-three-sisters/">The Three Sisters</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Star trails from the Echo Point viewpoint</p></div>
+              <div class="card-body h-100"><a href="/photography/the-three-sisters/"><img src="/photography/the-three-sisters/1.jpg" loading="lazy" width="2048" height="1366" alt="Cover image: The Three Sisters" srcset="/photography/the-three-sisters/1.jpg 2048w, /photography/the-three-sisters/1-128w.jpg 128w, /photography/the-three-sisters/1-256w.jpg 256w, /photography/the-three-sisters/1-512w.jpg 512w, /photography/the-three-sisters/1-768w.jpg 768w, /photography/the-three-sisters/1-1024w.jpg 1024w, /photography/the-three-sisters/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2014-06-04</p></div>
+        <p hidden>star trails star spirals landscape long exposure Three Sisters Echo Point Katoomba Blue Mountains Sydney New South Wales Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/aiguille-du-midi/">Aiguille du Midi</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Beneath the peak of Aiguille du Midi</p></div>
+              <div class="card-body h-100"><a href="/photography/aiguille-du-midi/"><img src="/photography/aiguille-du-midi/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Aiguille du Midi" srcset="/photography/aiguille-du-midi/1.jpg 2048w, /photography/aiguille-du-midi/1-128w.jpg 128w, /photography/aiguille-du-midi/1-256w.jpg 256w, /photography/aiguille-du-midi/1-512w.jpg 512w, /photography/aiguille-du-midi/1-768w.jpg 768w, /photography/aiguille-du-midi/1-1024w.jpg 1024w, /photography/aiguille-du-midi/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2014-06-04</p></div>
+        <p hidden>Mont Blanc Chamonix France alps mountain landscape</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/the-three-sisters/">The Three Sisters</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Star trails from the Echo Point viewpoint</p></div>
+              <div class="card-body h-100"><a href="/photography/the-three-sisters/"><img src="/photography/the-three-sisters/1.jpg" loading="lazy" width="2048" height="1366" alt="Cover image: The Three Sisters" srcset="/photography/the-three-sisters/1.jpg 2048w, /photography/the-three-sisters/1-128w.jpg 128w, /photography/the-three-sisters/1-256w.jpg 256w, /photography/the-three-sisters/1-512w.jpg 512w, /photography/the-three-sisters/1-768w.jpg 768w, /photography/the-three-sisters/1-1024w.jpg 1024w, /photography/the-three-sisters/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2014-06-04</p></div>
+        <p hidden>star trails star spirals landscape long exposure Three Sisters Echo Point Katoomba Blue Mountains Sydney New South Wales Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/aiguille-du-midi/">Aiguille du Midi</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Beneath the peak of Aiguille du Midi</p></div>
+              <div class="card-body h-100"><a href="/photography/aiguille-du-midi/"><img src="/photography/aiguille-du-midi/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Aiguille du Midi" srcset="/photography/aiguille-du-midi/1.jpg 2048w, /photography/aiguille-du-midi/1-128w.jpg 128w, /photography/aiguille-du-midi/1-256w.jpg 256w, /photography/aiguille-du-midi/1-512w.jpg 512w, /photography/aiguille-du-midi/1-768w.jpg 768w, /photography/aiguille-du-midi/1-1024w.jpg 1024w, /photography/aiguille-du-midi/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2014-06-04</p></div>
+        <p hidden>Mont Blanc Chamonix France alps mountain landscape</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/rethinking-soil-carbon-modelling/">Rethinking soil carbon modelling: a stochastic approach to quantify uncertainties</a></h1>
+        <p class="card-text date">D. Clifford, D. Pagendam, J. Baldock, N. Cressie, R. Farquharson, M. Farrell, L. Macdonald and L.M. Murray</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2014-02-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/bayesian-learning-and-predictability-in-a-stochastic-nonlinear-dynamical-model/">Bayesian Learning and Predictability in a Stochastic Nonlinear Dynamical Model</a></h1>
+        <p class="card-text date">J. Parslow, N. Cressie and E.P. Campbell, E. Jones and L.M. Murray</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2013-12-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/no-more-starry-nights/">No More Starry Nights</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Searching for star trails through suburban glow and the last of the winter rainmakers</p></div>
+              <div class="card-body h-100"><a href="/photography/no-more-starry-nights/"><img src="/photography/no-more-starry-nights/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: No More Starry Nights" srcset="/photography/no-more-starry-nights/1.jpg 2048w, /photography/no-more-starry-nights/1-128w.jpg 128w, /photography/no-more-starry-nights/1-256w.jpg 256w, /photography/no-more-starry-nights/1-512w.jpg 512w, /photography/no-more-starry-nights/1-768w.jpg 768w, /photography/no-more-starry-nights/1-1024w.jpg 1024w, /photography/no-more-starry-nights/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-10-08</p></div>
+        <p hidden>beach light pollution star spirals star trails long exposure landscape North Floreat Beach Perth Western Australia Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-software">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">software</span>
+        <span class="badge rounded-pill text-bg-warning">Archive</span>
+        
+        <h1 class="card-title fs-5"><a href="/software/libbi/">LibBi</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A high-performance probabilistic programming language for state-space models with GPU and distributed computing support</p></div>
+              <div class="card-body h-100"><a href="/software/libbi/"><img src="/software/libbi/libbi.svg" loading="lazy" width="200" height="100" alt="Cover image: LibBi"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2013-06-01</p></div>
+        <p hidden>bayesian bayes statistics inference machine learning training probabilistic programming probabilistic programming language ppl sequential monte carlo smc markov chain monte carlo mcmc particle filter gpu c++ cpp cplusplus modern c++ c++20 c++17</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/on-disturbance-state-space-models/">On Disturbance State-Space Models and the Particle Marginal Metropolis–Hastings Sampler</a></h1>
+        <p class="card-text date">L.M. Murray, E.M. Jones and J. Parslow</p>
+      </div>
+              <div class="card-body h-100"><a href="/research/on-disturbance-state-space-models/"><img src="/research/on-disturbance-state-space-models/on-disturbance-state-space-models.svg" loading="lazy" width="164" height="94" alt="Cover image: On Disturbance State-Space Models and the Particle Marginal Metropolis–Hastings Sampler"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2013-03-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/feynman-kac-particle-integration-with-geometric-interacting-jumps/">Feynman-Kac Particle Integration with Geometric Interacting Jumps</a></h1>
+        <p class="card-text date">P. Del Moral, P.E. Jacob, A. Lee, L.M. Murray and G.W. Peters</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2013-03-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/ta-seng/">Ta Seng</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Watching Muy Thai on television with the locals</p></div>
+              <div class="card-body h-100"><a href="/photography/ta-seng/"><img src="/photography/ta-seng/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Ta Seng" srcset="/photography/ta-seng/1.jpg 2048w, /photography/ta-seng/1-128w.jpg 128w, /photography/ta-seng/1-256w.jpg 256w, /photography/ta-seng/1-512w.jpg 512w, /photography/ta-seng/1-768w.jpg 768w, /photography/ta-seng/1-1024w.jpg 1024w, /photography/ta-seng/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-02-16</p></div>
+        <p hidden>village Preah Vihear Preah Khan Cambodia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/sambor-prei-kuk-woodlands/">Sambor Prei Kuk Woodlands</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Sun gilds the trees on an afternoon walk through the temples of Sambor Prei Kuk</p></div>
+              <div class="card-body h-100"><a href="/photography/sambor-prei-kuk-woodlands/"><img src="/photography/sambor-prei-kuk-woodlands/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Sambor Prei Kuk Woodlands" srcset="/photography/sambor-prei-kuk-woodlands/1.jpg 2048w, /photography/sambor-prei-kuk-woodlands/1-128w.jpg 128w, /photography/sambor-prei-kuk-woodlands/1-256w.jpg 256w, /photography/sambor-prei-kuk-woodlands/1-512w.jpg 512w, /photography/sambor-prei-kuk-woodlands/1-768w.jpg 768w, /photography/sambor-prei-kuk-woodlands/1-1024w.jpg 1024w, /photography/sambor-prei-kuk-woodlands/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-02-16</p></div>
+        <p hidden>temple forest Sambor Prei Kuk Cambodia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/preah-khan/">Preah Khan</a></h1>
+        
+      </div>
+              <div class="card-body h-100"><a href="/photography/preah-khan/"><img src="/photography/preah-khan/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Preah Khan" srcset="/photography/preah-khan/1.jpg 2048w, /photography/preah-khan/1-128w.jpg 128w, /photography/preah-khan/1-256w.jpg 256w, /photography/preah-khan/1-512w.jpg 512w, /photography/preah-khan/1-768w.jpg 768w, /photography/preah-khan/1-1024w.jpg 1024w, /photography/preah-khan/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-02-16</p></div>
+        <p hidden>ruin temple jungle Preah Khan Cambodia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/phnom-bakheng/">Phnom Bakheng</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">The popular hill for sunset</p></div>
+              <div class="card-body h-100"><a href="/photography/phnom-bakheng/"><img src="/photography/phnom-bakheng/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Phnom Bakheng" srcset="/photography/phnom-bakheng/1.jpg 2048w, /photography/phnom-bakheng/1-128w.jpg 128w, /photography/phnom-bakheng/1-256w.jpg 256w, /photography/phnom-bakheng/1-512w.jpg 512w, /photography/phnom-bakheng/1-768w.jpg 768w, /photography/phnom-bakheng/1-1024w.jpg 1024w, /photography/phnom-bakheng/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-02-16</p></div>
+        <p hidden>temple sunset Phnom Bakheng Siem Reap Angkor Cambodia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/ta-seng/">Ta Seng</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Watching Muy Thai on television with the locals</p></div>
+              <div class="card-body h-100"><a href="/photography/ta-seng/"><img src="/photography/ta-seng/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Ta Seng" srcset="/photography/ta-seng/1.jpg 2048w, /photography/ta-seng/1-128w.jpg 128w, /photography/ta-seng/1-256w.jpg 256w, /photography/ta-seng/1-512w.jpg 512w, /photography/ta-seng/1-768w.jpg 768w, /photography/ta-seng/1-1024w.jpg 1024w, /photography/ta-seng/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-02-16</p></div>
+        <p hidden>village Preah Vihear Preah Khan Cambodia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/sambor-prei-kuk-woodlands/">Sambor Prei Kuk Woodlands</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Sun gilds the trees on an afternoon walk through the temples of Sambor Prei Kuk</p></div>
+              <div class="card-body h-100"><a href="/photography/sambor-prei-kuk-woodlands/"><img src="/photography/sambor-prei-kuk-woodlands/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Sambor Prei Kuk Woodlands" srcset="/photography/sambor-prei-kuk-woodlands/1.jpg 2048w, /photography/sambor-prei-kuk-woodlands/1-128w.jpg 128w, /photography/sambor-prei-kuk-woodlands/1-256w.jpg 256w, /photography/sambor-prei-kuk-woodlands/1-512w.jpg 512w, /photography/sambor-prei-kuk-woodlands/1-768w.jpg 768w, /photography/sambor-prei-kuk-woodlands/1-1024w.jpg 1024w, /photography/sambor-prei-kuk-woodlands/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-02-16</p></div>
+        <p hidden>temple forest Sambor Prei Kuk Cambodia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/preah-khan/">Preah Khan</a></h1>
+        
+      </div>
+              <div class="card-body h-100"><a href="/photography/preah-khan/"><img src="/photography/preah-khan/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Preah Khan" srcset="/photography/preah-khan/1.jpg 2048w, /photography/preah-khan/1-128w.jpg 128w, /photography/preah-khan/1-256w.jpg 256w, /photography/preah-khan/1-512w.jpg 512w, /photography/preah-khan/1-768w.jpg 768w, /photography/preah-khan/1-1024w.jpg 1024w, /photography/preah-khan/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-02-16</p></div>
+        <p hidden>ruin temple jungle Preah Khan Cambodia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/phnom-bakheng/">Phnom Bakheng</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">The popular hill for sunset</p></div>
+              <div class="card-body h-100"><a href="/photography/phnom-bakheng/"><img src="/photography/phnom-bakheng/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Phnom Bakheng" srcset="/photography/phnom-bakheng/1.jpg 2048w, /photography/phnom-bakheng/1-128w.jpg 128w, /photography/phnom-bakheng/1-256w.jpg 256w, /photography/phnom-bakheng/1-512w.jpg 512w, /photography/phnom-bakheng/1-768w.jpg 768w, /photography/phnom-bakheng/1-1024w.jpg 1024w, /photography/phnom-bakheng/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-02-16</p></div>
+        <p hidden>temple sunset Phnom Bakheng Siem Reap Angkor Cambodia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/fig-tree-tower/">Fig Tree Tower</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Once they tore it apart, now they hold it together</p></div>
+              <div class="card-body h-100"><a href="/photography/fig-tree-tower/"><img src="/photography/fig-tree-tower/1.jpg" loading="lazy" width="1200" height="800" alt="Cover image: Fig Tree Tower" srcset="/photography/fig-tree-tower/1.jpg 1200w, /photography/fig-tree-tower/1-128w.jpg 128w, /photography/fig-tree-tower/1-256w.jpg 256w, /photography/fig-tree-tower/1-512w.jpg 512w, /photography/fig-tree-tower/1-768w.jpg 768w, /photography/fig-tree-tower/1-1024w.jpg 1024w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-01-12</p></div>
+        <p hidden>strangler fig jungle temple Beng Mealea Koh Ker Cambodia Siem Reap Angkor</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/beng-mealea/">Beng Mealea</a></h1>
+        
+      </div>
+              <div class="card-body h-100"><a href="/photography/beng-mealea/"><img src="/photography/beng-mealea/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Beng Mealea" srcset="/photography/beng-mealea/1.jpg 2048w, /photography/beng-mealea/1-128w.jpg 128w, /photography/beng-mealea/1-256w.jpg 256w, /photography/beng-mealea/1-512w.jpg 512w, /photography/beng-mealea/1-768w.jpg 768w, /photography/beng-mealea/1-1024w.jpg 1024w, /photography/beng-mealea/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-01-12</p></div>
+        <p hidden>temple jungle Beng Mealea Koh Ker Siem Reap Cambodia Angkor</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/fig-tree-tower/">Fig Tree Tower</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Once they tore it apart, now they hold it together</p></div>
+              <div class="card-body h-100"><a href="/photography/fig-tree-tower/"><img src="/photography/fig-tree-tower/1.jpg" loading="lazy" width="1200" height="800" alt="Cover image: Fig Tree Tower" srcset="/photography/fig-tree-tower/1.jpg 1200w, /photography/fig-tree-tower/1-128w.jpg 128w, /photography/fig-tree-tower/1-256w.jpg 256w, /photography/fig-tree-tower/1-512w.jpg 512w, /photography/fig-tree-tower/1-768w.jpg 768w, /photography/fig-tree-tower/1-1024w.jpg 1024w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-01-12</p></div>
+        <p hidden>strangler fig jungle temple Beng Mealea Koh Ker Cambodia Siem Reap Angkor</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/beng-mealea/">Beng Mealea</a></h1>
+        
+      </div>
+              <div class="card-body h-100"><a href="/photography/beng-mealea/"><img src="/photography/beng-mealea/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Beng Mealea" srcset="/photography/beng-mealea/1.jpg 2048w, /photography/beng-mealea/1-128w.jpg 128w, /photography/beng-mealea/1-256w.jpg 256w, /photography/beng-mealea/1-512w.jpg 512w, /photography/beng-mealea/1-768w.jpg 768w, /photography/beng-mealea/1-1024w.jpg 1024w, /photography/beng-mealea/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2013-01-12</p></div>
+        <p hidden>temple jungle Beng Mealea Koh Ker Siem Reap Cambodia Angkor</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/lake-pedder-evening/">Lake Pedder Evening</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">View of the lake at dusk, from near the Mt Eliza hut</p></div>
+              <div class="card-body h-100"><a href="/photography/lake-pedder-evening/"><img src="/photography/lake-pedder-evening/1.jpg" loading="lazy" width="2048" height="1440" alt="Cover image: Lake Pedder Evening" srcset="/photography/lake-pedder-evening/1.jpg 2048w, /photography/lake-pedder-evening/1-128w.jpg 128w, /photography/lake-pedder-evening/1-256w.jpg 256w, /photography/lake-pedder-evening/1-512w.jpg 512w, /photography/lake-pedder-evening/1-768w.jpg 768w, /photography/lake-pedder-evening/1-1024w.jpg 1024w, /photography/lake-pedder-evening/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2012-11-11</p></div>
+        <p hidden>dusk landscape Lake Pedder Tasmania</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/alpine-snow-melt/">Alpine Snow Melt</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Patches of snow melt into an alpine pool</p></div>
+              <div class="card-body h-100"><a href="/photography/alpine-snow-melt/"><img src="/photography/alpine-snow-melt/1.jpg" loading="lazy" width="2048" height="1344" alt="Cover image: Alpine Snow Melt" srcset="/photography/alpine-snow-melt/1.jpg 2048w, /photography/alpine-snow-melt/1-128w.jpg 128w, /photography/alpine-snow-melt/1-256w.jpg 256w, /photography/alpine-snow-melt/1-512w.jpg 512w, /photography/alpine-snow-melt/1-768w.jpg 768w, /photography/alpine-snow-melt/1-1024w.jpg 1024w, /photography/alpine-snow-melt/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2012-11-11</p></div>
+        <p hidden>landscape alpine snow Mount Eliza Mount Anne Tasmania Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/alpine-plateau/">Alpine Plateau</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Alpine foliage in its crooked forms and ruddy hues</p></div>
+              <div class="card-body h-100"><a href="/photography/alpine-plateau/"><img src="/photography/alpine-plateau/1.jpg" loading="lazy" width="2048" height="1536" alt="Cover image: Alpine Plateau" srcset="/photography/alpine-plateau/1.jpg 2048w, /photography/alpine-plateau/1-128w.jpg 128w, /photography/alpine-plateau/1-256w.jpg 256w, /photography/alpine-plateau/1-512w.jpg 512w, /photography/alpine-plateau/1-768w.jpg 768w, /photography/alpine-plateau/1-1024w.jpg 1024w, /photography/alpine-plateau/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2012-11-11</p></div>
+        <p hidden>alpine Mount Eliza Mount Anne Tasmania Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/lake-pedder-evening/">Lake Pedder Evening</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">View of the lake at dusk, from near the Mt Eliza hut</p></div>
+              <div class="card-body h-100"><a href="/photography/lake-pedder-evening/"><img src="/photography/lake-pedder-evening/1.jpg" loading="lazy" width="2048" height="1440" alt="Cover image: Lake Pedder Evening" srcset="/photography/lake-pedder-evening/1.jpg 2048w, /photography/lake-pedder-evening/1-128w.jpg 128w, /photography/lake-pedder-evening/1-256w.jpg 256w, /photography/lake-pedder-evening/1-512w.jpg 512w, /photography/lake-pedder-evening/1-768w.jpg 768w, /photography/lake-pedder-evening/1-1024w.jpg 1024w, /photography/lake-pedder-evening/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2012-11-11</p></div>
+        <p hidden>dusk landscape Lake Pedder Tasmania</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/alpine-snow-melt/">Alpine Snow Melt</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Patches of snow melt into an alpine pool</p></div>
+              <div class="card-body h-100"><a href="/photography/alpine-snow-melt/"><img src="/photography/alpine-snow-melt/1.jpg" loading="lazy" width="2048" height="1344" alt="Cover image: Alpine Snow Melt" srcset="/photography/alpine-snow-melt/1.jpg 2048w, /photography/alpine-snow-melt/1-128w.jpg 128w, /photography/alpine-snow-melt/1-256w.jpg 256w, /photography/alpine-snow-melt/1-512w.jpg 512w, /photography/alpine-snow-melt/1-768w.jpg 768w, /photography/alpine-snow-melt/1-1024w.jpg 1024w, /photography/alpine-snow-melt/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2012-11-11</p></div>
+        <p hidden>landscape alpine snow Mount Eliza Mount Anne Tasmania Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/alpine-plateau/">Alpine Plateau</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Alpine foliage in its crooked forms and ruddy hues</p></div>
+              <div class="card-body h-100"><a href="/photography/alpine-plateau/"><img src="/photography/alpine-plateau/1.jpg" loading="lazy" width="2048" height="1536" alt="Cover image: Alpine Plateau" srcset="/photography/alpine-plateau/1.jpg 2048w, /photography/alpine-plateau/1-128w.jpg 128w, /photography/alpine-plateau/1-256w.jpg 256w, /photography/alpine-plateau/1-512w.jpg 512w, /photography/alpine-plateau/1-768w.jpg 768w, /photography/alpine-plateau/1-1024w.jpg 1024w, /photography/alpine-plateau/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2012-11-11</p></div>
+        <p hidden>alpine Mount Eliza Mount Anne Tasmania Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/gpu-acceleration-of-runge-kutta-integrators/">GPU Acceleration of Runge-Kutta Integrators</a></h1>
+        <p class="card-text date">L.M. Murray</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2012-09-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/being-different/">Being Different</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Supposedly, the fiercest dolls bring the greatest fortunes</p></div>
+              <div class="card-body h-100"><a href="/photography/being-different/"><img src="/photography/being-different/1.jpg" loading="lazy" width="2048" height="2048" alt="Cover image: Being Different" srcset="/photography/being-different/1.jpg 2048w, /photography/being-different/1-128w.jpg 128w, /photography/being-different/1-256w.jpg 256w, /photography/being-different/1-512w.jpg 512w, /photography/being-different/1-768w.jpg 768w, /photography/being-different/1-1024w.jpg 1024w, /photography/being-different/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2012-07-14</p></div>
+        <p hidden>daruma temple Mino park Osaka Japan</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/assimilation-of-glider-and-moorning-data-into-a-coastal-ocean-model/">Assimilation of glider and mooring data into a coastal ocean model</a></h1>
+        <p class="card-text date">E.M. Jones, P.R. Oke, F. Rizwi and L.M. Murray</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2012-06-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/fishing-around-the-perfume-pagoda/">Fishing Around the Perfume Pagoda</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Locals fish from the shore along the waterway that links the many pagodas of the region by row boat</p></div>
+              <div class="card-body h-100"><a href="/photography/fishing-around-the-perfume-pagoda/"><img src="/photography/fishing-around-the-perfume-pagoda/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Fishing Around the Perfume Pagoda" srcset="/photography/fishing-around-the-perfume-pagoda/1.jpg 2048w, /photography/fishing-around-the-perfume-pagoda/1-128w.jpg 128w, /photography/fishing-around-the-perfume-pagoda/1-256w.jpg 256w, /photography/fishing-around-the-perfume-pagoda/1-512w.jpg 512w, /photography/fishing-around-the-perfume-pagoda/1-768w.jpg 768w, /photography/fishing-around-the-perfume-pagoda/1-1024w.jpg 1024w, /photography/fishing-around-the-perfume-pagoda/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2012-03-25</p></div>
+        <p hidden>Perfume Pagoda Vietnam North Vietnam mountains cloud</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/emperors-and-poetry/">Emperors and Poetry</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">The summer house at Tu Doc Tomb, where the Nguyen emperor once came to write poetry</p></div>
+              <div class="card-body h-100"><a href="/photography/emperors-and-poetry/"><img src="/photography/emperors-and-poetry/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Emperors and Poetry" srcset="/photography/emperors-and-poetry/1.jpg 2048w, /photography/emperors-and-poetry/1-128w.jpg 128w, /photography/emperors-and-poetry/1-256w.jpg 256w, /photography/emperors-and-poetry/1-512w.jpg 512w, /photography/emperors-and-poetry/1-768w.jpg 768w, /photography/emperors-and-poetry/1-1024w.jpg 1024w, /photography/emperors-and-poetry/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2012-03-25</p></div>
+        <p hidden>lake summer house Tu Doc Hue Vietnam</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/fishing-around-the-perfume-pagoda/">Fishing Around the Perfume Pagoda</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Locals fish from the shore along the waterway that links the many pagodas of the region by row boat</p></div>
+              <div class="card-body h-100"><a href="/photography/fishing-around-the-perfume-pagoda/"><img src="/photography/fishing-around-the-perfume-pagoda/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Fishing Around the Perfume Pagoda" srcset="/photography/fishing-around-the-perfume-pagoda/1.jpg 2048w, /photography/fishing-around-the-perfume-pagoda/1-128w.jpg 128w, /photography/fishing-around-the-perfume-pagoda/1-256w.jpg 256w, /photography/fishing-around-the-perfume-pagoda/1-512w.jpg 512w, /photography/fishing-around-the-perfume-pagoda/1-768w.jpg 768w, /photography/fishing-around-the-perfume-pagoda/1-1024w.jpg 1024w, /photography/fishing-around-the-perfume-pagoda/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2012-03-25</p></div>
+        <p hidden>Perfume Pagoda Vietnam North Vietnam mountains cloud</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/emperors-and-poetry/">Emperors and Poetry</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">The summer house at Tu Doc Tomb, where the Nguyen emperor once came to write poetry</p></div>
+              <div class="card-body h-100"><a href="/photography/emperors-and-poetry/"><img src="/photography/emperors-and-poetry/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Emperors and Poetry" srcset="/photography/emperors-and-poetry/1.jpg 2048w, /photography/emperors-and-poetry/1-128w.jpg 128w, /photography/emperors-and-poetry/1-256w.jpg 256w, /photography/emperors-and-poetry/1-512w.jpg 512w, /photography/emperors-and-poetry/1-768w.jpg 768w, /photography/emperors-and-poetry/1-1024w.jpg 1024w, /photography/emperors-and-poetry/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2012-03-25</p></div>
+        <p hidden>lake summer house Tu Doc Hue Vietnam</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/milford-sound-waterfalls/">Milford Sound Waterfalls</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A moody day on the water after recent rain</p></div>
+              <div class="card-body h-100"><a href="/photography/milford-sound-waterfalls/"><img src="/photography/milford-sound-waterfalls/1.jpg" loading="lazy" width="2048" height="1106" alt="Cover image: Milford Sound Waterfalls" srcset="/photography/milford-sound-waterfalls/1.jpg 2048w, /photography/milford-sound-waterfalls/1-128w.jpg 128w, /photography/milford-sound-waterfalls/1-256w.jpg 256w, /photography/milford-sound-waterfalls/1-512w.jpg 512w, /photography/milford-sound-waterfalls/1-768w.jpg 768w, /photography/milford-sound-waterfalls/1-1024w.jpg 1024w, /photography/milford-sound-waterfalls/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2011-10-06</p></div>
+        <p hidden>waterfall cloud landscape Milford Sound South Island New Zealand</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/particle-smoothing-in-continuous-time-a-fast-approach-via-density-estimation/">Particle smoothing in continuous time: A fast approach via density estimation</a></h1>
+        <p class="card-text date">L.M. Murray and A. Storkey</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2011-08-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/high-performance-pseudo-random-number-generation-on-graphics-processing-units/">High-Performance Pseudo-Random Number Generation on Graphics Processing Units</a></h1>
+        <p class="card-text date">N. Nandapalan, R. Brent, L.M. Murray and A. Rendell</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2011-04-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/gpu-acceleration-of-the-particle-filter-the-metropolis-resampler/">GPU acceleration of the particle filter: The Metropolis resampler</a></h1>
+        <p class="card-text date">L.M. Murray</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2011-03-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/lake-ballard/">Lake Ballard</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Abstract figures on a remote salt lake</p></div>
+              <div class="card-body h-100"><a href="/photography/lake-ballard/"><img src="/photography/lake-ballard/1.jpg" loading="lazy" width="2048" height="3740" alt="Cover image: Lake Ballard" srcset="/photography/lake-ballard/1.jpg 2048w, /photography/lake-ballard/1-128w.jpg 128w, /photography/lake-ballard/1-256w.jpg 256w, /photography/lake-ballard/1-512w.jpg 512w, /photography/lake-ballard/1-768w.jpg 768w, /photography/lake-ballard/1-1024w.jpg 1024w, /photography/lake-ballard/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2011-02-07</p></div>
+        <p hidden>salt lake landscape Antony Gormley Inside Australia Lake Ballard Menzies Western Australia Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/distributed-markov-chain-monte-carlo/">Distributed Markov chain Monte Carlo</a></h1>
+        <p class="card-text date">L.M. Murray</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2010-12-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/phanak-island/">Phanak Island</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Photo-fluorescent plankton in sheltered caves, to a buzz-saw cicada symphony</p></div>
+              <div class="card-body h-100"><a href="/photography/phanak-island/"><img src="/photography/phanak-island/1.jpg" loading="lazy" width="2048" height="1536" alt="Cover image: Phanak Island" srcset="/photography/phanak-island/1.jpg 2048w, /photography/phanak-island/1-128w.jpg 128w, /photography/phanak-island/1-256w.jpg 256w, /photography/phanak-island/1-512w.jpg 512w, /photography/phanak-island/1-768w.jpg 768w, /photography/phanak-island/1-1024w.jpg 1024w, /photography/phanak-island/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2010-11-26</p></div>
+        <p hidden>island cliff Phanak Phuket Thailand</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/a-bayesian-approach-to-state-and-parameter-estimation-in-a-phytoplankton-zooplankton-model/">A Bayesian approach to state and parameter estimation in a Phytoplankton-Zooplankton model</a></h1>
+        <p class="card-text date">E. Jones, J. Parslow and L.M. Murray</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2010-11-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/lake-magic/">Lake Magic</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Captivating colours of salt lakes</p></div>
+              <div class="card-body h-100"><a href="/photography/lake-magic/"><img src="/photography/lake-magic/1.jpg" loading="lazy" width="2048" height="681" alt="Cover image: Lake Magic" srcset="/photography/lake-magic/1.jpg 2048w, /photography/lake-magic/1-128w.jpg 128w, /photography/lake-magic/1-256w.jpg 256w, /photography/lake-magic/1-512w.jpg 512w, /photography/lake-magic/1-768w.jpg 768w, /photography/lake-magic/1-1024w.jpg 1024w, /photography/lake-magic/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2010-09-29</p></div>
+        <p hidden>salt lake landscape Lake Magic Hyden Western Australia Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/on-the-road-to-pugilist-hill/">On the Road to Pugilist Hill</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Long exposure after sunset, looking out to Rawnsley Bluff</p></div>
+              <div class="card-body h-100"><a href="/photography/on-the-road-to-pugilist-hill/"><img src="/photography/on-the-road-to-pugilist-hill/1.jpg" loading="lazy" width="2048" height="1202" alt="Cover image: On the Road to Pugilist Hill" srcset="/photography/on-the-road-to-pugilist-hill/1.jpg 2048w, /photography/on-the-road-to-pugilist-hill/1-128w.jpg 128w, /photography/on-the-road-to-pugilist-hill/1-256w.jpg 256w, /photography/on-the-road-to-pugilist-hill/1-512w.jpg 512w, /photography/on-the-road-to-pugilist-hill/1-768w.jpg 768w, /photography/on-the-road-to-pugilist-hill/1-1024w.jpg 1024w, /photography/on-the-road-to-pugilist-hill/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2010-06-29</p></div>
+        <p hidden>dusk landscape long exposure Flinders Ranges South Australia Australia</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/albina-lake/">Albina Lake</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">A day of shifting showers</p></div>
+              <div class="card-body h-100"><a href="/photography/albina-lake/"><img src="/photography/albina-lake/1.jpg" loading="lazy" width="2048" height="1138" alt="Cover image: Albina Lake" srcset="/photography/albina-lake/1.jpg 2048w, /photography/albina-lake/1-128w.jpg 128w, /photography/albina-lake/1-256w.jpg 256w, /photography/albina-lake/1-512w.jpg 512w, /photography/albina-lake/1-768w.jpg 768w, /photography/albina-lake/1-1024w.jpg 1024w, /photography/albina-lake/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2010-01-03</p></div>
+        <p hidden>Kosciuszko Charlotte Pass Thredbo Snowy Mountains Australia lake alpine snow cloud landscape</p>
+      </div>
+    </div>
+  </div><div class="postcard display-software">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">software</span>
+        <span class="badge rounded-pill text-bg-warning">Archive</span>
+        
+        <h1 class="card-title fs-5"><a href="/software/urbanlightscape/">Urban Lightscape</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Exposure correction and local lighting adjustments</p></div>
+              <div class="card-body h-100"><a href="/software/urbanlightscape/"><img src="/software/urbanlightscape/urbanlightscape.gif" loading="lazy" width="340" height="272" alt="Cover image: Urban Lightscape"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2010-01-01</p></div>
+        <p hidden>photography tintii urban lightscape color colour brightness</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/bayesian-learning-of-continuous-time-dynamical-systems/">Bayesian Learning of Continuous Time Dynamical Systems with Applications in Functional Magnetic Resonance Imaging</a></h1>
+        <p class="card-text date">L.M. Murray</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2009-11-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/watarrka-domes/">Watarrka Domes</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Ancient rock forms at the top of the Rim Walk</p></div>
+              <div class="card-body h-100"><a href="/photography/watarrka-domes/"><img src="/photography/watarrka-domes/1.jpg" loading="lazy" width="2048" height="967" alt="Cover image: Watarrka Domes" srcset="/photography/watarrka-domes/1.jpg 2048w, /photography/watarrka-domes/1-128w.jpg 128w, /photography/watarrka-domes/1-256w.jpg 256w, /photography/watarrka-domes/1-512w.jpg 512w, /photography/watarrka-domes/1-768w.jpg 768w, /photography/watarrka-domes/1-1024w.jpg 1024w, /photography/watarrka-domes/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2009-10-01</p></div>
+        <p hidden>Watarrka King’s Canyon Northern Territory Australia canyon</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/last-nights-campsite/">Last Night’s Campsite</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Ellery Creek Bighole</p></div>
+              <div class="card-body h-100"><a href="/photography/last-nights-campsite/"><img src="/photography/last-nights-campsite/1.jpg" loading="lazy" width="2048" height="1365" alt="Cover image: Last Night’s Campsite" srcset="/photography/last-nights-campsite/1.jpg 2048w, /photography/last-nights-campsite/1-128w.jpg 128w, /photography/last-nights-campsite/1-256w.jpg 256w, /photography/last-nights-campsite/1-512w.jpg 512w, /photography/last-nights-campsite/1-768w.jpg 768w, /photography/last-nights-campsite/1-1024w.jpg 1024w, /photography/last-nights-campsite/1-1536w.jpg 1536w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2009-09-29</p></div>
+        <p hidden>Ellery Creek Bighole West MacDonnell Ranges Northern Territory Australia sunset gorge</p>
+      </div>
+    </div>
+  </div><div class="postcard display-photography">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">photography</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/photography/goodbye-edinburgh/">Goodbye Edinburgh</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">The Balmoral Hotel from Bailie Fyfe’s Close, off the Royal Mile</p></div>
+              <div class="card-body h-100"><a href="/photography/goodbye-edinburgh/"><img src="/photography/goodbye-edinburgh/1.jpg" loading="lazy" width="1196" height="800" alt="Cover image: Goodbye Edinburgh" srcset="/photography/goodbye-edinburgh/1.jpg 1196w, /photography/goodbye-edinburgh/1-128w.jpg 128w, /photography/goodbye-edinburgh/1-256w.jpg 256w, /photography/goodbye-edinburgh/1-512w.jpg 512w, /photography/goodbye-edinburgh/1-768w.jpg 768w, /photography/goodbye-edinburgh/1-1024w.jpg 1024w”" sizes="auto"></a></div>
+          <div class="card-body date">
+              <div class="float-start"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><use href="#image"></use></svg> 1</div>
+              <div class="float-end"><p class="card-text">2009-02-01</p></div>
+        <p hidden>Edinburgh Scotland United Kingdom Balmoral Royal Mile sunset</p>
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/continuous-time-particle-filtering-for-fmri/">Continuous Time Particle Filtering for fMRI</a></h1>
+        <p class="card-text date">L.M. Murray and A. Storkey</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2008-12-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-research">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">research</span>
+        
+        
+        <h1 class="card-title fs-5"><a href="/research/learning-structural-equation-models-for-fmri/">Learning structural equation models for fMRI</a></h1>
+        <p class="card-text date">A.J. Storkey, E. Simonotto, H. Whalley, S. Lawrie, L.M. Murray and D. McGonigle</p>
+      </div>
+              <div class="card-body h-100"></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2007-12-01</p></div>
+        
+      </div>
+    </div>
+  </div><div class="postcard display-software">
+    <div class="card">
+      <div class="card-header">
+        <span class="category">software</span>
+        <span class="badge rounded-pill text-bg-warning">Archive</span>
+        
+        <h1 class="card-title fs-5"><a href="/software/tintii/">Tintii</a></h1>
+        
+      </div>
+          <div class="card-body"><p class="card-text">Selective colour and saturation control</p></div>
+              <div class="card-body h-100"><a href="/software/tintii/"><img src="/software/tintii/tintii.gif" loading="lazy" width="352" height="250" alt="Cover image: Tintii"></a></div>
+          <div class="card-body date">
+              <div class="float-end"><p class="card-text">2007-01-01</p></div>
+        <p hidden>photography tintii urban lightscape color colour brightness</p>
+      </div>
+    </div>
+  </div>
+  </main>
+
+  </div>
+
+<div class="w-100 pb-4 bg-body-tertiary" style="clear:both;margin-top:96px;">
+<div class="container">
+  <nav class="row g-4">
+    
+    <div class="nav-bottom">
+            <h1>Menu</h1>
+            <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="/" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg>
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/about" class="nav-link">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+            About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="https://fosstodon.org/@lawmurray" title="Lawrence Murray on Mastodon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M20.94,14C20.66,15.41 18.5,16.96 15.97,17.26C14.66,17.41 13.37,17.56 12,17.5C9.75,17.39 8,16.96 8,16.96V17.58C8.32,19.8 10.22,19.93 12.03,20C13.85,20.05 15.47,19.54 15.47,19.54L15.55,21.19C15.55,21.19 14.27,21.87 12,22C10.75,22.07 9.19,21.97 7.38,21.5C3.46,20.45 2.78,16.26 2.68,12L2.67,8.57C2.67,4.23 5.5,2.96 5.5,2.96C6.95,2.3 9.41,2 11.97,2H12.03C14.59,2 17.05,2.3 18.5,2.96C18.5,2.96 21.33,4.23 21.33,8.57C21.33,8.57 21.37,11.78 20.94,14M18,8.91C18,7.83 17.7,7 17.15,6.35C16.59,5.72 15.85,5.39 14.92,5.39C13.86,5.39 13.05,5.8 12.5,6.62L12,7.5L11.5,6.62C10.94,5.8 10.14,5.39 9.07,5.39C8.15,5.39 7.41,5.72 6.84,6.35C6.29,7 6,7.83 6,8.91V14.17H8.1V9.06C8.1,8 8.55,7.44 9.46,7.44C10.46,7.44 10.96,8.09 10.96,9.37V12.16H13.03V9.37C13.03,8.09 13.53,7.44 14.54,7.44C15.44,7.44 15.89,8 15.89,9.06V14.17H18V8.91Z" /></svg>
+            Mastodon
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="http://www.github.com/lawmurray" title="Lawrence Murray on GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" /></svg>
+            GitHub
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/newsletter/" title="Subscribe to the email newsletter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="m20 8-8 5-8-5V6l8 5 8-5m0-2H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"/></svg>
+            Newsletter
+          </a>
+        </li>
+        <li class="nav-item">
+          <a rel="me" class="nav-link" href="/rss/" title="RSS Feeds">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24" class="align-text-top"><path d="M6.18,15.64A2.18,2.18 0 0,1 8.36,17.82C8.36,19 7.38,20 6.18,20C5,20 4,19 4,17.82A2.18,2.18 0 0,1 6.18,15.64M4,4.44A15.56,15.56 0 0,1 19.56,20H16.73A12.73,12.73 0 0,0 4,7.27V4.44M4,10.1A9.9,9.9 0 0,1 13.9,20H11.07A7.07,7.07 0 0,0 4,12.93V10.1Z" /></svg>
+            Feeds
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <h1>About</h1>
+      <p><small><a href="/about">Lawrence Murray</a> is a research scientist and software engineer with over 20 years experience in industry and acadamia.</small></p>
+      <p><small>&copy;&nbsp;Copyright. All rights reserved.</small></p>
+    </div>
+  </nav>
+</div>
+</div></body>
+</html>
