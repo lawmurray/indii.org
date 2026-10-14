@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+    width="952" height="218"
+    viewBox="0 0 952 218">
+  <style type="text/css" source-text-origin="source-independent defaults: shared by ASCII and UTF-8">
+    svg {
+        color-scheme: light dark; /* this becomes necessary if not inherited from parent elements */
+        font-family: monospace;
+        font-size: 15px;
+    }
+    text {
+        stroke: none;
+        text-anchor: middle;
+    }
+    .path {
+        fill: none;
+    }
+    circle.filled {
+        fill: inherit;
+    }
+    circle.hollow {
+         fill: none;
+    }
+    svg {
+        color: #000;  /* set value of 'currentColor' */
+    }
+    @media (prefers-color-scheme: dark) {
+        svg {
+            color: #FFF;  /* set value of 'currentColor' */
+        }
+    }
+    svg {
+        fill: currentColor;
+        stroke: currentColor;
+    }
+  </style>
+
+<g transform='translate(8,12)'>
+  <g id='lines'>
+    <polyline class="path" points="120,16 584,16"/>
+    <polyline class="path" points="112,48 160,48"/>
+    <polyline class="path" points="160,48 184,48"/>
+    <polyline class="path" points="184,48 264,48"/>
+    <polyline class="path" points="264,48 304,48"/>
+    <polyline class="path" points="304,48 336,48"/>
+    <polyline class="path" points="336,48 352,48"/>
+    <polyline class="path" points="352,48 368,48"/>
+    <polyline class="path" points="368,48 472,48"/>
+    <polyline class="path" points="472,48 528,48"/>
+    <polyline class="path" points="528,48 592,48"/>
+    <polyline class="path" points="784,48 832,48"/>
+    <polyline class="path" points="832,48 856,48"/>
+    <polyline class="path" points="856,48 936,48"/>
+    <polyline class="path" points="112,80 160,80"/>
+    <polyline class="path" points="160,80 184,80"/>
+    <polyline class="path" points="184,80 264,80"/>
+    <polyline class="path" points="264,80 304,80"/>
+    <polyline class="path" points="304,80 336,80"/>
+    <polyline class="path" points="336,80 352,80"/>
+    <polyline class="path" points="352,80 368,80"/>
+    <polyline class="path" points="368,80 472,80"/>
+    <polyline class="path" points="472,80 528,80"/>
+    <polyline class="path" points="528,80 592,80"/>
+    <polyline class="path" points="784,80 832,80"/>
+    <polyline class="path" points="832,80 856,80"/>
+    <polyline class="path" points="856,80 936,80"/>
+    <polyline class="path" points="32,112 64,112"/>
+    <polyline class="path" points="64,112 80,112"/>
+    <polyline class="path" points="80,112 96,112"/>
+    <polyline class="path" points="96,112 120,112"/>
+    <polyline class="path" points="120,112 136,112"/>
+    <polyline class="path" points="136,112 152,112"/>
+    <polyline class="path" points="152,112 176,112"/>
+    <polyline class="path" points="176,112 200,112"/>
+    <polyline class="path" points="200,112 216,112"/>
+    <polyline class="path" points="216,112 240,112"/>
+    <polyline class="path" points="680,112 712,112"/>
+    <polyline class="path" points="712,112 744,112"/>
+    <polyline class="path" points="744,112 760,112"/>
+    <polyline class="path" points="760,112 776,112"/>
+    <polyline class="path" points="776,112 800,112"/>
+    <polyline class="path" points="800,112 816,112"/>
+    <polyline class="path" points="816,112 832,112"/>
+    <polyline class="path" points="832,112 856,112"/>
+    <polyline class="path" points="856,112 880,112"/>
+    <polyline class="path" points="880,112 896,112"/>
+    <polyline class="path" points="896,112 920,112"/>
+    <polyline class="path" points="920,112 936,112"/>
+    <polyline class="path" points="32,144 64,144"/>
+    <polyline class="path" points="64,144 80,144"/>
+    <polyline class="path" points="80,144 96,144"/>
+    <polyline class="path" points="96,144 120,144"/>
+    <polyline class="path" points="120,144 136,144"/>
+    <polyline class="path" points="136,144 152,144"/>
+    <polyline class="path" points="152,144 176,144"/>
+    <polyline class="path" points="176,144 200,144"/>
+    <polyline class="path" points="200,144 216,144"/>
+    <polyline class="path" points="216,144 240,144"/>
+    <polyline class="path" points="680,144 712,144"/>
+    <polyline class="path" points="712,144 744,144"/>
+    <polyline class="path" points="744,144 760,144"/>
+    <polyline class="path" points="760,144 776,144"/>
+    <polyline class="path" points="776,144 800,144"/>
+    <polyline class="path" points="800,144 816,144"/>
+    <polyline class="path" points="816,144 832,144"/>
+    <polyline class="path" points="832,144 856,144"/>
+    <polyline class="path" points="856,144 880,144"/>
+    <polyline class="path" points="880,144 896,144"/>
+    <polyline class="path" points="896,144 920,144"/>
+    <polyline class="path" points="920,144 936,144"/>
+    <polyline class="path" points="40,176 232,176"/>
+    <polyline class="path" points="248,176 672,176"/>
+    <polyline class="path" points="688,176 704,176"/>
+    <polyline class="path" points="720,176 936,176"/>
+    <polyline class="path" points="32,112 32,144"/>
+    <polyline class="path" points="32,168 32,184"/>
+    <polyline class="path" points="64,112 64,144"/>
+    <polyline class="path" points="80,112 80,144"/>
+    <polyline class="path" points="96,112 96,144"/>
+    <polyline class="path" points="112,8 112,24"/>
+    <polyline class="path" points="112,48 112,80"/>
+    <polyline class="path" points="120,112 120,144"/>
+    <polyline class="path" points="136,112 136,144"/>
+    <polyline class="path" points="152,112 152,144"/>
+    <polyline class="path" points="160,48 160,80"/>
+    <polyline class="path" points="176,112 176,144"/>
+    <polyline class="path" points="184,48 184,80"/>
+    <polyline class="path" points="200,112 200,144"/>
+    <polyline class="path" points="216,112 216,144"/>
+    <polyline class="path" points="240,112 240,144"/>
+    <polyline class="path" points="240,168 240,184"/>
+    <polyline class="path" points="264,48 264,80"/>
+    <polyline class="path" points="304,48 304,80"/>
+    <polyline class="path" points="336,48 336,80"/>
+    <polyline class="path" points="352,48 352,80"/>
+    <polyline class="path" points="368,48 368,80"/>
+    <polyline class="path" points="472,48 472,80"/>
+    <polyline class="path" points="528,48 528,80"/>
+    <polyline class="path" points="592,8 592,24"/>
+    <polyline class="path" points="592,48 592,80"/>
+    <polyline class="path" points="680,112 680,144"/>
+    <polyline class="path" points="680,168 680,184"/>
+    <polyline class="path" points="712,112 712,144"/>
+    <polyline class="path" points="712,168 712,184"/>
+    <polyline class="path" points="744,112 744,144"/>
+    <polyline class="path" points="760,112 760,144"/>
+    <polyline class="path" points="776,112 776,144"/>
+    <polyline class="path" points="784,48 784,80"/>
+    <polyline class="path" points="800,112 800,144"/>
+    <polyline class="path" points="816,112 816,144"/>
+    <polyline class="path" points="832,48 832,80"/>
+    <polyline class="path" points="832,112 832,144"/>
+    <polyline class="path" points="856,48 856,80"/>
+    <polyline class="path" points="856,112 856,144"/>
+    <polyline class="path" points="880,112 880,144"/>
+    <polyline class="path" points="896,112 896,144"/>
+    <polyline class="path" points="920,112 920,144"/>
+  </g>
+  <g id='triangles'>
+    <polygon points="48,176 36,170.4 36,181.6" transform="rotate(180, 40, 176)" class="arrowhead"></polygon>
+    <polygon points="128,16 116,10.4 116,21.6" transform="rotate(180, 120, 16)" class="arrowhead"></polygon>
+    <polygon points="240,176 228,170.4 228,181.6" transform="rotate(0, 232, 176)" class="arrowhead"></polygon>
+    <polygon points="256,176 244,170.4 244,181.6" transform="rotate(180, 248, 176)" class="arrowhead"></polygon>
+    <polygon points="592,16 580,10.4 580,21.6" transform="rotate(0, 584, 16)" class="arrowhead"></polygon>
+    <polygon points="680,176 668,170.4 668,181.6" transform="rotate(0, 672, 176)" class="arrowhead"></polygon>
+    <polygon points="696,176 684,170.4 684,181.6" transform="rotate(180, 688, 176)" class="arrowhead"></polygon>
+    <polygon points="712,176 700,170.4 700,181.6" transform="rotate(0, 704, 176)" class="arrowhead"></polygon>
+    <polygon points="728,176 716,170.4 716,181.6" transform="rotate(180, 720, 176)" class="arrowhead"></polygon>
+  </g>
+  <g id='roundedCorners'>
+  </g>
+  <g id='circles'>
+  </g>
+  <g id='bridges'>
+  </g>
+  <g id='text'>
+    <text x="352" y="4">2</text>
+    <text x="0" y="68">G</text>
+    <text x="8" y="68">P</text>
+    <text x="16" y="68">U</text>
+    <text x="0" y="132">C</text>
+    <text x="8" y="132">P</text>
+    <text x="16" y="132">U</text>
+    <text x="136" y="196">1</text>
+    <text x="456" y="196">4</text>
+    <text x="696" y="196">3</text>
+    <text x="832" y="196">5</text>
+</g>
+</g>
+</svg>
