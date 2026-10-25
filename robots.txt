@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /404.html
+Sitemap: https://indii.org/sitemap.txt
+
+User-agent: Google-Extended
+Disallow: /creative
+
+User-agent: GPTBot
+Disallow: /creative

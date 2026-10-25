@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+    width="232" height="154"
+    viewBox="0 0 232 154">
+  <style type="text/css" source-text-origin="source-independent defaults: shared by ASCII and UTF-8">
+    svg {
+        color-scheme: light dark; /* this becomes necessary if not inherited from parent elements */
+        font-family: monospace;
+        font-size: 15px;
+    }
+    text {
+        stroke: none;
+        text-anchor: middle;
+    }
+    .path {
+        fill: none;
+    }
+    circle.filled {
+        fill: inherit;
+    }
+    circle.hollow {
+         fill: none;
+    }
+    svg {
+        color: #000;  /* set value of 'currentColor' */
+    }
+    @media (prefers-color-scheme: dark) {
+        svg {
+            color: #FFF;  /* set value of 'currentColor' */
+        }
+    }
+    svg {
+        fill: currentColor;
+        stroke: currentColor;
+    }
+  </style>
+
+<g transform='translate(8,12)'>
+  <g id='lines'>
+    <polyline class="path" points="72,0 96,0"/>
+    <polyline class="path" points="176,0 200,0"/>
+    <polyline class="path" points="16,16 48,16"/>
+    <polyline class="path" points="120,16 152,16"/>
+    <polyline class="path" points="72,32 80,32"/>
+    <polyline class="path" points="80,32 96,32"/>
+    <polyline class="path" points="176,32 184,32"/>
+    <polyline class="path" points="184,32 200,32"/>
+    <polyline class="path" points="56,96 80,96"/>
+    <polyline class="path" points="80,96 112,96"/>
+    <polyline class="path" points="160,96 184,96"/>
+    <polyline class="path" points="184,96 216,96"/>
+    <polyline class="path" points="56,128 112,128"/>
+    <polyline class="path" points="160,128 216,128"/>
+    <polyline class="path" points="56,96 56,128"/>
+    <polyline class="path" points="80,32 80,80"/>
+    <polyline class="path" points="80,80 80,96"/>
+    <polyline class="path" points="112,96 112,128"/>
+    <polyline class="path" points="160,96 160,128"/>
+    <polyline class="path" points="184,32 184,80"/>
+    <polyline class="path" points="184,80 184,96"/>
+    <polyline class="path" points="216,96 216,128"/>
+  </g>
+  <g id='triangles'>
+    <polygon points="56,16 44,10.4 44,21.6" transform="rotate(0, 48, 16)" class="arrowhead"></polygon>
+    <polyline class="path" points="80,80 80,88"/>
+    <polygon points="96,80 84,74.4 84,85.6" transform="rotate(90, 80, 80)" class="arrowhead"></polygon>
+    <polygon points="160,16 148,10.4 148,21.6" transform="rotate(0, 152, 16)" class="arrowhead"></polygon>
+    <polyline class="path" points="184,80 184,88"/>
+    <polygon points="200,80 188,74.4 188,85.6" transform="rotate(90, 184, 80)" class="arrowhead"></polygon>
+  </g>
+  <g id='roundedCorners'>
+    <path class="path" d="M 72,0 A 16,16 0 0,0 56,16"></path>
+    <path class="path" d="M 96,0 A 16,16 0 0,1 112,16"></path>
+    <path class="path" d="M 176,0 A 16,16 0 0,0 160,16"></path>
+    <path class="path" d="M 200,0 A 16,16 0 0,1 216,16"></path>
+    <path class="path" d="M 56,16 A 16,16 0 0,0 72,32"></path>
+    <path class="path" d="M 112,16 A 16,16 0 0,1 96,32"></path>
+    <path class="path" d="M 160,16 A 16,16 0 0,0 176,32"></path>
+    <path class="path" d="M 216,16 A 16,16 0 0,1 200,32"></path>
+  </g>
+  <g id='circles'>
+  </g>
+  <g id='bridges'>
+  </g>
+  <g id='text'>
+    <text x="64" y="20">x</text>
+    <text x="72" y="20">[</text>
+    <text x="80" y="20">t</text>
+    <text x="88" y="20">-</text>
+    <text x="96" y="20">2</text>
+    <text x="104" y="20">]</text>
+    <text x="168" y="20">x</text>
+    <text x="176" y="20">[</text>
+    <text x="184" y="20">t</text>
+    <text x="192" y="20">-</text>
+    <text x="200" y="20">1</text>
+    <text x="208" y="20">]</text>
+    <text x="64" y="116">y</text>
+    <text x="72" y="116">[</text>
+    <text x="80" y="116">t</text>
+    <text x="88" y="116">-</text>
+    <text x="96" y="116">2</text>
+    <text x="104" y="116">]</text>
+    <text x="168" y="116">y</text>
+    <text x="176" y="116">[</text>
+    <text x="184" y="116">t</text>
+    <text x="192" y="116">-</text>
+    <text x="200" y="116">1</text>
+    <text x="208" y="116">]</text>
+</g>
+</g>
+</svg>
