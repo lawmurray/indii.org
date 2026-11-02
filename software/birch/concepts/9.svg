@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+    width="128" height="138"
+    viewBox="0 0 128 138">
+  <style type="text/css" source-text-origin="source-independent defaults: shared by ASCII and UTF-8">
+    svg {
+        color-scheme: light dark; /* this becomes necessary if not inherited from parent elements */
+        font-family: monospace;
+        font-size: 15px;
+    }
+    text {
+        stroke: none;
+        text-anchor: middle;
+    }
+    .path {
+        fill: none;
+    }
+    circle.filled {
+        fill: inherit;
+    }
+    circle.hollow {
+         fill: none;
+    }
+    svg {
+        color: #000;  /* set value of 'currentColor' */
+    }
+    @media (prefers-color-scheme: dark) {
+        svg {
+            color: #FFF;  /* set value of 'currentColor' */
+        }
+    }
+    svg {
+        fill: currentColor;
+        stroke: currentColor;
+    }
+  </style>
+
+<g transform='translate(8,12)'>
+  <g id='lines'>
+    <polyline class="path" points="56,80 64,80"/>
+    <polyline class="path" points="72,64 88,32"/>
+    <polyline class="path" points="24,32 40,64"/>
+  </g>
+  <g id='triangles'>
+    <polyline class="path" points="40,64 48,80"/>
+    <polygon points="58,64 46,58.4 46,69.6" transform="rotate(60, 40, 64)" class="arrowhead"></polygon>
+    <polyline class="path" points="64,80 72,64"/>
+    <polygon points="90,64 78,58.4 78,69.6" transform="rotate(120, 72, 64)" class="arrowhead"></polygon>
+  </g>
+  <g id='roundedCorners'>
+    <path class="path" d="M 16,0 A 16,16 0 0,0 0,16"></path>
+    <path class="path" d="M 16,0 A 16,16 0 0,1 32,16"></path>
+    <path class="path" d="M 96,0 A 16,16 0 0,0 80,16"></path>
+    <path class="path" d="M 96,0 A 16,16 0 0,1 112,16"></path>
+    <path class="path" d="M 0,16 A 16,16 0 0,0 16,32"></path>
+    <path class="path" d="M 32,16 A 16,16 0 0,1 16,32"></path>
+    <path class="path" d="M 80,16 A 16,16 0 0,0 96,32"></path>
+    <path class="path" d="M 112,16 A 16,16 0 0,1 96,32"></path>
+    <path class="path" d="M 56,80 A 16,16 0 0,0 40,96"></path>
+    <path class="path" d="M 56,80 A 16,16 0 0,1 72,96"></path>
+    <path class="path" d="M 40,96 A 16,16 0 0,0 56,112"></path>
+    <path class="path" d="M 72,96 A 16,16 0 0,1 56,112"></path>
+  </g>
+  <g id='circles'>
+  </g>
+  <g id='bridges'>
+  </g>
+  <g id='text'>
+    <text x="16" y="20">t</text>
+    <text x="96" y="20">c</text>
+    <text x="56" y="100">r</text>
+</g>
+</g>
+</svg>

@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+    width="136" height="138"
+    viewBox="0 0 136 138">
+  <style type="text/css" source-text-origin="source-independent defaults: shared by ASCII and UTF-8">
+    svg {
+        color-scheme: light dark; /* this becomes necessary if not inherited from parent elements */
+        font-family: monospace;
+        font-size: 15px;
+    }
+    text {
+        stroke: none;
+        text-anchor: middle;
+    }
+    .path {
+        fill: none;
+    }
+    circle.filled {
+        fill: inherit;
+    }
+    circle.hollow {
+         fill: none;
+    }
+    svg {
+        color: #000;  /* set value of 'currentColor' */
+    }
+    @media (prefers-color-scheme: dark) {
+        svg {
+            color: #FFF;  /* set value of 'currentColor' */
+        }
+    }
+    svg {
+        fill: currentColor;
+        stroke: currentColor;
+    }
+  </style>
+
+<g transform='translate(8,12)'>
+  <g id='lines'>
+    <polyline class="path" points="16,0 24,0"/>
+    <polyline class="path" points="40,16 80,16"/>
+    <polyline class="path" points="16,32 24,32"/>
+    <polyline class="path" points="32,96 80,96"/>
+    <polyline class="path" points="16,32 16,80"/>
+    <polyline class="path" points="104,32 104,64"/>
+  </g>
+  <g id='triangles'>
+    <polygon points="88,16 76,10.4 76,21.6" transform="rotate(0, 80, 16)" class="arrowhead"></polygon>
+    <polygon points="88,96 76,90.4 76,101.6" transform="rotate(0, 80, 96)" class="arrowhead"></polygon>
+    <polyline class="path" points="104,64 104,72"/>
+    <polygon points="120,64 108,58.4 108,69.6" transform="rotate(90, 104, 64)" class="arrowhead"></polygon>
+  </g>
+  <g id='roundedCorners'>
+    <path class="path" d="M 16,0 A 16,16 0 0,0 0,16"></path>
+    <path class="path" d="M 24,0 A 16,16 0 0,1 40,16"></path>
+    <path class="path" d="M 104,0 A 16,16 0 0,0 88,16"></path>
+    <path class="path" d="M 104,0 A 16,16 0 0,1 120,16"></path>
+    <path class="path" d="M 0,16 A 16,16 0 0,0 16,32"></path>
+    <path class="path" d="M 40,16 A 16,16 0 0,1 24,32"></path>
+    <path class="path" d="M 88,16 A 16,16 0 0,0 104,32"></path>
+    <path class="path" d="M 120,16 A 16,16 0 0,1 104,32"></path>
+    <path class="path" d="M 104,80 A 16,16 0 0,0 88,96"></path>
+    <path class="path" d="M 104,80 A 16,16 0 0,1 120,96"></path>
+    <path class="path" d="M 16,80 A 16,16 0 0,0 32,96"></path>
+    <path class="path" d="M 88,96 A 16,16 0 0,0 104,112"></path>
+    <path class="path" d="M 120,96 A 16,16 0 0,1 104,112"></path>
+  </g>
+  <g id='circles'>
+  </g>
+  <g id='bridges'>
+  </g>
+  <g id='text'>
+    <text x="16" y="20">σ</text>
+    <text x="24" y="20">2</text>
+    <text x="104" y="20">β</text>
+    <text x="104" y="100">y</text>
+</g>
+</g>
+</svg>

@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+    width="784" height="58"
+    viewBox="0 0 784 58">
+  <style type="text/css" source-text-origin="source-independent defaults: shared by ASCII and UTF-8">
+    svg {
+        color-scheme: light dark; /* this becomes necessary if not inherited from parent elements */
+        font-family: monospace;
+        font-size: 15px;
+    }
+    text {
+        stroke: none;
+        text-anchor: middle;
+    }
+    .path {
+        fill: none;
+    }
+    circle.filled {
+        fill: inherit;
+    }
+    circle.hollow {
+         fill: none;
+    }
+    svg {
+        color: #000;  /* set value of 'currentColor' */
+    }
+    @media (prefers-color-scheme: dark) {
+        svg {
+            color: #FFF;  /* set value of 'currentColor' */
+        }
+    }
+    svg {
+        fill: currentColor;
+        stroke: currentColor;
+    }
+  </style>
+
+<g transform='translate(8,12)'>
+  <g id='lines'>
+    <polyline class="path" points="0,0 48,0"/>
+    <polyline class="path" points="48,0 96,0"/>
+    <polyline class="path" points="96,0 144,0"/>
+    <polyline class="path" points="144,0 192,0"/>
+    <polyline class="path" points="192,0 240,0"/>
+    <polyline class="path" points="240,0 288,0"/>
+    <polyline class="path" points="288,0 336,0"/>
+    <polyline class="path" points="336,0 384,0"/>
+    <polyline class="path" points="384,0 432,0"/>
+    <polyline class="path" points="432,0 480,0"/>
+    <polyline class="path" points="480,0 528,0"/>
+    <polyline class="path" points="528,0 576,0"/>
+    <polyline class="path" points="576,0 624,0"/>
+    <polyline class="path" points="624,0 672,0"/>
+    <polyline class="path" points="672,0 720,0"/>
+    <polyline class="path" points="720,0 768,0"/>
+    <polyline class="path" points="0,32 48,32"/>
+    <polyline class="path" points="48,32 96,32"/>
+    <polyline class="path" points="96,32 144,32"/>
+    <polyline class="path" points="144,32 192,32"/>
+    <polyline class="path" points="192,32 240,32"/>
+    <polyline class="path" points="240,32 288,32"/>
+    <polyline class="path" points="288,32 336,32"/>
+    <polyline class="path" points="336,32 384,32"/>
+    <polyline class="path" points="384,32 432,32"/>
+    <polyline class="path" points="432,32 480,32"/>
+    <polyline class="path" points="480,32 528,32"/>
+    <polyline class="path" points="528,32 576,32"/>
+    <polyline class="path" points="576,32 624,32"/>
+    <polyline class="path" points="624,32 672,32"/>
+    <polyline class="path" points="672,32 720,32"/>
+    <polyline class="path" points="720,32 768,32"/>
+    <polyline class="path" points="0,0 0,32"/>
+    <polyline class="path" points="48,0 48,32"/>
+    <polyline class="path" points="96,0 96,32"/>
+    <polyline class="path" points="144,0 144,32"/>
+    <polyline class="path" points="192,0 192,32"/>
+    <polyline class="path" points="240,0 240,32"/>
+    <polyline class="path" points="288,0 288,32"/>
+    <polyline class="path" points="336,0 336,32"/>
+    <polyline class="path" points="384,0 384,32"/>
+    <polyline class="path" points="432,0 432,32"/>
+    <polyline class="path" points="480,0 480,32"/>
+    <polyline class="path" points="528,0 528,32"/>
+    <polyline class="path" points="576,0 576,32"/>
+    <polyline class="path" points="624,0 624,32"/>
+    <polyline class="path" points="672,0 672,32"/>
+    <polyline class="path" points="720,0 720,32"/>
+    <polyline class="path" points="768,0 768,32"/>
+  </g>
+  <g id='triangles'>
+  </g>
+  <g id='roundedCorners'>
+  </g>
+  <g id='circles'>
+  </g>
+  <g id='bridges'>
+  </g>
+  <g id='text'>
+    <text x="16" y="20">0</text>
+    <text x="24" y="20">,</text>
+    <text x="32" y="20">0</text>
+    <text x="64" y="20">1</text>
+    <text x="72" y="20">,</text>
+    <text x="80" y="20">0</text>
+    <text x="112" y="20">2</text>
+    <text x="120" y="20">,</text>
+    <text x="128" y="20">0</text>
+    <text x="208" y="20">0</text>
+    <text x="216" y="20">,</text>
+    <text x="224" y="20">1</text>
+    <text x="256" y="20">1</text>
+    <text x="264" y="20">,</text>
+    <text x="272" y="20">1</text>
+    <text x="304" y="20">2</text>
+    <text x="312" y="20">,</text>
+    <text x="320" y="20">1</text>
+    <text x="400" y="20">0</text>
+    <text x="408" y="20">,</text>
+    <text x="416" y="20">2</text>
+    <text x="448" y="20">1</text>
+    <text x="456" y="20">,</text>
+    <text x="464" y="20">2</text>
+    <text x="496" y="20">2</text>
+    <text x="504" y="20">,</text>
+    <text x="512" y="20">2</text>
+    <text x="592" y="20">0</text>
+    <text x="600" y="20">,</text>
+    <text x="608" y="20">3</text>
+    <text x="640" y="20">1</text>
+    <text x="648" y="20">,</text>
+    <text x="656" y="20">3</text>
+    <text x="688" y="20">2</text>
+    <text x="696" y="20">,</text>
+    <text x="704" y="20">3</text>
+</g>
+</g>
+</svg>

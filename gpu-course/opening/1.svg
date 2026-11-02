@@ -1,0 +1,620 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+    width="1016" height="474"
+    viewBox="0 0 1016 474">
+  <style type="text/css" source-text-origin="source-independent defaults: shared by ASCII and UTF-8">
+    svg {
+        color-scheme: light dark; /* this becomes necessary if not inherited from parent elements */
+        font-family: monospace;
+        font-size: 15px;
+    }
+    text {
+        stroke: none;
+        text-anchor: middle;
+    }
+    .path {
+        fill: none;
+    }
+    circle.filled {
+        fill: inherit;
+    }
+    circle.hollow {
+         fill: none;
+    }
+    svg {
+        color: #000;  /* set value of 'currentColor' */
+    }
+    @media (prefers-color-scheme: dark) {
+        svg {
+            color: #FFF;  /* set value of 'currentColor' */
+        }
+    }
+    svg {
+        fill: currentColor;
+        stroke: currentColor;
+    }
+  </style>
+
+<g transform='translate(8,12)'>
+  <g id='lines'>
+    <polyline class="path" points="16,0 464,0"/>
+    <polyline class="path" points="536,0 984,0"/>
+    <polyline class="path" points="24,32 152,32"/>
+    <polyline class="path" points="152,32 232,32"/>
+    <polyline class="path" points="248,32 376,32"/>
+    <polyline class="path" points="376,32 456,32"/>
+    <polyline class="path" points="544,32 592,32"/>
+    <polyline class="path" points="592,32 616,32"/>
+    <polyline class="path" points="616,32 640,32"/>
+    <polyline class="path" points="640,32 664,32"/>
+    <polyline class="path" points="664,32 688,32"/>
+    <polyline class="path" points="688,32 712,32"/>
+    <polyline class="path" points="712,32 736,32"/>
+    <polyline class="path" points="736,32 760,32"/>
+    <polyline class="path" points="760,32 784,32"/>
+    <polyline class="path" points="784,32 808,32"/>
+    <polyline class="path" points="808,32 832,32"/>
+    <polyline class="path" points="832,32 856,32"/>
+    <polyline class="path" points="856,32 880,32"/>
+    <polyline class="path" points="880,32 904,32"/>
+    <polyline class="path" points="904,32 928,32"/>
+    <polyline class="path" points="928,32 952,32"/>
+    <polyline class="path" points="952,32 976,32"/>
+    <polyline class="path" points="544,64 592,64"/>
+    <polyline class="path" points="592,64 616,64"/>
+    <polyline class="path" points="616,64 640,64"/>
+    <polyline class="path" points="640,64 664,64"/>
+    <polyline class="path" points="664,64 688,64"/>
+    <polyline class="path" points="688,64 712,64"/>
+    <polyline class="path" points="712,64 736,64"/>
+    <polyline class="path" points="736,64 760,64"/>
+    <polyline class="path" points="760,64 784,64"/>
+    <polyline class="path" points="784,64 808,64"/>
+    <polyline class="path" points="808,64 832,64"/>
+    <polyline class="path" points="832,64 856,64"/>
+    <polyline class="path" points="856,64 880,64"/>
+    <polyline class="path" points="880,64 904,64"/>
+    <polyline class="path" points="904,64 928,64"/>
+    <polyline class="path" points="928,64 952,64"/>
+    <polyline class="path" points="952,64 976,64"/>
+    <polyline class="path" points="24,96 152,96"/>
+    <polyline class="path" points="248,96 376,96"/>
+    <polyline class="path" points="544,96 592,96"/>
+    <polyline class="path" points="592,96 616,96"/>
+    <polyline class="path" points="616,96 640,96"/>
+    <polyline class="path" points="640,96 664,96"/>
+    <polyline class="path" points="664,96 688,96"/>
+    <polyline class="path" points="688,96 712,96"/>
+    <polyline class="path" points="712,96 736,96"/>
+    <polyline class="path" points="736,96 760,96"/>
+    <polyline class="path" points="760,96 784,96"/>
+    <polyline class="path" points="784,96 808,96"/>
+    <polyline class="path" points="808,96 832,96"/>
+    <polyline class="path" points="832,96 856,96"/>
+    <polyline class="path" points="856,96 880,96"/>
+    <polyline class="path" points="880,96 904,96"/>
+    <polyline class="path" points="904,96 928,96"/>
+    <polyline class="path" points="928,96 952,96"/>
+    <polyline class="path" points="952,96 976,96"/>
+    <polyline class="path" points="24,128 152,128"/>
+    <polyline class="path" points="152,128 232,128"/>
+    <polyline class="path" points="248,128 376,128"/>
+    <polyline class="path" points="376,128 456,128"/>
+    <polyline class="path" points="544,128 592,128"/>
+    <polyline class="path" points="592,128 616,128"/>
+    <polyline class="path" points="616,128 640,128"/>
+    <polyline class="path" points="640,128 664,128"/>
+    <polyline class="path" points="664,128 688,128"/>
+    <polyline class="path" points="688,128 712,128"/>
+    <polyline class="path" points="712,128 736,128"/>
+    <polyline class="path" points="736,128 760,128"/>
+    <polyline class="path" points="760,128 784,128"/>
+    <polyline class="path" points="784,128 808,128"/>
+    <polyline class="path" points="808,128 832,128"/>
+    <polyline class="path" points="832,128 856,128"/>
+    <polyline class="path" points="856,128 880,128"/>
+    <polyline class="path" points="880,128 904,128"/>
+    <polyline class="path" points="904,128 928,128"/>
+    <polyline class="path" points="928,128 952,128"/>
+    <polyline class="path" points="952,128 976,128"/>
+    <polyline class="path" points="24,160 152,160"/>
+    <polyline class="path" points="152,160 232,160"/>
+    <polyline class="path" points="248,160 376,160"/>
+    <polyline class="path" points="376,160 456,160"/>
+    <polyline class="path" points="544,160 592,160"/>
+    <polyline class="path" points="592,160 616,160"/>
+    <polyline class="path" points="616,160 640,160"/>
+    <polyline class="path" points="640,160 664,160"/>
+    <polyline class="path" points="664,160 688,160"/>
+    <polyline class="path" points="688,160 712,160"/>
+    <polyline class="path" points="712,160 736,160"/>
+    <polyline class="path" points="736,160 760,160"/>
+    <polyline class="path" points="760,160 784,160"/>
+    <polyline class="path" points="784,160 808,160"/>
+    <polyline class="path" points="808,160 832,160"/>
+    <polyline class="path" points="832,160 856,160"/>
+    <polyline class="path" points="856,160 880,160"/>
+    <polyline class="path" points="880,160 904,160"/>
+    <polyline class="path" points="904,160 928,160"/>
+    <polyline class="path" points="928,160 952,160"/>
+    <polyline class="path" points="952,160 976,160"/>
+    <polyline class="path" points="544,192 592,192"/>
+    <polyline class="path" points="592,192 616,192"/>
+    <polyline class="path" points="616,192 640,192"/>
+    <polyline class="path" points="640,192 664,192"/>
+    <polyline class="path" points="664,192 688,192"/>
+    <polyline class="path" points="688,192 712,192"/>
+    <polyline class="path" points="712,192 736,192"/>
+    <polyline class="path" points="736,192 760,192"/>
+    <polyline class="path" points="760,192 784,192"/>
+    <polyline class="path" points="784,192 808,192"/>
+    <polyline class="path" points="808,192 832,192"/>
+    <polyline class="path" points="832,192 856,192"/>
+    <polyline class="path" points="856,192 880,192"/>
+    <polyline class="path" points="880,192 904,192"/>
+    <polyline class="path" points="904,192 928,192"/>
+    <polyline class="path" points="928,192 952,192"/>
+    <polyline class="path" points="952,192 976,192"/>
+    <polyline class="path" points="24,224 152,224"/>
+    <polyline class="path" points="248,224 376,224"/>
+    <polyline class="path" points="544,224 592,224"/>
+    <polyline class="path" points="592,224 616,224"/>
+    <polyline class="path" points="616,224 640,224"/>
+    <polyline class="path" points="640,224 664,224"/>
+    <polyline class="path" points="664,224 688,224"/>
+    <polyline class="path" points="688,224 712,224"/>
+    <polyline class="path" points="712,224 736,224"/>
+    <polyline class="path" points="736,224 760,224"/>
+    <polyline class="path" points="760,224 784,224"/>
+    <polyline class="path" points="784,224 808,224"/>
+    <polyline class="path" points="808,224 832,224"/>
+    <polyline class="path" points="832,224 856,224"/>
+    <polyline class="path" points="856,224 880,224"/>
+    <polyline class="path" points="880,224 904,224"/>
+    <polyline class="path" points="904,224 928,224"/>
+    <polyline class="path" points="928,224 952,224"/>
+    <polyline class="path" points="952,224 976,224"/>
+    <polyline class="path" points="24,256 152,256"/>
+    <polyline class="path" points="152,256 232,256"/>
+    <polyline class="path" points="248,256 376,256"/>
+    <polyline class="path" points="376,256 456,256"/>
+    <polyline class="path" points="544,256 592,256"/>
+    <polyline class="path" points="592,256 616,256"/>
+    <polyline class="path" points="616,256 640,256"/>
+    <polyline class="path" points="640,256 664,256"/>
+    <polyline class="path" points="664,256 688,256"/>
+    <polyline class="path" points="688,256 712,256"/>
+    <polyline class="path" points="712,256 736,256"/>
+    <polyline class="path" points="736,256 760,256"/>
+    <polyline class="path" points="760,256 784,256"/>
+    <polyline class="path" points="784,256 808,256"/>
+    <polyline class="path" points="808,256 832,256"/>
+    <polyline class="path" points="832,256 856,256"/>
+    <polyline class="path" points="856,256 880,256"/>
+    <polyline class="path" points="880,256 904,256"/>
+    <polyline class="path" points="904,256 928,256"/>
+    <polyline class="path" points="928,256 952,256"/>
+    <polyline class="path" points="952,256 976,256"/>
+    <polyline class="path" points="24,288 232,288"/>
+    <polyline class="path" points="248,288 456,288"/>
+    <polyline class="path" points="544,288 592,288"/>
+    <polyline class="path" points="592,288 616,288"/>
+    <polyline class="path" points="616,288 640,288"/>
+    <polyline class="path" points="640,288 664,288"/>
+    <polyline class="path" points="664,288 688,288"/>
+    <polyline class="path" points="688,288 712,288"/>
+    <polyline class="path" points="712,288 736,288"/>
+    <polyline class="path" points="736,288 760,288"/>
+    <polyline class="path" points="760,288 784,288"/>
+    <polyline class="path" points="784,288 808,288"/>
+    <polyline class="path" points="808,288 832,288"/>
+    <polyline class="path" points="832,288 856,288"/>
+    <polyline class="path" points="856,288 880,288"/>
+    <polyline class="path" points="880,288 904,288"/>
+    <polyline class="path" points="904,288 928,288"/>
+    <polyline class="path" points="928,288 952,288"/>
+    <polyline class="path" points="952,288 976,288"/>
+    <polyline class="path" points="24,320 232,320"/>
+    <polyline class="path" points="248,320 456,320"/>
+    <polyline class="path" points="544,320 592,320"/>
+    <polyline class="path" points="592,320 616,320"/>
+    <polyline class="path" points="616,320 640,320"/>
+    <polyline class="path" points="640,320 664,320"/>
+    <polyline class="path" points="664,320 688,320"/>
+    <polyline class="path" points="688,320 712,320"/>
+    <polyline class="path" points="712,320 736,320"/>
+    <polyline class="path" points="736,320 760,320"/>
+    <polyline class="path" points="760,320 784,320"/>
+    <polyline class="path" points="784,320 808,320"/>
+    <polyline class="path" points="808,320 832,320"/>
+    <polyline class="path" points="832,320 856,320"/>
+    <polyline class="path" points="856,320 880,320"/>
+    <polyline class="path" points="880,320 904,320"/>
+    <polyline class="path" points="904,320 928,320"/>
+    <polyline class="path" points="928,320 952,320"/>
+    <polyline class="path" points="952,320 976,320"/>
+    <polyline class="path" points="24,352 456,352"/>
+    <polyline class="path" points="544,352 592,352"/>
+    <polyline class="path" points="592,352 616,352"/>
+    <polyline class="path" points="616,352 640,352"/>
+    <polyline class="path" points="640,352 664,352"/>
+    <polyline class="path" points="664,352 688,352"/>
+    <polyline class="path" points="688,352 712,352"/>
+    <polyline class="path" points="712,352 736,352"/>
+    <polyline class="path" points="736,352 760,352"/>
+    <polyline class="path" points="760,352 784,352"/>
+    <polyline class="path" points="784,352 808,352"/>
+    <polyline class="path" points="808,352 832,352"/>
+    <polyline class="path" points="832,352 856,352"/>
+    <polyline class="path" points="856,352 880,352"/>
+    <polyline class="path" points="880,352 904,352"/>
+    <polyline class="path" points="904,352 928,352"/>
+    <polyline class="path" points="928,352 952,352"/>
+    <polyline class="path" points="952,352 976,352"/>
+    <polyline class="path" points="544,384 976,384"/>
+    <polyline class="path" points="24,416 456,416"/>
+    <polyline class="path" points="544,416 976,416"/>
+    <polyline class="path" points="16,448 464,448"/>
+    <polyline class="path" points="536,448 984,448"/>
+    <polyline class="path" points="544,56 592,56"/>
+    <polyline class="path" points="544,88 592,88"/>
+    <polyline class="path" points="544,120 592,120"/>
+    <polyline class="path" points="544,152 592,152"/>
+    <polyline class="path" points="544,184 592,184"/>
+    <polyline class="path" points="544,216 592,216"/>
+    <polyline class="path" points="544,248 592,248"/>
+    <polyline class="path" points="544,280 592,280"/>
+    <polyline class="path" points="544,312 592,312"/>
+    <polyline class="path" points="544,344 592,344"/>
+    <polyline class="path" points="0,16 0,432"/>
+    <polyline class="path" points="24,32 24,96"/>
+    <polyline class="path" points="24,96 24,128"/>
+    <polyline class="path" points="24,160 24,224"/>
+    <polyline class="path" points="24,224 24,256"/>
+    <polyline class="path" points="24,288 24,320"/>
+    <polyline class="path" points="24,352 24,416"/>
+    <polyline class="path" points="152,32 152,96"/>
+    <polyline class="path" points="152,96 152,128"/>
+    <polyline class="path" points="152,160 152,224"/>
+    <polyline class="path" points="152,224 152,256"/>
+    <polyline class="path" points="232,32 232,128"/>
+    <polyline class="path" points="232,160 232,256"/>
+    <polyline class="path" points="232,288 232,320"/>
+    <polyline class="path" points="248,32 248,96"/>
+    <polyline class="path" points="248,96 248,128"/>
+    <polyline class="path" points="248,160 248,224"/>
+    <polyline class="path" points="248,224 248,256"/>
+    <polyline class="path" points="248,288 248,320"/>
+    <polyline class="path" points="376,32 376,96"/>
+    <polyline class="path" points="376,96 376,128"/>
+    <polyline class="path" points="376,160 376,224"/>
+    <polyline class="path" points="376,224 376,256"/>
+    <polyline class="path" points="456,32 456,128"/>
+    <polyline class="path" points="456,160 456,256"/>
+    <polyline class="path" points="456,288 456,320"/>
+    <polyline class="path" points="456,352 456,416"/>
+    <polyline class="path" points="480,16 480,432"/>
+    <polyline class="path" points="520,16 520,432"/>
+    <polyline class="path" points="544,32 544,48"/>
+    <polyline class="path" points="544,48 544,64"/>
+    <polyline class="path" points="544,64 544,80"/>
+    <polyline class="path" points="544,80 544,96"/>
+    <polyline class="path" points="544,96 544,112"/>
+    <polyline class="path" points="544,112 544,128"/>
+    <polyline class="path" points="544,128 544,144"/>
+    <polyline class="path" points="544,144 544,160"/>
+    <polyline class="path" points="544,160 544,176"/>
+    <polyline class="path" points="544,176 544,192"/>
+    <polyline class="path" points="544,192 544,208"/>
+    <polyline class="path" points="544,208 544,224"/>
+    <polyline class="path" points="544,224 544,240"/>
+    <polyline class="path" points="544,240 544,256"/>
+    <polyline class="path" points="544,256 544,272"/>
+    <polyline class="path" points="544,272 544,288"/>
+    <polyline class="path" points="544,288 544,304"/>
+    <polyline class="path" points="544,304 544,320"/>
+    <polyline class="path" points="544,320 544,336"/>
+    <polyline class="path" points="544,336 544,352"/>
+    <polyline class="path" points="544,384 544,416"/>
+    <polyline class="path" points="592,32 592,48"/>
+    <polyline class="path" points="592,48 592,64"/>
+    <polyline class="path" points="592,64 592,80"/>
+    <polyline class="path" points="592,80 592,96"/>
+    <polyline class="path" points="592,96 592,112"/>
+    <polyline class="path" points="592,112 592,128"/>
+    <polyline class="path" points="592,128 592,144"/>
+    <polyline class="path" points="592,144 592,160"/>
+    <polyline class="path" points="592,160 592,176"/>
+    <polyline class="path" points="592,176 592,192"/>
+    <polyline class="path" points="592,192 592,208"/>
+    <polyline class="path" points="592,208 592,224"/>
+    <polyline class="path" points="592,224 592,240"/>
+    <polyline class="path" points="592,240 592,256"/>
+    <polyline class="path" points="592,256 592,272"/>
+    <polyline class="path" points="592,272 592,288"/>
+    <polyline class="path" points="592,288 592,304"/>
+    <polyline class="path" points="592,304 592,320"/>
+    <polyline class="path" points="592,320 592,336"/>
+    <polyline class="path" points="592,336 592,352"/>
+    <polyline class="path" points="616,32 616,64"/>
+    <polyline class="path" points="616,64 616,96"/>
+    <polyline class="path" points="616,96 616,128"/>
+    <polyline class="path" points="616,128 616,160"/>
+    <polyline class="path" points="616,160 616,192"/>
+    <polyline class="path" points="616,192 616,224"/>
+    <polyline class="path" points="616,224 616,256"/>
+    <polyline class="path" points="616,256 616,288"/>
+    <polyline class="path" points="616,288 616,320"/>
+    <polyline class="path" points="616,320 616,352"/>
+    <polyline class="path" points="640,32 640,64"/>
+    <polyline class="path" points="640,64 640,96"/>
+    <polyline class="path" points="640,96 640,128"/>
+    <polyline class="path" points="640,128 640,160"/>
+    <polyline class="path" points="640,160 640,192"/>
+    <polyline class="path" points="640,192 640,224"/>
+    <polyline class="path" points="640,224 640,256"/>
+    <polyline class="path" points="640,256 640,288"/>
+    <polyline class="path" points="640,288 640,320"/>
+    <polyline class="path" points="640,320 640,352"/>
+    <polyline class="path" points="664,32 664,64"/>
+    <polyline class="path" points="664,64 664,96"/>
+    <polyline class="path" points="664,96 664,128"/>
+    <polyline class="path" points="664,128 664,160"/>
+    <polyline class="path" points="664,160 664,192"/>
+    <polyline class="path" points="664,192 664,224"/>
+    <polyline class="path" points="664,224 664,256"/>
+    <polyline class="path" points="664,256 664,288"/>
+    <polyline class="path" points="664,288 664,320"/>
+    <polyline class="path" points="664,320 664,352"/>
+    <polyline class="path" points="688,32 688,64"/>
+    <polyline class="path" points="688,64 688,96"/>
+    <polyline class="path" points="688,96 688,128"/>
+    <polyline class="path" points="688,128 688,160"/>
+    <polyline class="path" points="688,160 688,192"/>
+    <polyline class="path" points="688,192 688,224"/>
+    <polyline class="path" points="688,224 688,256"/>
+    <polyline class="path" points="688,256 688,288"/>
+    <polyline class="path" points="688,288 688,320"/>
+    <polyline class="path" points="688,320 688,352"/>
+    <polyline class="path" points="712,32 712,64"/>
+    <polyline class="path" points="712,64 712,96"/>
+    <polyline class="path" points="712,96 712,128"/>
+    <polyline class="path" points="712,128 712,160"/>
+    <polyline class="path" points="712,160 712,192"/>
+    <polyline class="path" points="712,192 712,224"/>
+    <polyline class="path" points="712,224 712,256"/>
+    <polyline class="path" points="712,256 712,288"/>
+    <polyline class="path" points="712,288 712,320"/>
+    <polyline class="path" points="712,320 712,352"/>
+    <polyline class="path" points="736,32 736,64"/>
+    <polyline class="path" points="736,64 736,96"/>
+    <polyline class="path" points="736,96 736,128"/>
+    <polyline class="path" points="736,128 736,160"/>
+    <polyline class="path" points="736,160 736,192"/>
+    <polyline class="path" points="736,192 736,224"/>
+    <polyline class="path" points="736,224 736,256"/>
+    <polyline class="path" points="736,256 736,288"/>
+    <polyline class="path" points="736,288 736,320"/>
+    <polyline class="path" points="736,320 736,352"/>
+    <polyline class="path" points="760,32 760,64"/>
+    <polyline class="path" points="760,64 760,96"/>
+    <polyline class="path" points="760,96 760,128"/>
+    <polyline class="path" points="760,128 760,160"/>
+    <polyline class="path" points="760,160 760,192"/>
+    <polyline class="path" points="760,192 760,224"/>
+    <polyline class="path" points="760,224 760,256"/>
+    <polyline class="path" points="760,256 760,288"/>
+    <polyline class="path" points="760,288 760,320"/>
+    <polyline class="path" points="760,320 760,352"/>
+    <polyline class="path" points="784,32 784,64"/>
+    <polyline class="path" points="784,64 784,96"/>
+    <polyline class="path" points="784,96 784,128"/>
+    <polyline class="path" points="784,128 784,160"/>
+    <polyline class="path" points="784,160 784,192"/>
+    <polyline class="path" points="784,192 784,224"/>
+    <polyline class="path" points="784,224 784,256"/>
+    <polyline class="path" points="784,256 784,288"/>
+    <polyline class="path" points="784,288 784,320"/>
+    <polyline class="path" points="784,320 784,352"/>
+    <polyline class="path" points="808,32 808,64"/>
+    <polyline class="path" points="808,64 808,96"/>
+    <polyline class="path" points="808,96 808,128"/>
+    <polyline class="path" points="808,128 808,160"/>
+    <polyline class="path" points="808,160 808,192"/>
+    <polyline class="path" points="808,192 808,224"/>
+    <polyline class="path" points="808,224 808,256"/>
+    <polyline class="path" points="808,256 808,288"/>
+    <polyline class="path" points="808,288 808,320"/>
+    <polyline class="path" points="808,320 808,352"/>
+    <polyline class="path" points="832,32 832,64"/>
+    <polyline class="path" points="832,64 832,96"/>
+    <polyline class="path" points="832,96 832,128"/>
+    <polyline class="path" points="832,128 832,160"/>
+    <polyline class="path" points="832,160 832,192"/>
+    <polyline class="path" points="832,192 832,224"/>
+    <polyline class="path" points="832,224 832,256"/>
+    <polyline class="path" points="832,256 832,288"/>
+    <polyline class="path" points="832,288 832,320"/>
+    <polyline class="path" points="832,320 832,352"/>
+    <polyline class="path" points="856,32 856,64"/>
+    <polyline class="path" points="856,64 856,96"/>
+    <polyline class="path" points="856,96 856,128"/>
+    <polyline class="path" points="856,128 856,160"/>
+    <polyline class="path" points="856,160 856,192"/>
+    <polyline class="path" points="856,192 856,224"/>
+    <polyline class="path" points="856,224 856,256"/>
+    <polyline class="path" points="856,256 856,288"/>
+    <polyline class="path" points="856,288 856,320"/>
+    <polyline class="path" points="856,320 856,352"/>
+    <polyline class="path" points="880,32 880,64"/>
+    <polyline class="path" points="880,64 880,96"/>
+    <polyline class="path" points="880,96 880,128"/>
+    <polyline class="path" points="880,128 880,160"/>
+    <polyline class="path" points="880,160 880,192"/>
+    <polyline class="path" points="880,192 880,224"/>
+    <polyline class="path" points="880,224 880,256"/>
+    <polyline class="path" points="880,256 880,288"/>
+    <polyline class="path" points="880,288 880,320"/>
+    <polyline class="path" points="880,320 880,352"/>
+    <polyline class="path" points="904,32 904,64"/>
+    <polyline class="path" points="904,64 904,96"/>
+    <polyline class="path" points="904,96 904,128"/>
+    <polyline class="path" points="904,128 904,160"/>
+    <polyline class="path" points="904,160 904,192"/>
+    <polyline class="path" points="904,192 904,224"/>
+    <polyline class="path" points="904,224 904,256"/>
+    <polyline class="path" points="904,256 904,288"/>
+    <polyline class="path" points="904,288 904,320"/>
+    <polyline class="path" points="904,320 904,352"/>
+    <polyline class="path" points="928,32 928,64"/>
+    <polyline class="path" points="928,64 928,96"/>
+    <polyline class="path" points="928,96 928,128"/>
+    <polyline class="path" points="928,128 928,160"/>
+    <polyline class="path" points="928,160 928,192"/>
+    <polyline class="path" points="928,192 928,224"/>
+    <polyline class="path" points="928,224 928,256"/>
+    <polyline class="path" points="928,256 928,288"/>
+    <polyline class="path" points="928,288 928,320"/>
+    <polyline class="path" points="928,320 928,352"/>
+    <polyline class="path" points="952,32 952,64"/>
+    <polyline class="path" points="952,64 952,96"/>
+    <polyline class="path" points="952,96 952,128"/>
+    <polyline class="path" points="952,128 952,160"/>
+    <polyline class="path" points="952,160 952,192"/>
+    <polyline class="path" points="952,192 952,224"/>
+    <polyline class="path" points="952,224 952,256"/>
+    <polyline class="path" points="952,256 952,288"/>
+    <polyline class="path" points="952,288 952,320"/>
+    <polyline class="path" points="952,320 952,352"/>
+    <polyline class="path" points="976,32 976,64"/>
+    <polyline class="path" points="976,64 976,96"/>
+    <polyline class="path" points="976,96 976,128"/>
+    <polyline class="path" points="976,128 976,160"/>
+    <polyline class="path" points="976,160 976,192"/>
+    <polyline class="path" points="976,192 976,224"/>
+    <polyline class="path" points="976,224 976,256"/>
+    <polyline class="path" points="976,256 976,288"/>
+    <polyline class="path" points="976,288 976,320"/>
+    <polyline class="path" points="976,320 976,352"/>
+    <polyline class="path" points="976,384 976,416"/>
+    <polyline class="path" points="1000,16 1000,432"/>
+  </g>
+  <g id='triangles'>
+  </g>
+  <g id='roundedCorners'>
+    <path class="path" d="M 16,0 A 16,16 0 0,0 0,16"></path>
+    <path class="path" d="M 464,0 A 16,16 0 0,1 480,16"></path>
+    <path class="path" d="M 536,0 A 16,16 0 0,0 520,16"></path>
+    <path class="path" d="M 984,0 A 16,16 0 0,1 1000,16"></path>
+    <path class="path" d="M 0,432 A 16,16 0 0,0 16,448"></path>
+    <path class="path" d="M 480,432 A 16,16 0 0,1 464,448"></path>
+    <path class="path" d="M 520,432 A 16,16 0 0,0 536,448"></path>
+    <path class="path" d="M 1000,432 A 16,16 0 0,1 984,448"></path>
+  </g>
+  <g id='circles'>
+  </g>
+  <g id='bridges'>
+  </g>
+  <g id='text'>
+    <text x="72" y="68">C</text>
+    <text x="80" y="68">o</text>
+    <text x="88" y="68">r</text>
+    <text x="96" y="68">e</text>
+    <text x="296" y="68">C</text>
+    <text x="304" y="68">o</text>
+    <text x="312" y="68">r</text>
+    <text x="320" y="68">e</text>
+    <text x="168" y="84">C</text>
+    <text x="176" y="84">o</text>
+    <text x="184" y="84">n</text>
+    <text x="192" y="84">t</text>
+    <text x="200" y="84">r</text>
+    <text x="208" y="84">o</text>
+    <text x="216" y="84">l</text>
+    <text x="392" y="84">C</text>
+    <text x="400" y="84">o</text>
+    <text x="408" y="84">n</text>
+    <text x="416" y="84">t</text>
+    <text x="424" y="84">r</text>
+    <text x="432" y="84">o</text>
+    <text x="440" y="84">l</text>
+    <text x="56" y="116">L</text>
+    <text x="64" y="116">1</text>
+    <text x="80" y="116">C</text>
+    <text x="88" y="116">a</text>
+    <text x="96" y="116">c</text>
+    <text x="104" y="116">h</text>
+    <text x="112" y="116">e</text>
+    <text x="280" y="116">L</text>
+    <text x="288" y="116">1</text>
+    <text x="304" y="116">C</text>
+    <text x="312" y="116">a</text>
+    <text x="320" y="116">c</text>
+    <text x="328" y="116">h</text>
+    <text x="336" y="116">e</text>
+    <text x="72" y="196">C</text>
+    <text x="80" y="196">o</text>
+    <text x="88" y="196">r</text>
+    <text x="96" y="196">e</text>
+    <text x="296" y="196">C</text>
+    <text x="304" y="196">o</text>
+    <text x="312" y="196">r</text>
+    <text x="320" y="196">e</text>
+    <text x="168" y="212">C</text>
+    <text x="176" y="212">o</text>
+    <text x="184" y="212">n</text>
+    <text x="192" y="212">t</text>
+    <text x="200" y="212">r</text>
+    <text x="208" y="212">o</text>
+    <text x="216" y="212">l</text>
+    <text x="392" y="212">C</text>
+    <text x="400" y="212">o</text>
+    <text x="408" y="212">n</text>
+    <text x="416" y="212">t</text>
+    <text x="424" y="212">r</text>
+    <text x="432" y="212">o</text>
+    <text x="440" y="212">l</text>
+    <text x="56" y="244">L</text>
+    <text x="64" y="244">1</text>
+    <text x="80" y="244">C</text>
+    <text x="88" y="244">a</text>
+    <text x="96" y="244">c</text>
+    <text x="104" y="244">h</text>
+    <text x="112" y="244">e</text>
+    <text x="280" y="244">L</text>
+    <text x="288" y="244">1</text>
+    <text x="304" y="244">C</text>
+    <text x="312" y="244">a</text>
+    <text x="320" y="244">c</text>
+    <text x="328" y="244">h</text>
+    <text x="336" y="244">e</text>
+    <text x="104" y="308">L</text>
+    <text x="112" y="308">2</text>
+    <text x="128" y="308">C</text>
+    <text x="136" y="308">a</text>
+    <text x="144" y="308">c</text>
+    <text x="152" y="308">h</text>
+    <text x="160" y="308">e</text>
+    <text x="320" y="308">L</text>
+    <text x="328" y="308">2</text>
+    <text x="344" y="308">C</text>
+    <text x="352" y="308">a</text>
+    <text x="360" y="308">c</text>
+    <text x="368" y="308">h</text>
+    <text x="376" y="308">e</text>
+    <text x="208" y="388">L</text>
+    <text x="216" y="388">3</text>
+    <text x="232" y="388">C</text>
+    <text x="240" y="388">a</text>
+    <text x="248" y="388">c</text>
+    <text x="256" y="388">h</text>
+    <text x="264" y="388">e</text>
+    <text x="728" y="404">L</text>
+    <text x="736" y="404">2</text>
+    <text x="752" y="404">C</text>
+    <text x="760" y="404">a</text>
+    <text x="768" y="404">c</text>
+    <text x="776" y="404">h</text>
+    <text x="784" y="404">e</text>
+</g>
+</g>
+</svg>

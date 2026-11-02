@@ -1,0 +1,17 @@
+  |              ^                             ^
+  |             /                             /
+  |            /                             /
+  |           /                             /
+  |          /  O(n) scaling on CPU        /  O(n) scaling on GPU
+  |         /                             /
+  |        /                             /
+  +-------+-----------------------------'
+  |      /
+  |     /
+  |    /    Until the problem is large
+  |   /     enough to occupy the GPU,
+  |  /      performance is constant
+  | /
+  |/
+  '--------------------------------------------------------------
+ 0                                n
